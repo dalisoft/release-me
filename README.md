@@ -14,7 +14,8 @@ An zero-dependency single-file shell script which does all the work of [semantic
 
 ## Limitations
 
-Currently supports only **Node.js** and **Rust** projects
+- Currently supports only **Node.js**, **Python** and **Rust** projects
+- Version should be valid, see [Semantic Versioning](https://semver.org)
 
 ## Usage
 
