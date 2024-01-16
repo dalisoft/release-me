@@ -1,6 +1,6 @@
 # release-me
 
-An zero-dependency single-file shell script which does all the work of **semantic-release** with it's **GitHub** and **npm** plugin and it's so fast
+An zero-dependency single-file shell script which does all the work of [semantic-release](https://github.com/semantic-release/semantic-release) with it's **GitHub** and **npm** plugin and it's so fast
 
 ## Features
 
@@ -8,6 +8,7 @@ An zero-dependency single-file shell script which does all the work of **semanti
 - Zero-dependency
 - Zero pre-install
 - Zero wait
+- Programming language agnostic
 - Single file
 - Fast (<1 sec)
 
