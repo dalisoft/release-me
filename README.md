@@ -14,8 +14,16 @@ An zero-dependency single-file shell script which does all the work of [semantic
 
 ## Limitations
 
-- Currently supports only **Node.js**, **Python** and **Rust** projects
+- Currently supports only **Node.js**, **Rust** and **Python** projects
 - Version should be valid, see [Semantic Versioning](https://semver.org)
+
+## Versioning priority
+
+If one of files described below will be found, script parse first matched file and priority will ran as these
+
+1. **Node.js** (`package.json`)
+2. **Rust** (`Cargo.toml`)
+3. **Python** (`setup.py`)
 
 ## Usage
 
