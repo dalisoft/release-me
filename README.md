@@ -1,6 +1,6 @@
 # release-me
 
-An zero-dependency single-file shell script which does all the work of **semantic-release** with it's GitHub and `npm` plugin and it's so fast
+An zero-dependency single-file shell script which does all the work of **semantic-release** with it's **GitHub** and **npm** plugin and it's so fast
 
 ## Features
 
@@ -26,10 +26,10 @@ GH_TOKEN=<YOUR_GITHUB_TOKEN> NPM_TOKEN=<YOUR_NPM_TOKEN> sh /path/to/script/relea
 
 ## Environment variables
 
-| Name        | Description                       |
-| ----------- | --------------------------------- |
-| `GH_TOKEN`  | Used to publish Github releases   |
-| `NPM_TOKEN` | Used to publish to `npm` registry |
+| Name        | Description                         |
+| ----------- | ----------------------------------- |
+| `GH_TOKEN`  | Used to publish **Github** releases |
+| `NPM_TOKEN` | Used to publish to **npm** registry |
 
 ## License
 
