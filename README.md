@@ -8,9 +8,13 @@ An zero-dependency single-file shell script which does all the work of [semantic
 - Zero-dependency
 - Zero pre-install
 - Zero wait
-- Programming language agnostic
+- Programming language agnostic\*
 - Single file
 - Fast (<1 sec)
+
+## Limitations
+
+Currently supports only **Node.js** and **Rust** projects
 
 ## Usage
 

@@ -54,9 +54,24 @@ function parsePackageVersion() {
 ##############################
 ##### Package variables ######
 ##############################
-PKG_NAME=$(cat "./package.json" | sed -n 's/^[[:space:]]*"name": "\(.*\)",/\1/p')
-PKG_VERSION=$(cat "./package.json" | sed -n 's/^[[:space:]]*"version": "\(.*\)",/\1/p')
-VERSION=$(parsePackageVersion "$PKG_VERSION")
+
+if [ -f "./package.json" ]; then
+  PKG_NAME=$(cat "./package.json" | sed -n 's/^[[:space:]]*"name": "\(.*\)",/\1/p')
+  PKG_VERSION=$(cat "./package.json" | sed -n 's/^[[:space:]]*"version": "\(.*\)",/\1/p')
+
+  VERSION=$(parsePackageVersion "$PKG_VERSION")
+elif [ -f "./Cargo.toml" ]; then
+  PKG_NAME=$(cat "./Cargo.toml" | sed -n 's/^name = "\(.*\)"/\1/p')
+  PKG_VERSION=$(cat "./Cargo.toml" | sed -n 's/^version = "\(.*\)"/\1/p')
+
+  VERSION=$(parsePackageVersion "$PKG_VERSION")
+else
+  cat <<EOF
+This project currently supports only Node.js and Rust projects.
+Please wait for updates to get support in other languages!
+EOF
+  exit 1
+fi
 
 ##############################
 ####### Git variables ########
