@@ -1,5 +1,6 @@
 {
+  "prettier.requireConfig": false,
   "[markdown]": {
-    "editor.defaultFormatter": "vscode.markdown-language-features"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
