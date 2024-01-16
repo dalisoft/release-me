@@ -66,7 +66,7 @@ elif [ -f "./setup.py" ]; then
   PKG_VERSION=$(cat "./setup.py" | sed -n 's/^ *version\s*=\s*["'\'']\([^"'\'']*\)["'\''].*/\1/p')
 else
   cat <<EOF
-This project currently supports only Node.js, Python and Rust projects.
+This project currently supports only Node.js, Rust and Python projects.
 Please wait for updates to get support in other languages!
 EOF
   exit 1
