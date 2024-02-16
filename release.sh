@@ -107,6 +107,11 @@ function isValidCommitType {
 
 parseOptions "$@"
 
+up_to_date() {
+  echo "Your repository is up-to-date"
+  exit 0
+}
+
 # Release types
 # shellcheck disable=2034
 RELEASE_SKIP_TYPES=("build" "chore" "docs" "test" "style" "ci" "skip ci")
@@ -194,8 +199,7 @@ function getGitCommits {
   fi
 
   if [[ "${#COMMITS[*]}" -eq 0 ]]; then
-    echo "Your repository is up-to-date"
-    exit 0
+    up_to_date
   fi
 }
 
@@ -246,6 +250,10 @@ function handleGitCommits {
     IFS='.'
     echo -n "${SEMANTIC_VERSION_COPY[*]}"
   )
+
+  if [ "$BUILD_VERSION" == "$PREV_BUILD_VERSION" ]; then
+    up_to_date
+  fi
 
   RELEASE_PREV_TAG_NAME=""
 
