@@ -22,7 +22,9 @@ GIT_LOG_FORMAT="$GIT_LOG_SEPARATOR%s$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEP
 GIT_REPO_NAME=$(git remote get-url origin | cut -d ':' -f 2 | sed s/.git//)
 
 IS_WORKSPACE=false
-IS_DRY_RUN=false
+IS_DRY_RUN=true
+IS_VERBOSE=false
+PLUGINS=()
 
 ##############################
 ###### Helpers & Utils #######
@@ -30,7 +32,8 @@ IS_DRY_RUN=false
 
 function parseOptions {
   while :; do
-    case $1 in
+    local KEY="$1"
+    case $KEY in
     -v | --version)
       echo "release-me: ${RELEASE_ME_VERSION}"
       exit 0
@@ -42,16 +45,23 @@ function parseOptions {
     -w | --workspace)
       IS_WORKSPACE=true
       ;;
+    -p=* | --plugins=*)
+      local IFS=','
+      read -ra PLUGINS <<<"${KEY#*=}"
+      ;;
     -d | --dry-run)
       IS_DRY_RUN=true
       ;;
+    --verbose)
+      IS_VERBOSE=true
+      ;;
     -?*)
-      echo "Unknown option: $1" >&2
+      echo "Unknown option: $KEY" >&2
       echo "$USAGE"
       exit 1
       ;;
     ?*)
-      echo "Unknown argument: $1" >&2
+      echo "Unknown argument: $KEY" >&2
       echo "$USAGE"
       exit 1
       ;;
@@ -190,56 +200,65 @@ MINOR_UPGRADED=false
 MAJOR_UPGRADED=false
 
 function handleGitCommit {
+  local -n COMMIT_MSG="$1"
 
-  local -n COMMIT_HEAD="$1"
-  local COMMIT_HASH="$2"
-  local COMMIT_SHA="$3"
-  local COMMIT_BODY="$*"
+  local COMMIT_HEADER="${COMMIT_MSG[0]}"
+  local COMMIT_HASH="${COMMIT_MSG[2]}"
+  local COMMIT_SHA="${COMMIT_MSG[4]}"
 
-  # echo -e "head: $COMMIT_HEAD\nhash: $COMMIT_HASH\nsha: $COMMIT_SHA\nbody: $COMMIT_BODY"
+  # echo -e "commit"
+  # echo -e "${COMMIT_MSG[@]}"
+  # echo -e "end commit"
 
-  COMMIT_MSG="${COMMIT_HEAD}\n${COMMIT_BODY}"
+  for i in "${!COMMIT_MSG[@]}"; do
+    if [[ $i -lt 5 || ${COMMIT_MSG[i]} == "" ]]; then
+      continue
+    fi
+    # read -d '\n' -r -a COMMITES <<<"${COMMIT_MSG[i]}"
+    mapfile -d '\n' -t COMMITES < <(printf '%s' "${COMMIT_MSG[i]}")
 
-  COMMIT_BODY_PARSED=$(echo "${COMMIT_HEAD}" | cut -d ':' -f 2 | xargs)
-  COMMIT_BODY_PARSED+="\n- ${COMMIT_BODY}"
+    for commit in "${COMMITES[@]}"; do
+      # shellcheck disable=SC2034
+      local REF_ARRAY=("$commit" "" "$COMMIT_HASH" "" "$COMMIT_SHA")
+      handleGitCommit REF_ARRAY
+    done
 
-  if isValidCommitType "$COMMIT_HEAD" "${RELEASE_SKIP_TYPES[@]}"; then
     return 0
-  elif isValidCommitType "$COMMIT_HEAD" "${RELEASE_PATCH_TYPES[@]}"; then
+  done
+
+  COMMIT_HEAD_CONTENT=$(echo "${COMMIT_HEADER}" | cut -d ':' -f 2 | xargs)
+
+  if isValidCommitType "$COMMIT_HEADER" "${RELEASE_SKIP_TYPES[@]}"; then
+    return 0
+  elif isValidCommitType "$COMMIT_HEADER" "${RELEASE_PATCH_TYPES[@]}"; then
     if ! $PATCH_UPGRADED; then
-      SEMANTIC_VERSION[2]=$((SEMANTIC_VERSION[2] + 1))
       PATCH_UPGRADED=true
       RELEASE_BODY+="\n## Bug Fixes\n\n"
     fi
     if $IS_WORKSPACE; then
-      RELEASE_BODY+="- **$PKG_NAME**: $COMMIT_BODY_PARSED ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
+      RELEASE_BODY+="- **$PKG_NAME**: $COMMIT_HEAD_CONTENT ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
     else
       RELEASE_BODY+="- $COMMIT_MSG ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
     fi
-  elif isValidCommitType "$COMMIT_HEAD" "${RELEASE_MINOR_TYPES[@]}"; then
+  elif isValidCommitType "$COMMIT_HEADER" "${RELEASE_MINOR_TYPES[@]}"; then
     if ! $MINOR_UPGRADED; then
-      SEMANTIC_VERSION[1]=$((SEMANTIC_VERSION[1] + 1))
-      SEMANTIC_VERSION[2]=0
       MINOR_UPGRADED=true
       RELEASE_BODY+="\n## Features\n\n"
     fi
 
     if $IS_WORKSPACE; then
-      RELEASE_BODY+="- **$PKG_NAME**: $COMMIT_BODY_PARSED ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
+      RELEASE_BODY+="- **$PKG_NAME**: $COMMIT_HEAD_CONTENT ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
     else
       RELEASE_BODY+="- $COMMIT_MSG ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
     fi
-  elif isValidCommitType "$COMMIT_HEAD" "${RELEASE_MAJOR_TYPES[@]}"; then
+  elif isValidCommitType "$COMMIT_HEADER" "${RELEASE_MAJOR_TYPES[@]}"; then
     if ! $MAJOR_UPGRADED; then
-      SEMANTIC_VERSION[0]=$((SEMANTIC_VERSION[0] + 1))
-      SEMANTIC_VERSION[1]=0
-      SEMANTIC_VERSION[2]=0
       MAJOR_UPGRADED=true
       RELEASE_BODY+="\n## BREAKING CHANGES\n\n"
     fi
 
     if $IS_WORKSPACE; then
-      RELEASE_BODY+="- **$PKG_NAME**: $COMMIT_BODY_PARSED ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
+      RELEASE_BODY+="- **$PKG_NAME**: $COMMIT_HEAD_CONTENT ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
     else
       RELEASE_BODY+="- $COMMIT_MSG ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
     fi
@@ -254,6 +273,17 @@ function handleGitCommits {
 
     handleGitCommit COMMIT_ARRAY
   done
+
+  if $MAJOR_UPGRADED; then
+    SEMANTIC_VERSION[0]=$((SEMANTIC_VERSION[0] + 1))
+    SEMANTIC_VERSION[1]=0
+    SEMANTIC_VERSION[2]=0
+  elif $MINOR_UPGRADED; then
+    SEMANTIC_VERSION[1]=$((SEMANTIC_VERSION[1] + 1))
+    SEMANTIC_VERSION[2]=0
+  elif $PATCH_UPGRADED; then
+    SEMANTIC_VERSION[2]=$((SEMANTIC_VERSION[1] + 2))
+  fi
 
   BUILD_VERSION=$(
     IFS='.'
@@ -285,6 +315,7 @@ function handleGitCommits {
 ##############################
 
 function handlePushes {
+
   local IFS="$GIT_LOG_ENTRY_SEPARATOR"
   read -r -a COMMIT_ARRAY <<<"${COMMITS[-1]}"
   CHECKOUT_SHA=${COMMIT_ARRAY[4]}
@@ -299,24 +330,17 @@ function handlePushes {
     echo "Skipped Git tag [$RELEASE_TAG_NAME] in DRY-RUN mode."
   fi
 
-  # Create a `GitHub` release
-  if [[ "$GITHUB_TOKEN" != "" ]]; then
-    echo "Creating GitHub release..."
-    if ! $IS_DRY_RUN; then
-      curl -s -o /dev/null \
-        -L \
-        -X POST \
-        -H "Accept: application/vnd.github+json" \
-        -H "Authorization: Bearer $GITHUB_TOKEN" \
-        -H "X-GitHub-Api-Version: 2022-11-28" \
-        "https://api.github.com/repos/$GIT_REPO_NAME/releases" \
-        -d "{\"tag_name\":\"$RELEASE_TAG_NAME\",\"target_commitish\":\"$CHECKOUT_SHA\",\"name\":\"$RELEASE_TAG_NAME\",\"body\":\"$RELEASE_BODY\",\"draft\":false,\"prerelease\":false,\"generate_release_notes\":false,\"make_latest\":\"true\"}"
-      echo "Created GitHub release [$RELEASE_TAG_NAME]!"
-      echo "GitHub release available at https://github.com/$GIT_REPO_NAME/releases/tag/$RELEASE_TAG_NAME"
-    else
-      echo "Skipped GitHub release [$RELEASE_TAG_NAME] in DRY-RUN mode."
+  for plugin in "${PLUGINS[@]}"; do
+    local SOURCE_PLUGIN_FILE="plugins/${plugin}.sh"
+    # shellcheck disable=SC1090
+    source "$SOURCE_PLUGIN_FILE"
+    if [ "$(command -v release)" ]; then
+      release
     fi
-  fi
+    unset release
+  done
+
+  # there plugins?
 }
 
 ##############################
@@ -327,3 +351,9 @@ getGitVariables
 getGitCommits
 handleGitCommits
 handlePushes
+
+if $IS_VERBOSE; then
+  echo "Release tag: $RELEASE_TAG_NAME"
+  echo "Release title: $RELEASE_BODY_TITLE"
+  echo -e "Release body: $RELEASE_BODY"
+fi
