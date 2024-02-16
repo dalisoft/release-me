@@ -56,6 +56,7 @@ function parseOptions {
       read -r PRESET <<<"${KEY#*=}"
       ;;
     -d | --dry-run)
+      # shellcheck disable=2034
       IS_DRY_RUN=true
       ;;
     --verbose)
@@ -107,10 +108,14 @@ function isValidCommitType {
 parseOptions "$@"
 
 # Release types
-export RELEASE_SKIP_TYPES=("build" "chore" "docs" "test" "style" "ci" "skip ci")
-export RELEASE_PATCH_TYPES=("fix" "close" "closes" "perf" "revert")
-export RELEASE_MINOR_TYPES=("refactor" "feat")
-export RELEASE_MAJOR_TYPES=("BREAKING CHANGE")
+# shellcheck disable=2034
+RELEASE_SKIP_TYPES=("build" "chore" "docs" "test" "style" "ci" "skip ci")
+# shellcheck disable=2034
+RELEASE_PATCH_TYPES=("fix" "close" "closes" "perf" "revert")
+# shellcheck disable=2034
+RELEASE_MINOR_TYPES=("refactor" "feat")
+# shellcheck disable=2034
+RELEASE_MAJOR_TYPES=("BREAKING CHANGE")
 
 ##############################
 ##### Package variables ######
@@ -270,6 +275,8 @@ function handlePushes {
 
   local IFS="$GIT_LOG_ENTRY_SEPARATOR"
   read -r -a COMMIT_ARRAY <<<"${COMMITS[-1]}"
+  # shellcheck disable=2034
+  CHECKOUT_SHA=${COMMIT_ARRAY[4]}
 
   for plugin in "${PLUGINS[@]}"; do
     local SOURCE_PLUGIN_FILE="plugins/${plugin}.sh"
