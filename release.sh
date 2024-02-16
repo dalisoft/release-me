@@ -181,15 +181,15 @@ function getGitCommits {
     # Get and cache commits variable, so later
     # can be checked for commits length and avaibality
     if $IS_WORKSPACE; then
-      mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log "$GIT_LAST_PROJECT_TAG...HEAD" --grep "$PKG_NAME" --pretty=format:"$GIT_LOG_FORMAT" | sort -k1)
+      mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log "$GIT_LAST_PROJECT_TAG...HEAD" --grep "$PKG_NAME" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
     else
-      mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log "$GIT_LAST_PROJECT_TAG..HEAD" --pretty=format:"$GIT_LOG_FORMAT" | sort -k1)
+      mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log "$GIT_LAST_PROJECT_TAG..HEAD" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
     fi
   else
     if $IS_WORKSPACE; then
-      mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log HEAD --grep "$PKG_NAME" --pretty=format:"$GIT_LOG_FORMAT" | sort -k1)
+      mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log HEAD --grep "$PKG_NAME" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
     else
-      mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log HEAD --pretty=format:"$GIT_LOG_FORMAT" | sort -k1)
+      mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log HEAD --pretty=format:"$GIT_LOG_FORMAT" --reverse)
     fi
   fi
 
