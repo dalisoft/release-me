@@ -18,13 +18,15 @@ Options:
 CURRENT_DATE=$(date +'%Y-%m-%d')
 GIT_LOG_ENTRY_SEPARATOR='__'
 GIT_LOG_SEPARATOR='++++'
-GIT_LOG_FORMAT="$GIT_LOG_SEPARATOR%s$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H$GIT_LOG_ENTRY_SEPARATOR%b"
+GIT_LOG_FORMAT="$GIT_LOG_SEPARATOR%s$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
+#GIT_LOG_FORMAT+="$GIT_LOG_SEPARATOR%(trailers:only=true)$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
 GIT_REPO_NAME=$(git remote get-url origin | cut -d ':' -f 2 | sed s/.git//)
 
 IS_WORKSPACE=false
-IS_DRY_RUN=true
+IS_DRY_RUN=false
 IS_VERBOSE=false
 PLUGINS=()
+PRESET=""
 
 ##############################
 ###### Helpers & Utils #######
@@ -45,9 +47,13 @@ function parseOptions {
     -w | --workspace)
       IS_WORKSPACE=true
       ;;
-    -p=* | --plugins=*)
+    --plugins=*)
       local IFS=','
       read -ra PLUGINS <<<"${KEY#*=}"
+      ;;
+    --preset=*)
+      local IFS=','
+      read -r PRESET <<<"${KEY#*=}"
       ;;
     -d | --dry-run)
       IS_DRY_RUN=true
@@ -101,18 +107,18 @@ function isValidCommitType {
 parseOptions "$@"
 
 # Release types
-RELEASE_SKIP_TYPES=("build" "chore" "style" "ci" "skip ci")
-RELEASE_PATCH_TYPES=("fix" "close" "closes" "perf" "docs" "test" "revert")
-RELEASE_MINOR_TYPES=("refactor" "feat")
-RELEASE_MAJOR_TYPES=("BREAKING CHANGE")
+export RELEASE_SKIP_TYPES=("build" "chore" "docs" "test" "style" "ci" "skip ci")
+export RELEASE_PATCH_TYPES=("fix" "close" "closes" "perf" "revert")
+export RELEASE_MINOR_TYPES=("refactor" "feat")
+export RELEASE_MAJOR_TYPES=("BREAKING CHANGE")
 
 ##############################
 ##### Package variables ######
 ##############################
 
 PKG_NAME=""
-SEMANTIC_VERSION=()
-SEMANTIC_VERSION_COPY=()
+SEMANTIC_VERSION=(0 0 0)
+SEMANTIC_VERSION_COPY=(0 0 0)
 
 function parsePackages {
   if ! $IS_WORKSPACE; then
@@ -170,15 +176,15 @@ function getGitCommits {
     # Get and cache commits variable, so later
     # can be checked for commits length and avaibality
     if $IS_WORKSPACE; then
-      mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log "$GIT_LAST_PROJECT_TAG...HEAD" --grep "$PKG_NAME" --pretty=format:$GIT_LOG_FORMAT | sort -r -k1)
+      mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log "$GIT_LAST_PROJECT_TAG...HEAD" --grep "$PKG_NAME" --pretty=format:"$GIT_LOG_FORMAT" | sort -k1)
     else
-      mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log "$GIT_LAST_PROJECT_TAG..HEAD" --pretty=format:$GIT_LOG_FORMAT | sort -r -k1)
+      mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log "$GIT_LAST_PROJECT_TAG..HEAD" --pretty=format:"$GIT_LOG_FORMAT" | sort -k1)
     fi
   else
     if $IS_WORKSPACE; then
-      mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log HEAD --grep "$PKG_NAME" --pretty=format:$GIT_LOG_FORMAT | sort -r -k1)
+      mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log HEAD --grep "$PKG_NAME" --pretty=format:"$GIT_LOG_FORMAT" | sort -k1)
     else
-      mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log HEAD --pretty=format:$GIT_LOG_FORMAT | sort -r -k1)
+      mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log HEAD --pretty=format:"$GIT_LOG_FORMAT" | sort -k1)
     fi
   fi
 
@@ -199,79 +205,21 @@ PATCH_UPGRADED=false
 MINOR_UPGRADED=false
 MAJOR_UPGRADED=false
 
-function handleGitCommit {
-  local -n COMMIT_MSG="$1"
-
-  local COMMIT_HEADER="${COMMIT_MSG[0]}"
-  local COMMIT_HASH="${COMMIT_MSG[2]}"
-  local COMMIT_SHA="${COMMIT_MSG[4]}"
-
-  # echo -e "commit"
-  # echo -e "${COMMIT_MSG[@]}"
-  # echo -e "end commit"
-
-  for i in "${!COMMIT_MSG[@]}"; do
-    if [[ $i -lt 5 || ${COMMIT_MSG[i]} == "" ]]; then
-      continue
-    fi
-    # read -d '\n' -r -a COMMITES <<<"${COMMIT_MSG[i]}"
-    mapfile -d '\n' -t COMMITES < <(printf '%s' "${COMMIT_MSG[i]}")
-
-    for commit in "${COMMITES[@]}"; do
-      # shellcheck disable=SC2034
-      local REF_ARRAY=("$commit" "" "$COMMIT_HASH" "" "$COMMIT_SHA")
-      handleGitCommit REF_ARRAY
-    done
-
-    return 0
-  done
-
-  COMMIT_HEAD_CONTENT=$(echo "${COMMIT_HEADER}" | cut -d ':' -f 2 | xargs)
-
-  if isValidCommitType "$COMMIT_HEADER" "${RELEASE_SKIP_TYPES[@]}"; then
-    return 0
-  elif isValidCommitType "$COMMIT_HEADER" "${RELEASE_PATCH_TYPES[@]}"; then
-    if ! $PATCH_UPGRADED; then
-      PATCH_UPGRADED=true
-      RELEASE_BODY+="\n## Bug Fixes\n\n"
-    fi
-    if $IS_WORKSPACE; then
-      RELEASE_BODY+="- **$PKG_NAME**: $COMMIT_HEAD_CONTENT ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
-    else
-      RELEASE_BODY+="- $COMMIT_MSG ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
-    fi
-  elif isValidCommitType "$COMMIT_HEADER" "${RELEASE_MINOR_TYPES[@]}"; then
-    if ! $MINOR_UPGRADED; then
-      MINOR_UPGRADED=true
-      RELEASE_BODY+="\n## Features\n\n"
-    fi
-
-    if $IS_WORKSPACE; then
-      RELEASE_BODY+="- **$PKG_NAME**: $COMMIT_HEAD_CONTENT ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
-    else
-      RELEASE_BODY+="- $COMMIT_MSG ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
-    fi
-  elif isValidCommitType "$COMMIT_HEADER" "${RELEASE_MAJOR_TYPES[@]}"; then
-    if ! $MAJOR_UPGRADED; then
-      MAJOR_UPGRADED=true
-      RELEASE_BODY+="\n## BREAKING CHANGES\n\n"
-    fi
-
-    if $IS_WORKSPACE; then
-      RELEASE_BODY+="- **$PKG_NAME**: $COMMIT_HEAD_CONTENT ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
-    else
-      RELEASE_BODY+="- $COMMIT_MSG ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
-    fi
-  fi
-}
-
 function handleGitCommits {
 
   for COMMIT in "${COMMITS[@]}"; do
     local IFS="$GIT_LOG_ENTRY_SEPARATOR"
     read -r -a COMMIT_ARRAY <<<"${COMMIT}"
 
-    handleGitCommit COMMIT_ARRAY
+    if [ "$PRESET" != "" ]; then
+      local SOURCE_PRESET_FILE="presets/${PRESET}.sh"
+      # shellcheck disable=SC1090
+      source "$SOURCE_PRESET_FILE"
+      if [ "$(command -v parse_commit)" ]; then
+        parse_commit COMMIT_ARRAY
+      fi
+      unset parse_commit
+    fi
   done
 
   if $MAJOR_UPGRADED; then
@@ -304,8 +252,12 @@ function handleGitCommits {
     RELEASE_PREV_TAG_NAME="v${PREV_BUILD_VERSION}"
   fi
 
-  RELEASE_DIFF_URL="https://github.com/$GIT_REPO_NAME/compare/${RELEASE_PREV_TAG_NAME}...$RELEASE_TAG_NAME"
-  RELEASE_BODY_TITLE="[$RELEASE_TAG_NAME]($RELEASE_DIFF_URL) ($CURRENT_DATE)"
+  if [ -n "$GIT_LAST_PROJECT_TAG_VER" ]; then
+    RELEASE_DIFF_URL="https://github.com/$GIT_REPO_NAME/compare/${RELEASE_PREV_TAG_NAME}...$RELEASE_TAG_NAME"
+    RELEASE_BODY_TITLE="[$RELEASE_TAG_NAME]($RELEASE_DIFF_URL) ($CURRENT_DATE)"
+  else
+    RELEASE_BODY_TITLE="$RELEASE_TAG_NAME ($CURRENT_DATE)"
+  fi
 
   RELEASE_BODY="# $RELEASE_BODY_TITLE\n$RELEASE_BODY"
 }
@@ -320,16 +272,6 @@ function handlePushes {
   read -r -a COMMIT_ARRAY <<<"${COMMITS[-1]}"
   CHECKOUT_SHA=${COMMIT_ARRAY[4]}
 
-  # Create a `git` tag
-  echo "Creating Git tag..."
-  if ! $IS_DRY_RUN; then
-    git tag "$RELEASE_TAG_NAME" "$CHECKOUT_SHA"
-    # git push origin "refs/tags/$RELEASE_TAG_NAME"
-    echo "Created Git tag [$RELEASE_TAG_NAME]!"
-  else
-    echo "Skipped Git tag [$RELEASE_TAG_NAME] in DRY-RUN mode."
-  fi
-
   for plugin in "${PLUGINS[@]}"; do
     local SOURCE_PLUGIN_FILE="plugins/${plugin}.sh"
     # shellcheck disable=SC1090
@@ -339,8 +281,6 @@ function handlePushes {
     fi
     unset release
   done
-
-  # there plugins?
 }
 
 ##############################
