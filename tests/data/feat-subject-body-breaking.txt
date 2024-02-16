@@ -1,0 +1,4 @@
+feat(uWS): update something to latest version
+
+BREAKING CHANGE: This feature breaks feature xyz
+And this may be bad for you, but if it's, please stay on previous version
