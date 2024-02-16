@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-function release {
+release() {
   # Create a `GitHub` release
   if [[ "$GITHUB_TOKEN" != "" ]]; then
     echo "Creating GitHub release..."
