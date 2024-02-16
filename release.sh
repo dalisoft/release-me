@@ -25,7 +25,7 @@ GIT_REPO_NAME=$(git remote get-url origin | cut -d ':' -f 2 | sed s/.git//)
 IS_WORKSPACE=false
 IS_DRY_RUN=false
 IS_VERBOSE=false
-PLUGINS=()
+PLUGINS=("git")
 PRESET=""
 
 ##############################
@@ -270,7 +270,6 @@ function handlePushes {
 
   local IFS="$GIT_LOG_ENTRY_SEPARATOR"
   read -r -a COMMIT_ARRAY <<<"${COMMITS[-1]}"
-  CHECKOUT_SHA=${COMMIT_ARRAY[4]}
 
   for plugin in "${PLUGINS[@]}"; do
     local SOURCE_PLUGIN_FILE="plugins/${plugin}.sh"
