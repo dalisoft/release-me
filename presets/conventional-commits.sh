@@ -6,44 +6,17 @@ regexp_commit_primary="^([a-z]+)(\(([^\)]+)\))?:\ (.+)$"
 regexp_commit_major="^([a-z]+)(\(([^\)]+)\))?!:\ (.+)$"
 string_commit_major="^BREAKING CHANGE"
 
-# separators
-git_log_commit_separator='____'
-
-parse_packages() {
-  if ! $IS_WORKSPACE; then
-    return 0
-  fi
-}
-
-is_valid_commit_type() {
-  local key="$1"
-  shift
-  local arr=("$@")
-
-  for element in "${arr[@]}"; do
-    if [[ "$key" == "${element}"* ]]; then
-      return 0
-    fi
-  done
-  return 1
-}
-
 # This function parses a single commit message
 parse_commit() {
+  local -n COMMIT_MSG="$1"
 
-  local IFS="$git_log_commit_separator"
-  read -r -a commit <<<$(echo "$1" | sed s/++++//)
-  local hash="${commit[0]}"
-  local sha256="${commit[1]}"
-  local subject="${commit[2]}"
-
-  echo "${commit[@]}"
+  local subject="${COMMIT_MSG[0]}"
+  local hash="${COMMIT_MSG[2]}"
+  local sha256="${COMMIT_MSG[4]}"
 
   local type
   local scope
   local description
-
-  local response=()
 
   # Extracting the type, scope, and description using Bash regex
   if [[ "$subject" =~ $regexp_commit_primary ]]; then
@@ -65,25 +38,29 @@ parse_commit() {
     return 0
   fi
 
-  response[0]="$type"
-
-  if [ -n "$scope" ]; then
-    response[1]="$scope"
-  else
-    response[1]=""
+  if isValidCommitType "$type" "${RELEASE_SKIP_TYPES[@]}"; then
+    return 0
+  elif isValidCommitType "$type" "${RELEASE_PATCH_TYPES[@]}"; then
+    if ! $PATCH_UPGRADED; then
+      PATCH_UPGRADED=true
+      RELEASE_BODY+="\n## Bug Fixes\n\n"
+    fi
+  elif isValidCommitType "$type" "${RELEASE_MINOR_TYPES[@]}"; then
+    if ! $MINOR_UPGRADED; then
+      MINOR_UPGRADED=true
+      RELEASE_BODY+="\n## Features\n\n"
+    fi
+  elif isValidCommitType "$type" "${RELEASE_MAJOR_TYPES[@]}"; then
+    if ! $MAJOR_UPGRADED; then
+      MAJOR_UPGRADED=true
+      RELEASE_BODY+="\n## BREAKING CHANGES\n\n"
+    fi
   fi
 
-  response[2]="$description"
-  response[3]="$hash"
-  response[4]="$sha256"
-
-  printf -v response_string "%s$git_log_commit_separator" "${response[@]}"
-  # To remove the trailing separator, we use parameter expansion
-  response_string=${response_string%"$git_log_commit_separator"}
-
-  echo "${response_string}"
+  RELEASE_BODY+="- "
+  if [ -n "$scope" ]; then
+    RELEASE_BODY+="**$scope**: "
+  fi
+  RELEASE_BODY+="$description "
+  RELEASE_BODY+="([\`$hash\`](https://github.com/$GIT_REPO_NAME/commit/$sha256))\n"
 }
-
-while IFS='++++' read -r line; do
-  parse_commit "$line"
-done <"${1:-/dev/stdin}"

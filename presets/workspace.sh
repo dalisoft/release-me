@@ -1,85 +1,67 @@
 #!/usr/bin/env bash
 set -e
 
-function parsePackages {
-  if [ -f "./package.json" ]; then
-    PKG_NAME=$(awk -F': ' '/"name":/ {gsub(/[",]/, "", $2); print $2}' "./package.json")
-  elif [ -f "./Cargo.toml" ]; then
-    PKG_NAME=$(sed -n 's/^name = "\(.*\)"/\1/p' "./Cargo.toml")
-  elif [ -f "./setup.py" ]; then
-    PKG_NAME=$(sed -n 's/^setup(\s*name\s*=\s*["'\'']\([^"'\'']*\)["'\''].*/\1/p' "./setup.py")
-  else
-    cat <<EOF
-This project currently supports only Node.js, Rust and Python projects.
-Please wait for updates to get support in other languages!
-EOF
-    exit 1
-  fi
-}
+# RegExp as variable
+regexp_commit_primary="^([a-z]+)(\(([^\)]+)\))?:\ (.+)$"
+regexp_commit_major="^([a-z]+)(\(([^\)]+)\))?!:\ (.+)$"
+string_commit_major="^BREAKING CHANGE"
 
-function isValidCommitType {
-  local key="$1"
-  shift
-  local arr=("$@")
-
-  for element in "${arr[@]}"; do
-    if [[ "$key" == "${element}(${PKG_NAME})"* ]]; then
-      return 0
-    fi
-  done
-  return 1
-}
-
-function handleGitCommit {
+# This function parses a single commit message
+parse_commit() {
   local -n COMMIT_MSG="$1"
 
-  local COMMIT_HEADER="${COMMIT_MSG[0]}"
-  local COMMIT_HASH="${COMMIT_MSG[2]}"
-  local COMMIT_SHA="${COMMIT_MSG[4]}"
+  local subject="${COMMIT_MSG[0]}"
+  local hash="${COMMIT_MSG[2]}"
+  local sha256="${COMMIT_MSG[4]}"
 
-  # echo -e "commit"
-  # echo -e "${COMMIT_MSG[@]}"
-  # echo -e "end commit"
+  local type
+  local scope
+  local description
 
-  for i in "${!COMMIT_MSG[@]}"; do
-    if [[ $i -lt 5 || ${COMMIT_MSG[i]} == "" ]]; then
-      continue
-    fi
-    # read -d '\n' -r -a COMMITES <<<"${COMMIT_MSG[i]}"
-    mapfile -d '\n' -t COMMITES < <(printf '%s' "${COMMIT_MSG[i]}")
+  # Extracting the type, scope, and description using Bash regex
+  if [[ "$subject" =~ $regexp_commit_primary ]]; then
+    type="${BASH_REMATCH[1]}"
+    scope="${BASH_REMATCH[3]}"
+    description="${BASH_REMATCH[4]}"
 
-    for commit in "${COMMITES[@]}"; do
-      # shellcheck disable=SC2034
-      local REF_ARRAY=("$commit" "" "$COMMIT_HASH" "" "$COMMIT_SHA")
-      handleGitCommit REF_ARRAY
-    done
+  elif [[ "$subject" =~ $regexp_commit_major ]]; then
+    # type="${BASH_REMATCH[1]}"
+    scope="${BASH_REMATCH[3]}"
+    description="${BASH_REMATCH[4]}"
 
+    type="BREAKING CHANGE"
+  elif [[ "$subject" =~ $string_commit_major ]]; then
+    type="BREAKING CHANGE"
+
+    description="$subject"
+  else
     return 0
-  done
+  fi
 
-  COMMIT_HEAD_CONTENT=$(echo "${COMMIT_HEADER}" | cut -d ':' -f 2 | xargs)
-
-  if isValidCommitType "$COMMIT_HEADER" "${RELEASE_SKIP_TYPES[@]}"; then
+  # Early catching non-workspace commits
+  if [ "$scope" != "$PKG_NAME" ]; then
     return 0
-  elif isValidCommitType "$COMMIT_HEADER" "${RELEASE_PATCH_TYPES[@]}"; then
+  fi
+
+  if isValidCommitType "$type" "${RELEASE_SKIP_TYPES[@]}"; then
+    return 0
+  elif isValidCommitType "$type" "${RELEASE_PATCH_TYPES[@]}"; then
     if ! $PATCH_UPGRADED; then
       PATCH_UPGRADED=true
       RELEASE_BODY+="\n## Bug Fixes\n\n"
     fi
-    RELEASE_BODY+="- **$PKG_NAME**: $COMMIT_HEAD_CONTENT ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
-  elif isValidCommitType "$COMMIT_HEADER" "${RELEASE_MINOR_TYPES[@]}"; then
+  elif isValidCommitType "$type" "${RELEASE_MINOR_TYPES[@]}"; then
     if ! $MINOR_UPGRADED; then
       MINOR_UPGRADED=true
       RELEASE_BODY+="\n## Features\n\n"
     fi
-
-    RELEASE_BODY+="- **$PKG_NAME**: $COMMIT_HEAD_CONTENT ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
-  elif isValidCommitType "$COMMIT_HEADER" "${RELEASE_MAJOR_TYPES[@]}"; then
+  elif isValidCommitType "$type" "${RELEASE_MAJOR_TYPES[@]}"; then
     if ! $MAJOR_UPGRADED; then
       MAJOR_UPGRADED=true
       RELEASE_BODY+="\n## BREAKING CHANGES\n\n"
     fi
-
-    RELEASE_BODY+="- **$PKG_NAME**: $COMMIT_HEAD_CONTENT ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
   fi
+
+  RELEASE_BODY+="- **$PKG_NAME**: $description "
+  RELEASE_BODY+="([\`$hash\`](https://github.com/$GIT_REPO_NAME/commit/$sha256))\n"
 }

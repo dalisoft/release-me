@@ -1,73 +1,66 @@
 #!/usr/bin/env bash
 set -e
 
-function parsePackages {
-  if ! $IS_WORKSPACE; then
-    return 0
-  fi
-}
+# RegExp as variable
+regexp_commit_primary="^([a-z]+)(\(([^\)]+)\))?:\ (.+)$"
+regexp_commit_major="^([a-z]+)(\(([^\)]+)\))?!:\ (.+)$"
+string_commit_major="^BREAKING CHANGE"
 
-function isValidCommitType {
-  local key="$1"
-  shift
-  local arr=("$@")
-
-  for element in "${arr[@]}"; do
-    if [[ "$key" == "${element}"* ]]; then
-      return 0
-    fi
-  done
-  return 1
-}
-
-function handleGitCommit {
+# This function parses a single commit message
+parse_commit() {
   local -n COMMIT_MSG="$1"
 
-  local COMMIT_HEADER="${COMMIT_MSG[0]}"
-  local COMMIT_HASH="${COMMIT_MSG[2]}"
-  local COMMIT_SHA="${COMMIT_MSG[4]}"
+  local subject="${COMMIT_MSG[0]}"
+  local hash="${COMMIT_MSG[2]}"
+  local sha256="${COMMIT_MSG[4]}"
 
-  # echo -e "commit"
-  # echo -e "${COMMIT_MSG[@]}"
-  # echo -e "end commit"
+  local type
+  local scope
+  local description
 
-  for i in "${!COMMIT_MSG[@]}"; do
-    if [[ $i -lt 5 || ${COMMIT_MSG[i]} == "" ]]; then
-      continue
-    fi
-    # read -d '\n' -r -a COMMITES <<<"${COMMIT_MSG[i]}"
-    mapfile -d '\n' -t COMMITES < <(printf '%s' "${COMMIT_MSG[i]}")
+  # Extracting the type, scope, and description using Bash regex
+  if [[ "$subject" =~ $regexp_commit_primary ]]; then
+    type="${BASH_REMATCH[1]}"
+    scope="${BASH_REMATCH[3]}"
+    description="${BASH_REMATCH[4]}"
 
-    for commit in "${COMMITES[@]}"; do
-      # shellcheck disable=SC2034
-      local REF_ARRAY=("$commit" "" "$COMMIT_HASH" "" "$COMMIT_SHA")
-      handleGitCommit REF_ARRAY
-    done
+  elif [[ "$subject" =~ $regexp_commit_major ]]; then
+    # type="${BASH_REMATCH[1]}"
+    scope="${BASH_REMATCH[3]}"
+    description="${BASH_REMATCH[4]}"
 
+    type="BREAKING CHANGE"
+  elif [[ "$subject" =~ $string_commit_major ]]; then
+    type="BREAKING CHANGE"
+
+    description="$subject"
+  else
     return 0
-  done
+  fi
 
-  if isValidCommitType "$COMMIT_HEADER" "${RELEASE_SKIP_TYPES[@]}"; then
+  if isValidCommitType "$type" "${RELEASE_SKIP_TYPES[@]}"; then
     return 0
-  elif isValidCommitType "$COMMIT_HEADER" "${RELEASE_PATCH_TYPES[@]}"; then
+  elif isValidCommitType "$type" "${RELEASE_PATCH_TYPES[@]}"; then
     if ! $PATCH_UPGRADED; then
       PATCH_UPGRADED=true
       RELEASE_BODY+="\n## Bug Fixes\n\n"
     fi
-    RELEASE_BODY+="- $COMMIT_MSG ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
-  elif isValidCommitType "$COMMIT_HEADER" "${RELEASE_MINOR_TYPES[@]}"; then
+  elif isValidCommitType "$type" "${RELEASE_MINOR_TYPES[@]}"; then
     if ! $MINOR_UPGRADED; then
       MINOR_UPGRADED=true
       RELEASE_BODY+="\n## Features\n\n"
     fi
-
-    RELEASE_BODY+="- $COMMIT_MSG ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
-  elif isValidCommitType "$COMMIT_HEADER" "${RELEASE_MAJOR_TYPES[@]}"; then
+  elif isValidCommitType "$type" "${RELEASE_MAJOR_TYPES[@]}"; then
     if ! $MAJOR_UPGRADED; then
       MAJOR_UPGRADED=true
       RELEASE_BODY+="\n## BREAKING CHANGES\n\n"
     fi
-
-    RELEASE_BODY+="- $COMMIT_MSG ([\`$COMMIT_HASH\`](https://github.com/$GIT_REPO_NAME/commit/$COMMIT_SHA))\n"
   fi
+
+  RELEASE_BODY+="- "
+  if [ -n "$scope" ]; then
+    RELEASE_BODY+="**$scope**: "
+  fi
+  RELEASE_BODY+="$description "
+  RELEASE_BODY+="([\`$hash\`](https://github.com/$GIT_REPO_NAME/commit/$sha256))\n"
 }
