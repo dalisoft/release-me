@@ -109,7 +109,8 @@ function isValidCommitType {
 parseOptions "$@"
 
 up_to_date() {
-  echo "Your repository is up-to-date"
+  echo "$1"
+  echo "Your project is up-to-date"
   exit 0
 }
 
@@ -200,7 +201,7 @@ function getGitCommits {
   fi
 
   if [[ "${#COMMITS[*]}" -eq 0 ]]; then
-    up_to_date
+    up_to_date "Your project has no new commits"
   fi
 }
 
@@ -253,7 +254,7 @@ function handleGitCommits {
   )
 
   if [ "$BUILD_VERSION" == "$PREV_BUILD_VERSION" ]; then
-    up_to_date
+    up_to_date "Your project has no incremental update"
   fi
 
   RELEASE_PREV_TAG_NAME=""
