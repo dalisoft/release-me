@@ -185,15 +185,14 @@ function getGitVariables {
     GIT_LAST_PROJECT_TAG=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | tail -1 | cut -d '/' -f 3)
   fi
 
-  # GIT_CURRENT_TAG="${PKG_NAME}-v${PKG_VERSION}"
-  # GIT_IS_TAG_EXISTS=$(git show-ref --tags --verify --quiet "refs/tags/${GIT_CURRENT_TAG}")
-
   if [[ $GIT_LAST_PROJECT_TAG != "" ]]; then
     GIT_LAST_PROJECT_TAG_VER=$(echo "$GIT_LAST_PROJECT_TAG" | rev | cut -d 'v' -f 1 | rev)
   fi
 
-  mapfile -d '.' -t SEMANTIC_VERSION < <(printf '%s' "$GIT_LAST_PROJECT_TAG_VER")
-  SEMANTIC_VERSION_COPY=("${SEMANTIC_VERSION[@]}")
+  if [ -n "$GIT_LAST_PROJECT_TAG_VER" ]; then
+    mapfile -d '.' -t SEMANTIC_VERSION < <(printf '%s' "$GIT_LAST_PROJECT_TAG_VER")
+    SEMANTIC_VERSION_COPY=("${SEMANTIC_VERSION[@]}")
+  fi
 }
 
 ##############################
