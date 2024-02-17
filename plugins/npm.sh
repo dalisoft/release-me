@@ -5,13 +5,13 @@ release() {
   # Publish a `npm` tag
   if [[ "$NPM_TOKEN" != "" ]]; then
     log "Publishing npm tag..."
-    log_verbose "npm tag: $RELEASE_TAG_NAME!"
+    log_verbose "npm tag: $RELEASE_TAG_NAME and version: $RELEASE_VERSION!"
 
     if ! $IS_DRY_RUN; then
       rm -rf .npmrc
       echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >>.npmrc
 
-      npm publish "$RELEASE_TAG_NAME"
+      npm publish --tag "$RELEASE_VERSION"
 
       echo "Published [$RELEASE_TAG_NAME]!"
       rm -rf .npmrc
