@@ -209,19 +209,19 @@ function getGitCommits {
     # can be checked for commits length and avaibality
     if $IS_WORKSPACE; then
       GIT_LOGS=$(git log "$GIT_LAST_PROJECT_TAG...HEAD" --grep "$PKG_NAME" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
-      GIT_LOGS_LENGTH=$(git log "$GIT_LAST_PROJECT_TAG...HEAD" --grep "$PKG_NAME" --pretty=format:"%s" | wc -l | xargs)
+      GIT_LOGS_LENGTH=$(git log "$GIT_LAST_PROJECT_TAG...HEAD" --grep "$PKG_NAME" --pretty=format:"\n%s" | wc -l | xargs)
     else
       GIT_LOGS=$(git log "$GIT_LAST_PROJECT_TAG..HEAD" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
-      GIT_LOGS_LENGTH=$(git log "$GIT_LAST_PROJECT_TAG..HEAD" --pretty=format:"%s" | wc -l | xargs)
+      GIT_LOGS_LENGTH=$(git log "$GIT_LAST_PROJECT_TAG..HEAD" --pretty=format:"\n%s" | wc -l | xargs)
     fi
   else
     log_verbose "Last project tag not found"
     if $IS_WORKSPACE; then
       GIT_LOGS=$(git log HEAD --grep "$PKG_NAME" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
-      GIT_LOGS_LENGTH=$(git log HEAD --grep "$PKG_NAME" --pretty=format:"%s%n" | wc -l | xargs)
+      GIT_LOGS_LENGTH=$(git log HEAD --grep "$PKG_NAME" --pretty=format:"\n%s" | wc -l | xargs)
     else
       GIT_LOGS=$(git log HEAD --pretty=format:"$GIT_LOG_FORMAT" --reverse)
-      GIT_LOGS_LENGTH=$(git log HEAD --pretty=format:"%s%n" | wc -l | xargs)
+      GIT_LOGS_LENGTH=$(git log HEAD --pretty=format:"\n%s" | wc -l | xargs)
     fi
   fi
 
