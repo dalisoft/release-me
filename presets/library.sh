@@ -16,6 +16,8 @@ RELEASE_MINOR_TYPES=("refactor" "feat")
 # shellcheck disable=2034
 RELEASE_MAJOR_TYPES=("BREAKING CHANGE")
 
+INCLUDE_SCOPE=("refactor" "perf" "revert")
+
 # This function parses a single commit message
 parse_commit() {
   local -n COMMIT_MSG="$1"
@@ -70,6 +72,9 @@ parse_commit() {
   RELEASE_BODY+="- "
   if [ -n "$scope" ]; then
     RELEASE_BODY+="**$scope**: "
+  fi
+  if isValidCommitType "$type" "${INCLUDE_SCOPE[@]}"; then
+    RELEASE_BODY+="**[$type]** "
   fi
   RELEASE_BODY+="$description "
   RELEASE_BODY+="([\`$hash\`](https://github.com/$GIT_REPO_NAME/commit/$sha256))\n"
