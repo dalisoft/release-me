@@ -37,6 +37,7 @@ GH_TOKEN=<YOUR_GITHUB_TOKEN> NPM_TOKEN=<YOUR_NPM_TOKEN> sh /path/to/script/relea
 | ----------- | ------------------------------------------------ | ------ |
 | `git`       | Creates **Git** tag and push to origin           | RC     |
 | `github`    | Release a tag with proper `CHANGELOG` and commit | RC     |
+| `npm`       | Publishes **npm** tag                            | RC     |
 | `changelog` | Generates `CHANGELOG` within your project        | Alpha  |
 
 ## Presets
