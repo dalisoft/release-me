@@ -155,8 +155,6 @@ function parsePackages {
     return 0
   fi
 
-  log_verbose "Workspace mode is enabled"
-
   if [ -f "./package.json" ]; then
     PKG_NAME=$(awk -F': ' '/"name":/ {gsub(/[",]/, "", $2); print $2}' "./package.json")
   elif [ -f "./Cargo.toml" ]; then
@@ -170,6 +168,9 @@ Please wait for updates to get support in other languages!
 EOF
     exit 1
   fi
+
+  log_verbose "Workspace mode is enabled"
+  log_verbose "Workspace project name: $PKG_NAME"
 }
 
 ##############################
