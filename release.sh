@@ -102,6 +102,13 @@ function isValidCommitType {
   return 1
 }
 
+# Verbose logging helper
+log_verbose() {
+  if $IS_VERBOSE; then
+    echo -e "$1"
+  fi
+}
+
 ##############################
 ##### Early exit errors ######
 ##############################
@@ -184,7 +191,8 @@ COMMITS=()
 
 function getGitCommits {
   # Check if exists last tag and is not empty
-  if [ "$GIT_LAST_PROJECT_TAG" != "" ]; then
+  if [ -n "$GIT_LAST_PROJECT_TAG" ]; then
+    log_verbose "Last project tag [$GIT_LAST_PROJECT_TAG] found"
     # Get and cache commits variable, so later
     # can be checked for commits length and avaibality
     if $IS_WORKSPACE; then
@@ -193,6 +201,7 @@ function getGitCommits {
       mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log "$GIT_LAST_PROJECT_TAG..HEAD" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
     fi
   else
+    log_verbose "Last project tag not found"
     if $IS_WORKSPACE; then
       mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log HEAD --grep "$PKG_NAME" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
     else
@@ -202,6 +211,12 @@ function getGitCommits {
 
   if [[ "${#COMMITS[*]}" -eq 0 ]]; then
     up_to_date "Your project has no new commits"
+  else
+    if [ -n "$GIT_LAST_PROJECT_TAG" ]; then
+      log_verbose "Found ${#COMMITS[*]} commits since last release"
+    else
+      log_verbose "Found ${#COMMITS[*]} commits but did not found any release"
+    fi
   fi
 }
 
@@ -308,8 +323,6 @@ getGitCommits
 handleGitCommits
 handlePushes
 
-if $IS_VERBOSE; then
-  echo "Release tag: $RELEASE_TAG_NAME"
-  echo "Release title: $RELEASE_BODY_TITLE"
-  echo -e "Release body: $RELEASE_BODY"
-fi
+log_verbose "Release tag: $RELEASE_TAG_NAME"
+log_verbose "Release title: $RELEASE_BODY_TITLE"
+log_verbose "Release body: $RELEASE_BODY"
