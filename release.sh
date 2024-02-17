@@ -2,13 +2,18 @@
 set -e
 
 readonly CLI_PREFIX="[release-me]"
-readonly RELEASE_ME_VERSION="0.0.1"
-readonly USAGE="Usage: release-me [options]
-An zero-dependency single-file shell script which does all the work of semantic-release with it's GitHub and npm plugin and it's so fast
+readonly DESCRIPTION="Blazing fast minimal semantic-release alternative written-in Bash script with it's GitHub and npm plugins and presets support"
+readonly USAGE="$CLI_PREFIX Usage: release-me [options]
+$DESCRIPTION
 
 Options:
   -d, --dry-run   Dry run. Skip tag creation, only show logs (if exists).
   -w, --workspace Use in workspace environment for publishing workspaces separately.
+  --verbose       Verbose mode, shows more detailed logs
+  --quiet         Quiet mode, shows less logs than default behavior
+  --plugins=*     Plugins option for loading plugins [Required]
+  --presets=*     Presets option for parsing commits [Required]
+  --quiet         Quiet mode, shows less logs than default behavior
   -h, --help      Show this help.
   -v, --version   Show version.
 "
@@ -39,7 +44,7 @@ function parseOptions {
     local KEY="$1"
     case $KEY in
     -v | --version)
-      echo "release-me: ${RELEASE_ME_VERSION}"
+      echo "$CLI_PREFIX last version available at GitHub"
       exit 0
       ;;
     -h | -\? | --help)
