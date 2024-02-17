@@ -10,3 +10,6 @@ bun.lockb
 
 # Generated files
 CHANGELOG.md
+
+# release-me
+.releaseme
