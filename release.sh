@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
+readonly CLI_PREFIX="[release-me]"
 readonly RELEASE_ME_VERSION="0.0.1"
 readonly USAGE="Usage: release-me [options]
 An zero-dependency single-file shell script which does all the work of semantic-release with it's GitHub and npm plugin and it's so fast
@@ -110,12 +111,12 @@ function isValidCommitType {
 ##############################
 log() {
   if ! $IS_QUIET; then
-    echo -e "$1"
+    echo -e "$CLI_PREFIX $1"
   fi
 }
 log_verbose() {
   if $IS_VERBOSE; then
-    echo -e "$1"
+    echo -e "$CLI_PREFIX $1"
   fi
 }
 
@@ -126,8 +127,8 @@ log_verbose() {
 parseOptions "$@"
 
 up_to_date() {
-  echo "$1"
-  echo "Your project is up-to-date"
+  echo "$CLI_PREFIX $1"
+  echo "$CLI_PREFIX Your project is up-to-date"
   exit 0
 }
 
@@ -153,6 +154,8 @@ function parsePackages {
   if ! $IS_WORKSPACE; then
     return 0
   fi
+
+  log_verbose "Workspace mode is enabled"
 
   if [ -f "./package.json" ]; then
     PKG_NAME=$(awk -F': ' '/"name":/ {gsub(/[",]/, "", $2); print $2}' "./package.json")
