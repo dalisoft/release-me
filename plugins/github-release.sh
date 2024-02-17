@@ -2,6 +2,10 @@
 set -e
 
 release() {
+  log_verbose "Release tag: $RELEASE_TAG_NAME"
+  log_verbose "Release title: $RELEASE_BODY_TITLE"
+  log_verbose "Release body: \n$RELEASE_BODY"
+
   # Create a `GitHub` release
   if [[ "$GITHUB_TOKEN" != "" ]]; then
     log "Creating GitHub release..."

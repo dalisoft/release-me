@@ -2,7 +2,10 @@
 set -e
 
 release() {
-  echo "Generating Changelog..."
+  log_verbose "CHANGELOG version: $RELEASE_TAG_NAME"
+  log_verbose "CHANGELOG content: \n$RELEASE_BODY"
+
+  log "Generating Changelog..."
   if ! $IS_DRY_RUN; then
     local CONTENT=""
     if [ -f CHANGELOG.md ]; then
@@ -13,6 +16,6 @@ release() {
     echo -e "$RELEASE_BODY$CONTENT" >>CHANGELOG.md
     echo "Generated Changelog!"
   else
-    echo "Skipped Changelog creation in DRY-RUN mode..."
+    log "Skipped Changelog creation in DRY-RUN mode..."
   fi
 }

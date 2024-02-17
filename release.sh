@@ -351,7 +351,3 @@ getGitVariables
 getGitCommits
 handleGitCommits
 handlePushes
-
-log_verbose "Release tag: $RELEASE_TAG_NAME"
-log_verbose "Release title: $RELEASE_BODY_TITLE"
-log_verbose "Release body: $RELEASE_BODY"
