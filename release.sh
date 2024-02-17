@@ -70,6 +70,7 @@ function parseOptions {
       ;;
     --verbose)
       IS_VERBOSE=true
+      # export GIT_TRACE=1
       ;;
     -?*)
       echo "Unknown option: $KEY" >&2
@@ -214,8 +215,8 @@ function getGitCommits {
       GIT_LOGS=$(git log "$GIT_LAST_PROJECT_TAG...HEAD" --grep "$PKG_NAME" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
       GIT_LOGS_LENGTH=$(git log "$GIT_LAST_PROJECT_TAG...HEAD" --grep "$PKG_NAME" --pretty=format:"%s" | grep -c '^')
     else
-      GIT_LOGS=$(git log "$GIT_LAST_PROJECT_TAG..HEAD" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
-      GIT_LOGS_LENGTH=$(git log "$GIT_LAST_PROJECT_TAG..HEAD" --pretty=format:"%s" | grep -c '^')
+      GIT_LOGS=$(git log "$GIT_LAST_PROJECT_TAG...HEAD" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
+      GIT_LOGS_LENGTH=$(git log "$GIT_LAST_PROJECT_TAG...HEAD" --pretty=format:"%s" | grep -c '^')
     fi
   else
     log_verbose "Last project tag not found"
