@@ -44,16 +44,16 @@ If one of files described below will be found, script parse first matched file a
 
 ### Commands
 
-> See [Environment variables](#environment-variables)
-
 ```bash
 git clone https://github.com/dalisoft/release-me.git --depth 1 .release-me
 ```
 
 ## Usage
 
+> See [Environment variables](#environment-variables)
+
 ```sh
-bash --debug ./.release-me/release.sh --plugins=git,github-release --preset=conventional-commits
+bash --debug .release-me/release.sh --plugins=git,github-release --preset=conventional-commits
 ```
 
 ## Plugins
