@@ -9,8 +9,9 @@ An zero-dependency single-file shell script which does all the work of [semantic
 - Zero pre-install
 - Zero wait
 - Programming language agnostic\*
-- Single file
 - Fast (<1 sec)
+- Plugins available/compatible
+- Presets available/compatible
 
 ## Limitations
 
@@ -28,15 +29,34 @@ If one of files described below will be found, script parse first matched file a
 ## Usage
 
 ```sh
-GH_TOKEN=<YOUR_GITHUB_TOKEN> NPM_TOKEN=<YOUR_NPM_TOKEN> sh /path/to/script/release.sh
+GH_TOKEN=<YOUR_GITHUB_TOKEN> NPM_TOKEN=<YOUR_NPM_TOKEN> sh /path/to/script/release.sh --preset=conventional-commits
 ```
+
+## Plugins
+
+| Name        | Description                                      | Status |
+| ----------- | ------------------------------------------------ | ------ |
+| `git`       | Creates **Git** tag and push to origin           | RC     |
+| `github`    | Release a tag with proper `CHANGELOG` and commit | RC     |
+| `changelog` | Generates `CHANGELOG` within your project        | Alpha  |
+
+## Presets
+
+| Name                   | Description                              | Status |
+| ---------------------- | ---------------------------------------- | ------ |
+| `conventional-commits` | Default preset like **semantic-release** | RC     |
+| `library`              | Same as `conventional-commits` for now   | RC     |
+| `workspace`            | Workspace preset for monorepos           | Alpha  |
 
 ## Options
 
-| Name         | Description                          | Status |
-| ------------ | ------------------------------------ | ------ |
-| `dry-run`    | Show only actions on logs            | ❌     |
-| `workspaces` | Releases every projects on workspace | ❌     |
+| Name         | Description                                    | Status | Required |
+| ------------ | ---------------------------------------------- | ------ | -------- |
+| `dry-run`    | Show only actions on logs                      | RC     | No       |
+| `verbose`    | Verbose logs                                   | RC     | No       |
+| `presets`    | Presets compatibility, see [Presets](#presets) | RC     | Yes      |
+| `plugins`    | Plugins compatibility, see [Plugins](#plugins) | RC     | Yes      |
+| `workspaces` | Releases every projects on workspace           | Alpha  | No       |
 
 ## Environment variables
 
