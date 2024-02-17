@@ -5,7 +5,9 @@ release() {
   # Create a `GitHub` release
   if [[ "$GITHUB_TOKEN" != "" ]]; then
     echo "Creating GitHub release..."
-    echo "GitHub release hash: $CHECKOUT_SHA!"
+    if $IS_VERBOSE; then
+      echo "GitHub release hash: $CHECKOUT_SHA!"
+    fi
     if ! $IS_DRY_RUN; then
       curl -s -o /dev/null \
         -L \
