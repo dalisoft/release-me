@@ -6,6 +6,16 @@ regexp_commit_primary="^([a-z]+)(\(([^\)]+)\))?:\ (.+)$"
 regexp_commit_major="^([a-z]+)(\(([^\)]+)\))?!:\ (.+)$"
 string_commit_major="^BREAKING CHANGE"
 
+# Release types
+# shellcheck disable=2034
+RELEASE_SKIP_TYPES=("build" "chore" "docs" "test" "style" "ci" "skip ci")
+# shellcheck disable=2034
+RELEASE_PATCH_TYPES=("fix" "close" "closes" "perf" "revert")
+# shellcheck disable=2034
+RELEASE_MINOR_TYPES=("refactor" "feat")
+# shellcheck disable=2034
+RELEASE_MAJOR_TYPES=("BREAKING CHANGE")
+
 # This function parses a single commit message
 parse_commit() {
   local -n COMMIT_MSG="$1"

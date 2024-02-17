@@ -59,7 +59,6 @@ function parseOptions {
       read -ra PLUGINS <<<"${KEY#*=}"
       ;;
     --preset=*)
-      local IFS=','
       read -r PRESET <<<"${KEY#*=}"
       ;;
     -d | --dry-run)
@@ -137,15 +136,11 @@ up_to_date() {
   exit 0
 }
 
-# Release types
-# shellcheck disable=2034
-RELEASE_SKIP_TYPES=("build" "chore" "docs" "test" "style" "ci" "skip ci")
-# shellcheck disable=2034
-RELEASE_PATCH_TYPES=("fix" "close" "closes" "perf" "revert")
-# shellcheck disable=2034
-RELEASE_MINOR_TYPES=("refactor" "feat")
-# shellcheck disable=2034
-RELEASE_MAJOR_TYPES=("BREAKING CHANGE")
+if [ "$PRESET" != "" ]; then
+  SOURCE_PRESET_FILE="$SCRIPT_DIR/presets/${PRESET}.sh"
+  # shellcheck disable=SC1090
+  source "$SOURCE_PRESET_FILE"
+fi
 
 ##############################
 ##### Package variables ######
@@ -259,16 +254,11 @@ function handleGitCommits {
 
   local IFS=
   while read -r subject && read -r hash && read -r sha256; do
+    # shellcheck disable=SC2034
     local COMMIT_ARRAY=("$subject" "$hash" "$sha256")
 
-    if [ "$PRESET" != "" ]; then
-      local SOURCE_PRESET_FILE="$SCRIPT_DIR/presets/${PRESET}.sh"
-      # shellcheck disable=SC1090
-      source "$SOURCE_PRESET_FILE"
-      if [ "$(command -v parse_commit)" ]; then
-        parse_commit COMMIT_ARRAY
-      fi
-      unset parse_commit
+    if [ "$(command -v parse_commit)" ]; then
+      parse_commit COMMIT_ARRAY
     fi
   done <<<"$GIT_LOGS"
 
