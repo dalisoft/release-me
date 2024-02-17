@@ -156,7 +156,7 @@ log_verbose() {
 parseOptions "$@"
 
 up_to_date() {
-  log "$CLI_PREFIX $1"
+  log "$CLI_PREFIX $1" -q
   echo "$CLI_PREFIX Your project is up-to-date"
   exit 0
 }
