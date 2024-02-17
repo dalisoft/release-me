@@ -39,6 +39,30 @@ PRESET=""
 ###### Helpers & Utils #######
 ##############################
 
+# proper handling of lines counter
+# as `grep -c '^'` fails if there nothing
+# and `wc -l` if there 1 commit
+# so this utility was made
+
+glc() {
+  local input="$1"
+
+  if [[ -p /dev/stdin ]]; then
+    input="$(cat -)"
+  else
+    input="${*}"
+  fi
+
+  local COUNT=0
+  while read -r line; do
+    if [ -n "$line" ]; then
+      COUNT=$((COUNT + 1))
+    fi
+  done <<<"$input"
+
+  echo -n $COUNT
+}
+
 function parseOptions {
   while :; do
     local KEY="$1"
@@ -213,19 +237,19 @@ function getGitCommits {
     # can be checked for commits length and avaibality
     if $IS_WORKSPACE; then
       GIT_LOGS=$(git log "$GIT_LAST_PROJECT_TAG...HEAD" --grep "$PKG_NAME" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
-      GIT_LOGS_LENGTH=$(git log "$GIT_LAST_PROJECT_TAG...HEAD" --grep "$PKG_NAME" --pretty=format:"%s" | grep -c '^')
+      GIT_LOGS_LENGTH=$(git log "$GIT_LAST_PROJECT_TAG...HEAD" --grep "$PKG_NAME" --pretty=format:"%s" | glc -)
     else
       GIT_LOGS=$(git log "$GIT_LAST_PROJECT_TAG...HEAD" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
-      GIT_LOGS_LENGTH=$(git log "$GIT_LAST_PROJECT_TAG...HEAD" --pretty=format:"%s" | grep -c '^')
+      GIT_LOGS_LENGTH=$(git rev-list --no-merges --count "$GIT_LAST_PROJECT_TAG...HEAD")
     fi
   else
     log_verbose "Last project tag not found"
     if $IS_WORKSPACE; then
       GIT_LOGS=$(git log HEAD --grep "$PKG_NAME" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
-      GIT_LOGS_LENGTH=$(git log HEAD --grep "$PKG_NAME" --pretty=format:"%s" | grep -c '^')
+      GIT_LOGS_LENGTH=$(git log HEAD --grep "$PKG_NAME" --pretty=format:"%s" | glc -)
     else
       GIT_LOGS=$(git log HEAD --pretty=format:"$GIT_LOG_FORMAT" --reverse)
-      GIT_LOGS_LENGTH=$(git log HEAD --pretty=format:"%s" | grep -c '^')
+      GIT_LOGS_LENGTH=$(git rev-list --no-merges --count "$GIT_LAST_PROJECT_TAG...HEAD")
     fi
   fi
 
