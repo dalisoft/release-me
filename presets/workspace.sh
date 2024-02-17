@@ -75,7 +75,7 @@ parse_commit() {
   fi
 
   if isValidCommitType "$type" "${INCLUDE_SCOPE[@]}"; then
-    RELEASE_BODY+="- **$PKG_NAME**: **[$type]** $description "
+    RELEASE_BODY+="- **$PKG_NAME**: **\`[$type]\`** $description "
   else
     RELEASE_BODY+="- **$PKG_NAME**: $description "
   fi
