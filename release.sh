@@ -15,6 +15,7 @@ Options:
 ##############################
 ####### Root variables #######
 ##############################
+SCRIPT_DIR=$(dirname -- "$(readlink -f -- "$0")")
 CURRENT_DATE=$(date +'%Y-%m-%d')
 GIT_LOG_ENTRY_SEPARATOR='__'
 GIT_LOG_SEPARATOR='++++'
@@ -221,7 +222,7 @@ function handleGitCommits {
     read -r -a COMMIT_ARRAY <<<"${COMMIT}"
 
     if [ "$PRESET" != "" ]; then
-      local SOURCE_PRESET_FILE="presets/${PRESET}.sh"
+      local SOURCE_PRESET_FILE="$SCRIPT_DIR/presets/${PRESET}.sh"
       # shellcheck disable=SC1090
       source "$SOURCE_PRESET_FILE"
       if [ "$(command -v parse_commit)" ]; then
@@ -287,7 +288,7 @@ function handlePushes {
   CHECKOUT_SHA=${COMMIT_ARRAY[4]}
 
   for plugin in "${PLUGINS[@]}"; do
-    local SOURCE_PLUGIN_FILE="plugins/${plugin}.sh"
+    local SOURCE_PLUGIN_FILE="$SCRIPT_DIR/plugins/${plugin}.sh"
     # shellcheck disable=SC1090
     source "$SOURCE_PLUGIN_FILE"
     if [ "$(command -v release)" ]; then
