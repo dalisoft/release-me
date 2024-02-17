@@ -115,12 +115,20 @@ function isValidCommitType {
 ##############################
 log() {
   if ! $IS_QUIET; then
-    echo -e "$CLI_PREFIX $1"
+    if [ "$2" == "-q" ]; then
+      echo -e "$1"
+    else
+      echo -e "$CLI_PREFIX $1"
+    fi
   fi
 }
 log_verbose() {
   if $IS_VERBOSE; then
-    echo -e "$CLI_PREFIX $1"
+    if [ "$2" == "-q" ]; then
+      echo -e "$1"
+    else
+      echo -e "$CLI_PREFIX $1"
+    fi
   fi
 }
 
@@ -251,18 +259,19 @@ MINOR_UPGRADED=false
 MAJOR_UPGRADED=false
 
 function handleGitCommits {
-  log_verbose "Analyzing commits..."
-
+  log_verbose "Analyzing commits...\n"
   local IFS=
   while read -r subject && read -r hash && read -r sha256; do
     # shellcheck disable=SC2034
     local COMMIT_ARRAY=("$subject" "$hash" "$sha256")
 
+    log_verbose "$subject" "-q"
+
     if [ "$(command -v parse_commit)" ]; then
       parse_commit COMMIT_ARRAY
     fi
   done <<<"$GIT_LOGS"
-
+  log_verbose "" "-q"
   log_verbose "Analyzed commits!"
 
   log_verbose "Analyzing updates..."
