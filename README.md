@@ -26,10 +26,34 @@ If one of files described below will be found, script parse first matched file a
 2. **Rust** (`Cargo.toml`)
 3. **Python** (`setup.py`)
 
+## Installation
+
+### Requirements
+
+> See [Environment variables](#environment-variables)
+
+- **bash** version **v5+** for best reliability
+- Make sure you have **write** access
+- Make sure you have **ACCESS TOKEN** with **write access**
+
+### Preparation
+
+- Add `.release-me` to `.gitignore`
+- Add your `.gitignore` to commit
+- Push into remote
+
+### Commands
+
+> See [Environment variables](#environment-variables)
+
+```bash
+git clone https://github.com/dalisoft/release-me.git --depth 1 .release-me
+```
+
 ## Usage
 
 ```sh
-GH_TOKEN=<YOUR_GITHUB_TOKEN> NPM_TOKEN=<YOUR_NPM_TOKEN> sh /path/to/script/release.sh --preset=conventional-commits
+bash --debug ./.release-me/release.sh --plugins=git,github-release --preset=conventional-commits
 ```
 
 ## Plugins
