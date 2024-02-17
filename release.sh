@@ -95,15 +95,7 @@ function isValidCommitType {
   local arr=("$@")
 
   for element in "${arr[@]}"; do
-    local elementDynamic=$element
-
-    if $IS_WORKSPACE; then
-      elementDynamic="${element}(${PKG_NAME})"
-    else
-      elementDynamic="${element}"
-    fi
-
-    if [[ "$key" == "$elementDynamic"* ]]; then
+    if [[ "$key" == "${element}"* ]]; then
       return 0
     fi
   done
