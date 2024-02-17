@@ -17,10 +17,9 @@ Options:
 ##############################
 SCRIPT_DIR=$(dirname -- "$(readlink -f -- "$0")")
 CURRENT_DATE=$(date +'%Y-%m-%d')
-GIT_LOG_ENTRY_SEPARATOR='__'
-GIT_LOG_SEPARATOR='++++'
-GIT_LOG_FORMAT="$GIT_LOG_SEPARATOR%s$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
-#GIT_LOG_FORMAT+="$GIT_LOG_SEPARATOR%(trailers:only=true)$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
+GIT_LOG_ENTRY_SEPARATOR='%n'
+GIT_LOG_FORMAT="%s$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
+#GIT_LOG_FORMAT+="%(trailers:only=true)$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
 GIT_REPO_NAME=$(git remote get-url origin | cut -d ':' -f 2 | sed s/.git//)
 
 IS_WORKSPACE=false
@@ -187,35 +186,41 @@ function getGitVariables {
 ######## Git handling ########
 ##############################
 
-COMMITS=()
+GIT_LOGS=""
 
 function getGitCommits {
+  local IFS=
+  local GIT_LOGS_LENGTH=0
   # Check if exists last tag and is not empty
   if [ -n "$GIT_LAST_PROJECT_TAG" ]; then
     log_verbose "Last project tag [$GIT_LAST_PROJECT_TAG] found"
     # Get and cache commits variable, so later
     # can be checked for commits length and avaibality
     if $IS_WORKSPACE; then
-      mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log "$GIT_LAST_PROJECT_TAG...HEAD" --grep "$PKG_NAME" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
+      GIT_LOGS=$(git log "$GIT_LAST_PROJECT_TAG...HEAD" --grep "$PKG_NAME" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
+      GIT_LOGS_LENGTH=$(git log "$GIT_LAST_PROJECT_TAG...HEAD" --grep "$PKG_NAME" --pretty=format:"%s" | wc -l | xargs)
     else
-      mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log "$GIT_LAST_PROJECT_TAG..HEAD" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
+      GIT_LOGS=$(git log "$GIT_LAST_PROJECT_TAG..HEAD" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
+      GIT_LOGS_LENGTH=$(git log "$GIT_LAST_PROJECT_TAG..HEAD" --pretty=format:"%s" | wc -l | xargs)
     fi
   else
     log_verbose "Last project tag not found"
     if $IS_WORKSPACE; then
-      mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log HEAD --grep "$PKG_NAME" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
+      GIT_LOGS=$(git log HEAD --grep "$PKG_NAME" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
+      GIT_LOGS_LENGTH=$(git log HEAD --grep "$PKG_NAME" --pretty=format:"%s" | wc -l | xargs)
     else
-      mapfile -d $GIT_LOG_SEPARATOR -t COMMITS < <(git log HEAD --pretty=format:"$GIT_LOG_FORMAT" --reverse)
+      GIT_LOGS=$(git log HEAD --pretty=format:"$GIT_LOG_FORMAT" --reverse)
+      GIT_LOGS_LENGTH=$(git log HEAD --pretty=format:"%s" | wc -l | xargs)
     fi
   fi
 
-  if [[ "${#COMMITS[*]}" -eq 0 ]]; then
+  if [[ $GIT_LOGS_LENGTH -eq 0 ]]; then
     up_to_date "Your project has no new commits"
   else
     if [ -n "$GIT_LAST_PROJECT_TAG" ]; then
-      log_verbose "Found ${#COMMITS[*]} commits since last release"
+      log_verbose "Found $GIT_LOGS_LENGTH commits since last release"
     else
-      log_verbose "Found ${#COMMITS[*]} commits but did not found any release"
+      log_verbose "Found $GIT_LOGS_LENGTH commits but did not found any release"
     fi
   fi
 }
@@ -232,10 +237,11 @@ MINOR_UPGRADED=false
 MAJOR_UPGRADED=false
 
 function handleGitCommits {
+  log_verbose "Analyzing commits..."
 
-  for COMMIT in "${COMMITS[@]}"; do
-    local IFS="$GIT_LOG_ENTRY_SEPARATOR"
-    read -r -a COMMIT_ARRAY <<<"${COMMIT}"
+  local IFS=
+  while read -r subject && read -r hash && read -r sha256; do
+    local COMMIT_ARRAY=("$subject" "$hash" "$sha256")
 
     if [ "$PRESET" != "" ]; then
       local SOURCE_PRESET_FILE="$SCRIPT_DIR/presets/${PRESET}.sh"
@@ -246,8 +252,11 @@ function handleGitCommits {
       fi
       unset parse_commit
     fi
-  done
+  done <<<"$GIT_LOGS"
 
+  log_verbose "Analyzed commits!"
+
+  log_verbose "Analyzing updates..."
   if $MAJOR_UPGRADED; then
     SEMANTIC_VERSION[0]=$((SEMANTIC_VERSION[0] + 1))
     SEMANTIC_VERSION[1]=0
@@ -270,6 +279,8 @@ function handleGitCommits {
 
   if [ "$BUILD_VERSION" == "$PREV_BUILD_VERSION" ]; then
     up_to_date "Your project has no incremental update"
+  else
+    log_verbose "Analyzing updates done!"
   fi
 
   RELEASE_PREV_TAG_NAME=""
@@ -297,13 +308,14 @@ function handleGitCommits {
 ##############################
 
 function handlePushes {
+  log_verbose "Applying changes..."
 
-  local IFS="$GIT_LOG_ENTRY_SEPARATOR"
-  read -r -a COMMIT_ARRAY <<<"${COMMITS[-1]}"
-  # shellcheck disable=2034
-  CHECKOUT_SHA=${COMMIT_ARRAY[4]}
+  CHECKOUT_SHA=$(echo "$GIT_LOGS" | tail -1)
+
+  log_verbose "Found tag commit [$CHECKOUT_SHA]"
 
   for plugin in "${PLUGINS[@]}"; do
+    log_verbose "Loading plugin \`$plugin\`..."
     local SOURCE_PLUGIN_FILE="$SCRIPT_DIR/plugins/${plugin}.sh"
     # shellcheck disable=SC1090
     source "$SOURCE_PLUGIN_FILE"
@@ -311,7 +323,10 @@ function handlePushes {
       release
     fi
     unset release
+    log_verbose "Applied plugin $plugin!"
   done
+
+  log_verbose "Applied changes!"
 }
 
 ##############################
