@@ -11,8 +11,8 @@ parse_commit() {
   local -n COMMIT_MSG="$1"
 
   local subject="${COMMIT_MSG[0]}"
-  local hash="${COMMIT_MSG[2]}"
-  local sha256="${COMMIT_MSG[4]}"
+  local hash="${COMMIT_MSG[1]}"
+  local sha256="${COMMIT_MSG[2]}"
 
   local type
   local scope
