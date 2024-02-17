@@ -218,10 +218,10 @@ function getGitCommits {
     log_verbose "Last project tag not found"
     if $IS_WORKSPACE; then
       GIT_LOGS=$(git log HEAD --grep "$PKG_NAME" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
-      GIT_LOGS_LENGTH=$(git log HEAD --grep "$PKG_NAME" --pretty=format:"%s" | wc -l | xargs)
+      GIT_LOGS_LENGTH=$(git log HEAD --grep "$PKG_NAME" --pretty=format:"%s%n" | wc -l | xargs)
     else
       GIT_LOGS=$(git log HEAD --pretty=format:"$GIT_LOG_FORMAT" --reverse)
-      GIT_LOGS_LENGTH=$(git log HEAD --pretty=format:"%s" | wc -l | xargs)
+      GIT_LOGS_LENGTH=$(git log HEAD --pretty=format:"%s%n" | wc -l | xargs)
     fi
   fi
 
