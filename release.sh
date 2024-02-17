@@ -24,6 +24,7 @@ GIT_REPO_NAME=$(git remote get-url origin | cut -d ':' -f 2 | sed s/.git//)
 
 IS_WORKSPACE=false
 IS_DRY_RUN=false
+IS_QUIET=false
 IS_VERBOSE=false
 PLUGINS=("git")
 PRESET=""
@@ -58,6 +59,9 @@ function parseOptions {
     -d | --dry-run)
       # shellcheck disable=2034
       IS_DRY_RUN=true
+      ;;
+    -q | --quiet)
+      IS_QUIET=true
       ;;
     --verbose)
       IS_VERBOSE=true
@@ -101,7 +105,14 @@ function isValidCommitType {
   return 1
 }
 
-# Verbose logging helper
+##############################
+##### Logging helpers #######
+##############################
+log() {
+  if ! $IS_QUIET; then
+    echo -e "$1"
+  fi
+}
 log_verbose() {
   if $IS_VERBOSE; then
     echo -e "$1"

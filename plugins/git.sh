@@ -3,7 +3,7 @@ set -e
 
 release() {
   # Create a `git` tag
-  echo "Creating Git tag..."
+  log "Creating Git tag..."
   log_verbose "Git hash: $CHECKOUT_SHA!"
 
   if ! $IS_DRY_RUN; then
@@ -11,6 +11,6 @@ release() {
     git push origin "refs/tags/$RELEASE_TAG_NAME"
     echo "Created Git tag [$RELEASE_TAG_NAME]!"
   else
-    echo "Skipped Git tag [$RELEASE_TAG_NAME] in DRY-RUN mode."
+    log "Skipped Git tag [$RELEASE_TAG_NAME] in DRY-RUN mode."
   fi
 }
