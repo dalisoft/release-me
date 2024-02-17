@@ -6,9 +6,10 @@ Blazing fast minimal [semantic-release](https://github.com/semantic-release/sema
 
 - Available on all **Unix** environments
 - Zero third-party dependencies
+- No pre-install, just use
 - Blazing fast, no wait
 - Programming language agnostic\*
-- Fast (<1 sec without GitHub plugin)
+- Fast (<5 sec with all plugins execution)
 - Plugins available/compatible
 - Presets available/compatible
 
