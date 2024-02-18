@@ -93,6 +93,29 @@ bash --debug .release-me/release.sh --plugins=git,github-release --preset=conven
 | `GH_TOKEN`  | Used to publish **Github** releases |
 | `NPM_TOKEN` | Used to publish to **npm** registry |
 
+## Comparison
+
+| Features      | release-me | semantic-release | go-semantic-release |
+| ------------- | ---------- | ---------------- | ------------------- |
+| Performance   | Fast       | Slow             | Fast                |
+| Startup delay | -          | Slow             | Fast                |
+| Platform      | Unix-only  | ALL              | ALL                 |
+| Dependencies  | -          | +                | ?                   |
+| Configuration | -          | +                | +                   |
+| Presets       | +          | +                | -                   |
+| Plugins       | +          | +                | +                   |
+| Workspaces    | Built-in   | ?                | -                   |
+
+## Benchmark
+
+> Please test yourself on your machine. These results on my machine **MacBook Pro 13" M1 16/512**
+
+| Name                | `time`  | Command                                                        |
+| ------------------- | ------- | -------------------------------------------------------------- |
+| semantic-release    | `7.93s` | `bunx semantic-release --dry-run`                              |
+| go-semantic-release | `2s`    | `./semantic-release --hooks goreleaser`                        |
+| release-me          | `2s`    | `bash ./release.sh --plugins=git,github-release,npm --dry-run` |
+
 ## Relative projects
 
 - [semantic-release](https://semantic-release.gitbook.io)
