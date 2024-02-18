@@ -3,7 +3,7 @@ set -e
 
 # RegExp as variable
 regexp_commit_primary="^([a-z]+)(\(([^\)]+)\))?:\ (.+)$"
-regexp_commit_major="^([a-z]+)?!(\(([^\)]+)\))?!?:\ (.+)$"
+regexp_commit_major="^([a-z]+)!?(\(([^\)]+)\))?!?:\ (.+)$"
 string_commit_major="^BREAKING CHANGE"
 
 # Release types
