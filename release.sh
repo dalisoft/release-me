@@ -35,6 +35,11 @@ IS_VERBOSE=false
 PLUGINS=("git")
 PRESET="conventional-commits"
 
+# set `verbose` on `CI`
+if [ "$CI" == true ]; then
+  IS_VERBOSE=true
+fi
+
 ##############################
 ###### Helpers & Utils #######
 ##############################
