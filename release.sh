@@ -33,7 +33,7 @@ IS_DRY_RUN=false
 IS_QUIET=false
 IS_VERBOSE=false
 PLUGINS=("git")
-PRESET=""
+PRESET="conventional-commits"
 
 ##############################
 ###### Helpers & Utils #######
