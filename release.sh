@@ -252,7 +252,7 @@ function getGitCommits {
       GIT_LOGS_LENGTH=$(git log "$GIT_LAST_PROJECT_TAG...HEAD" --grep "$PKG_NAME" --pretty=format:"%s" | glc -)
     else
       GIT_LOGS=$(git log "$GIT_LAST_PROJECT_TAG...HEAD" --pretty=format:"$GIT_LOG_FORMAT" --reverse)
-      GIT_LOGS_LENGTH=$(git rev-list --no-merges --count "$GIT_LAST_PROJECT_TAG...HEAD")
+      GIT_LOGS_LENGTH=$(git rev-list --count "$GIT_LAST_PROJECT_TAG...HEAD")
     fi
   else
     log_verbose "Last project tag not found"
@@ -261,7 +261,7 @@ function getGitCommits {
       GIT_LOGS_LENGTH=$(git log HEAD --grep "$PKG_NAME" --pretty=format:"%s" | glc -)
     else
       GIT_LOGS=$(git log HEAD --pretty=format:"$GIT_LOG_FORMAT" --reverse)
-      GIT_LOGS_LENGTH=$(git rev-list --no-merges --count "$GIT_LAST_PROJECT_TAG...HEAD")
+      GIT_LOGS_LENGTH=$(git rev-list --count "$GIT_LAST_PROJECT_TAG...HEAD")
     fi
   fi
 
