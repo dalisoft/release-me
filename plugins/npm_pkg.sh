@@ -18,6 +18,6 @@ release() {
 
     echo "Updated package.json version!"
   else
-    log "Skipped package.json version udate [$RELEASE_TAG_NAME] in DRY-RUN mode."
+    log "Skipped package.json version update [$RELEASE_TAG_NAME] in DRY-RUN mode."
   fi
 }
