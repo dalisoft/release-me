@@ -63,6 +63,7 @@ bash --debug .release-me/release.sh --plugins=git,github-release --preset=conven
 | `git`       | Creates **Git** tag and push to origin           | RC     |
 | `github`    | Release a tag with proper `CHANGELOG` and commit | RC     |
 | `npm`       | Publishes **npm** tag                            | RC     |
+| `npm_pkg`   | Updates `package.json` version                   | RC     |
 | `changelog` | Generates `CHANGELOG` within your project        | Alpha  |
 
 ## Presets
