@@ -60,31 +60,31 @@ bash --debug .release-me/release.sh --plugins=git,github-release --preset=conven
 
 ## Plugins
 
-| Name        | Description                                      | Status |
-| ----------- | ------------------------------------------------ | ------ |
-| `git`       | Creates **Git** tag and push to origin           | RC     |
-| `github`    | Release a tag with proper `CHANGELOG` and commit | RC     |
-| `npm`       | Publishes **npm** tag                            | RC     |
-| `npm_pkg`   | Updates `package.json` version                   | RC     |
-| `changelog` | Generates `CHANGELOG` within your project        | Alpha  |
+| Name             | Description                                      | Status |
+| ---------------- | ------------------------------------------------ | ------ |
+| `git`            | Creates **Git** tag and push to origin           | Stable |
+| `github-release` | Release a tag with proper `CHANGELOG` and commit | Stable |
+| `npm`            | Publishes **npm** tag                            | Stable |
+| `npm_package`    | Updates `package.json` version                   | RC     |
+| `changelog`      | Generates `CHANGELOG` within your project        | Alpha  |
 
 ## Presets
 
-| Name                   | Description                              | Status |
-| ---------------------- | ---------------------------------------- | ------ |
-| `conventional-commits` | Default preset like **semantic-release** | RC     |
-| `library`              | Same as `conventional-commits` for now   | RC     |
-| `workspace`            | Workspace preset for monorepos           | Alpha  |
+| Name                   | Description                              |
+| ---------------------- | ---------------------------------------- |
+| `conventional-commits` | Default preset like **semantic-release** |
+| `library`              | Same as `conventional-commits` for now   |
+| `workspace`            | Workspace preset for monorepos           |
 
 ## Options
 
-| Name         | Description                                    | Status | Required |
-| ------------ | ---------------------------------------------- | ------ | -------- |
-| `dry-run`    | Show only actions on logs                      | RC     | No       |
-| `verbose`    | Verbose logs                                   | RC     | No       |
-| `presets`    | Presets compatibility, see [Presets](#presets) | RC     | Yes      |
-| `plugins`    | Plugins compatibility, see [Plugins](#plugins) | RC     | Yes      |
-| `workspaces` | Releases every projects on workspace           | Alpha  | No       |
+| Name        | Description                                    | Required |
+| ----------- | ---------------------------------------------- | -------- |
+| `dry-run`   | Show only actions on logs                      | No       |
+| `verbose`   | Verbose logs                                   | No       |
+| `presets`   | Presets compatibility, see [Presets](#presets) | Yes      |
+| `plugins`   | Plugins compatibility, see [Plugins](#plugins) | Yes      |
+| `workspace` | Releases every projects on workspace           | No       |
 
 ## Environment variables
 
