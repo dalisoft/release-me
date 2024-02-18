@@ -26,7 +26,14 @@ CURRENT_DATE=$(date +'%Y-%m-%d')
 GIT_LOG_ENTRY_SEPARATOR='%n'
 GIT_LOG_FORMAT="%s$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
 #GIT_LOG_FORMAT+="%(trailers:only=true)$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
-GIT_REPO_NAME=$(git remote get-url origin | cut -d ':' -f 2 | sed s/.git//)
+GIT_REMOTE_ORIGIN=$(git remote get-url origin)
+GIT_REPO_NAME=
+
+if [[ "$GIT_REMOTE_ORIGIN" == "git@"* ]]; then
+  GIT_REPO_NAME=$(git remote get-url origin | cut -d ':' -f 2 | sed s/.git//)
+elif [[ "$GIT_REMOTE_ORIGIN" == "https"* ]]; then
+  GIT_REPO_NAME=$(git remote get-url origin | cut -d ':' -f 2 | sed s/\\/\\/github.com\\///)
+fi
 
 IS_WORKSPACE=false
 IS_DRY_RUN=false
