@@ -8,13 +8,10 @@ release() {
     log_verbose "npm tag: $RELEASE_TAG_NAME and version: $RELEASE_VERSION!"
 
     if ! $IS_DRY_RUN; then
-      rm -rf .npmrc
-      echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >>.npmrc
-
+      export NODE_AUTH_TOKEN="$NPM_TOKEN"
       npm publish "$RELEASE_VERSION"
 
       echo "Published [$RELEASE_TAG_NAME]!"
-      rm -rf .npmrc
     else
       log "Skipped npm tag [$RELEASE_TAG_NAME] in DRY-RUN mode."
     fi
