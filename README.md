@@ -8,6 +8,8 @@ Blazing fast minimal [semantic-release](https://github.com/semantic-release/sema
 - Zero third-party dependencies
 - No pre-install, just use
 - Blazing fast, no wait
+- Workspace support out-of-box
+- Much stable than **semantic-release** as does not loses commits
 - Programming language agnostic\*
 - Fast (<5 sec with all plugins execution)
 - Plugins available/compatible
@@ -90,6 +92,11 @@ bash --debug .release-me/release.sh --plugins=git,github-release --preset=conven
 | ----------- | ----------------------------------- |
 | `GH_TOKEN`  | Used to publish **Github** releases |
 | `NPM_TOKEN` | Used to publish to **npm** registry |
+
+## Relative projects
+
+- [semantic-release](https://semantic-release.gitbook.io)
+- [go-semantic-release](https://github.com/go-semantic-release/semantic-release)
 
 ## License
 
