@@ -11,6 +11,7 @@ release() {
       rm -rf .npmrc
       echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >>.npmrc
 
+      npm version "$RELEASE_VERSION" --no-commit-hooks --no-git-tag-version
       npm publish "$RELEASE_VERSION"
 
       echo "Published [$RELEASE_TAG_NAME]!"
