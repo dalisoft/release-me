@@ -22,6 +22,8 @@ jobs:
           fetch-depth: 0
 
       - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           bash --debug ./release.sh --plugins=git,github-release
