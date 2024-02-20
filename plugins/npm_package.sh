@@ -6,15 +6,7 @@ release() {
   log_verbose "New version: $RELEASE_VERSION!"
 
   if ! $IS_DRY_RUN; then
-    node -e "
-      const fs = require('fs/promises');
-      const pkg = require('./package.json');
-
-      fs.writeFile('./package.json', JSON.stringify({
-        ...pkg,
-        version: '$RELEASE_VERSION'.substr(1)
-      }, null, 2))
-      "
+    sed -i '' "s/\"version\": \"[^\"]*\",/\"version\": \"$BUILD_VERSION\",/" package.json
 
     echo "Updated package.json version!"
   else
