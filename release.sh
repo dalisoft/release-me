@@ -263,7 +263,7 @@ function getGitCommits {
       GIT_LOGS_LENGTH=$(git log HEAD --grep "$PKG_NAME" --pretty=format:"%s" | glc -)
     else
       GIT_LOGS=$(git log HEAD --pretty=format:"$GIT_LOG_FORMAT" --reverse)
-      GIT_LOGS_LENGTH=$(git rev-list --count)
+      GIT_LOGS_LENGTH=$(git rev-list --count HEAD)
     fi
   fi
 
