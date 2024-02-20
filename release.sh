@@ -315,11 +315,11 @@ function handleGitCommits {
   log_verbose "Analyzing updates..."
   if $IS_STABLE_VERSION && "${SEMANTIC_VERSION[0]}" -eq 0; then
     SEMANTIC_VERSION=(1 0 0)
-  elif $MAJOR_UPGRADED && "${SEMANTIC_VERSION[0]}" -gt 0; then
+  elif [[ $MAJOR_UPGRADED && "${SEMANTIC_VERSION[0]}" -gt 0 ]]; then
     SEMANTIC_VERSION[0]=$((SEMANTIC_VERSION[0] + 1))
     SEMANTIC_VERSION[1]=0
     SEMANTIC_VERSION[2]=0
-  elif $MINOR_UPGRADED; then
+  elif [[ $MINOR_UPGRADED || $MAJOR_UPGRADED ]]; then
     SEMANTIC_VERSION[1]=$((SEMANTIC_VERSION[1] + 1))
     SEMANTIC_VERSION[2]=0
   elif $PATCH_UPGRADED; then
