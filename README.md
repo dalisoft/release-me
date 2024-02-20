@@ -55,7 +55,7 @@ git clone https://github.com/dalisoft/release-me.git --depth 1 .release-me
 > See [Environment variables](#environment-variables)
 
 ```sh
-bash --debug .release-me/release.sh --plugins=git,github-release --preset=conventional-commits
+bash .release-me/release.sh --plugins=git,github-release --preset=conventional-commits
 ```
 
 ## Plugins
