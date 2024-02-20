@@ -64,8 +64,7 @@ bash .release-me/release.sh --plugins=git,github-release --preset=conventional-c
 | ---------------- | ------------------------------------------------ |
 | `git`            | Creates **Git** tag and push to origin           |
 | `github-release` | Release a tag with proper `CHANGELOG` and commit |
-| `npm`            | Publishes **npm** tag                            |
-| `npm_package`    | Updates `package.json` version                   |
+| `npm`            | Updates version field and Publishes **npm** tag  |
 | `changelog`      | Generates `CHANGELOG` within your project        |
 
 ## Presets
