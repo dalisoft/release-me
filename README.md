@@ -1,4 +1,6 @@
-# release-me
+# release-me \[0.x\]
+
+> Except bugs, errors and/or strange behavior
 
 Blazing fast minimal [semantic-release](https://github.com/semantic-release/semantic-release) alternative written-in **Bash** script with it's **GitHub** and **npm** plugins and presets support
 
@@ -9,11 +11,13 @@ Blazing fast minimal [semantic-release](https://github.com/semantic-release/sema
 - No pre-install, just use
 - Blazing fast, no wait
 - Workspace support out-of-box
-- Much stable than **semantic-release** as does not loses commits
+- Much stable/reliable than **semantic-release** as does not loses commits\*
 - Programming language agnostic\*
 - Fast (<5 sec with all plugins execution)
 - Plugins available/compatible
 - Presets available/compatible
+
+> \* - It's still in `0.x` phase but still handles much better and faster
 
 ## Limitations
 
