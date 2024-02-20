@@ -60,13 +60,13 @@ bash --debug .release-me/release.sh --plugins=git,github-release --preset=conven
 
 ## Plugins
 
-| Name             | Description                                      | Status |
-| ---------------- | ------------------------------------------------ | ------ |
-| `git`            | Creates **Git** tag and push to origin           | Stable |
-| `github-release` | Release a tag with proper `CHANGELOG` and commit | Stable |
-| `npm`            | Publishes **npm** tag                            | Stable |
-| `npm_package`    | Updates `package.json` version                   | RC     |
-| `changelog`      | Generates `CHANGELOG` within your project        | Alpha  |
+| Name             | Description                                      |
+| ---------------- | ------------------------------------------------ |
+| `git`            | Creates **Git** tag and push to origin           |
+| `github-release` | Release a tag with proper `CHANGELOG` and commit |
+| `npm`            | Publishes **npm** tag                            |
+| `npm_package`    | Updates `package.json` version                   |
+| `changelog`      | Generates `CHANGELOG` within your project        |
 
 ## Presets
 
