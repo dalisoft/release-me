@@ -11,6 +11,9 @@ release() {
       TEMP_FILE=$(mktemp)
       echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >>"$TEMP_FILE"
 
+      # Bump `package.json` `version` for properly publishing
+      sed -i '' "s/\"version\": \"[^\"]*\",/\"version\": \"$BUILD_VERSION\",/" package.json
+
       export NODE_AUTH_TOKEN="$NPM_TOKEN"
       npm publish "$RELEASE_VERSION" --userconfig "$TEMP_FILE"
 
