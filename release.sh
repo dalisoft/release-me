@@ -103,9 +103,11 @@ function parseOptions {
       ;;
     -q | --quiet)
       IS_QUIET=true
+      IS_VERBOSE=false
       ;;
     --verbose)
       IS_VERBOSE=true
+      IS_QUIET=false
       # export GIT_TRACE=1
       ;;
     -?*)
