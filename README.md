@@ -78,13 +78,15 @@ bash --debug .release-me/release.sh --plugins=git,github-release --preset=conven
 
 ## Options
 
-| Name        | Description                                    | Required |
-| ----------- | ---------------------------------------------- | -------- |
-| `dry-run`   | Show only actions on logs                      | No       |
-| `verbose`   | Verbose logs                                   | No       |
-| `presets`   | Presets compatibility, see [Presets](#presets) | Yes      |
-| `plugins`   | Plugins compatibility, see [Plugins](#plugins) | Yes      |
-| `workspace` | Releases every projects on workspace           | No       |
+| Name        | Description                                                | Required |
+| ----------- | ---------------------------------------------------------- | -------- |
+| `dry-run`   | Show only actions on logs                                  | No       |
+| `verbose`   | Verbose logs                                               | No       |
+| `quiet`     | Quiet logs                                                 | No       |
+| `workspace` | Releases every projects on workspace                       | No       |
+| `stable`    | If project current version is `0.x`, it will bump to `1.x` | Yes      |
+| `presets`   | Presets compatibility, see [Presets](#presets)             | Yes      |
+| `plugins`   | Plugins compatibility, see [Plugins](#plugins)             | Yes      |
 
 ## Environment variables
 
