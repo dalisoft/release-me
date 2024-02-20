@@ -27,4 +27,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         shell: bash
         run: |
-          bash --debug ./release.sh --plugins=git,github-release
+          bash ./release.sh --plugins=git,github-release
