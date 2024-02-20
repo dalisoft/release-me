@@ -13,7 +13,7 @@ Options:
   --quiet         Quiet mode, shows less logs than default behavior
   --plugins=*     Plugins option for loading plugins [Required]
   --presets=*     Presets option for parsing commits [Required]
-  --quiet         Quiet mode, shows less logs than default behavior
+  --stable        If project has a \`0.x\` version, it will bump to \`1.x\`
   -h, --help      Show this help.
   -v, --version   Show version.
 "
@@ -27,6 +27,7 @@ GIT_LOG_ENTRY_SEPARATOR='%n'
 GIT_LOG_FORMAT="%s$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
 #GIT_LOG_FORMAT+="%(trailers:only=true)$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
 GIT_REMOTE_ORIGIN=$(git remote get-url origin)
+GIT_CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 GIT_REPO_NAME=
 
 if [[ "$GIT_REMOTE_ORIGIN" == "git@"* ]]; then
@@ -39,6 +40,7 @@ IS_WORKSPACE=false
 IS_DRY_RUN=false
 IS_QUIET=false
 IS_VERBOSE=false
+IS_STABLE_VERSION=false
 PLUGINS=("git")
 PRESET="conventional-commits"
 
@@ -96,6 +98,10 @@ function parseOptions {
       ;;
     --preset=*)
       read -r PRESET <<<"${KEY#*=}"
+      ;;
+    --stable)
+      # shellcheck disable=2034
+      IS_STABLE_VERSION=true
       ;;
     -d | --dry-run)
       # shellcheck disable=2034
@@ -307,7 +313,9 @@ function handleGitCommits {
   log_verbose "Analyzed commits!"
 
   log_verbose "Analyzing updates..."
-  if $MAJOR_UPGRADED; then
+  if $IS_STABLE_VERSION && "${SEMANTIC_VERSION[0]}" -eq 0; then
+    SEMANTIC_VERSION=(1 0 0)
+  elif $MAJOR_UPGRADED && "${SEMANTIC_VERSION[0]}" -gt 0; then
     SEMANTIC_VERSION[0]=$((SEMANTIC_VERSION[0] + 1))
     SEMANTIC_VERSION[1]=0
     SEMANTIC_VERSION[2]=0
