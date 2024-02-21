@@ -21,6 +21,7 @@ Options:
 ##############################
 ####### Root variables #######
 ##############################
+EXEC_DIR=$(pwd)
 SCRIPT_DIR=$(dirname -- "$(readlink -f -- "$0")")
 CURRENT_DATE=$(date +'%Y-%m-%d')
 GIT_LOG_ENTRY_SEPARATOR='%n'
