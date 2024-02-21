@@ -102,12 +102,13 @@ function parseOptions {
       read -r PRESET <<<"${KEY#*=}"
       ;;
     --stable)
-      # shellcheck disable=2034
       IS_STABLE_VERSION=true
+      PRE_RELEASE_VERSION=false
       ;;
     --pre-release)
       # shellcheck disable=2034
       PRE_RELEASE_VERSION=true
+      IS_STABLE_VERSION=false
       ;;
     -d | --dry-run)
       # shellcheck disable=2034
@@ -245,7 +246,7 @@ function getGitVariables {
     mapfile -d '.' -t SEMANTIC_VERSION < <(printf '%s' "$GIT_LAST_PROJECT_TAG_VER")
     SEMANTIC_VERSION_COPY=("${SEMANTIC_VERSION[@]}")
 
-    if [[ $IS_STABLE_VERSION == false && "${SEMANTIC_VERSION[0]}" -gt 0 ]]; then
+    if [[ $IS_STABLE_VERSION == false && $PRE_RELEASE_VERSION == false && "${SEMANTIC_VERSION[0]}" -gt 0 ]]; then
       IS_STABLE_VERSION=true
     fi
   fi
