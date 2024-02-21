@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-# Local variables
-TMP_GIT_CONFIG_FILE=$(mktemp)
-
 # Global variables
 export GPG_TTY=$(tty)
-export GIT_CONFIG="$TMP_GIT_CONFIG_FILE"
 
 prepare() {
   if [[ -n "$GIT_USERNAME" && -n "$GIT_EMAIL" ]]; then
@@ -53,7 +49,6 @@ cleanup() {
     log_verbose "Git GPG config cleanup"
   fi
 
-  rm -rf "$TMP_GIT_CONFIG_FILE"
   log_verbose "Git config cleanup"
 }
 
