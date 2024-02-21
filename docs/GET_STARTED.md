@@ -6,6 +6,7 @@ Blazing fast minimal [semantic-release](https://github.com/semantic-release/sema
 
 List of contents:
 
+- [Github repository](https://github.com/dalisoft/release-me)
 - **Getting Started**
 - [Installation](./INSTALLATION.md)
 - [Usage](./USAGE.md)
