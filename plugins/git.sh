@@ -27,7 +27,7 @@ prepare() {
     echo "pinentry-mode loopback" >>~/.gnupg/gpg.conf
     gpg-connect-agent reloadagent /bye
 
-    echo "$GPG_PASSPHRASE" | gpg --passphrase-fd 0 --batch --pinentry-mode loopback --sign
+    gpg --passphrase "$GPG_PASSPHRASE" --batch --pinentry-mode loopback --sign
     log_verbose "Git GPG passphrease set"
   fi
 }
@@ -64,11 +64,14 @@ release() {
 
     if [[ -n "$GPG_KEY_ID" && -n "$GPG_PASSPHRASE" ]]; then
       git tag --sign "$RELEASE_TAG_NAME" "$CHECKOUT_SHA" --message "Release, tag and sign $RELEASE_TAG_NAME"
+      echo "Created signed Git tag [$RELEASE_TAG_NAME]!"
     else
       git tag "$RELEASE_TAG_NAME" "$CHECKOUT_SHA"
+      echo "Created Git tag [$RELEASE_TAG_NAME]!"
     fi
+
     git push origin "refs/tags/$RELEASE_TAG_NAME"
-    echo "Created Git tag [$RELEASE_TAG_NAME]!"
+    log_verbose "Pushed Git tag to remote"
 
     cleanup
   else
