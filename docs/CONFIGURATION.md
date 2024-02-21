@@ -1,0 +1,43 @@
+# release-me \[0.x\]
+
+> Except bugs, errors and/or strange behavior
+
+Blazing fast minimal [semantic-release](https://github.com/semantic-release/semantic-release) alternative written-in **Bash** script with it's **GitHub** and **npm** plugins and presets support
+
+List of contents:
+
+- [Getting Started](./GET_STARTED.md)
+- [Installation](./INSTALLATION.md)
+- [Usage](./USAGE.md)
+- **Configuration**
+- [Presets](./PRESETS.md)
+- [Plugins](./PLUGINS.md)
+- [Benchmark](./BENCHMARK.md)
+
+## Configuration
+
+### Environment variables
+
+| Name        | Description                         | Type    | Depended plugin           |
+| ----------- | ----------------------------------- | ------- | ------------------------- |
+| `GH_TOKEN`  | Used to publish **Github** releases | Secrets | **GitHub Release** plugin |
+| `NPM_TOKEN` | Used to publish to **npm** registry | Secrets | **npm** plugin            |
+
+### Git variables
+
+> These variable names used for creating tag(s)
+
+| Name           | Description               | Type      | Depended plugin |
+| -------------- | ------------------------- | --------- | --------------- |
+| `GIT_USERNAME` | Specify tag author name   | Variables | **git** plugin  |
+| `GIT_EMAIL`    | Specify tag author e-mail | Variables | **git** plugin  |
+
+### GPG (Git) variables
+
+> These variable names used for signing tag(s)
+
+| Name             | Description            | Type      | Depended plugin |
+| ---------------- | ---------------------- | --------- | --------------- |
+| `GPG_KEY_ID`     | Public GPG key/ring ID | Variables | **git** plugin  |
+| `GPG_KEY`        | Private GPG key        | Secrets   | **git** plugin  |
+| `GPG_PASSPHRASE` | Private GPG passphrase | Secrets   | **git** plugin  |
