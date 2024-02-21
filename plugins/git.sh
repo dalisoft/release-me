@@ -12,7 +12,7 @@ prepare() {
     git config --global commit.gpgsign true
     git config --global user.signingkey "$GPG_KEY_ID"
   fi
-  if [[ -n "$GPG_KEY_ID" && -n "$GPG_KEY" && -n "$GPG_PASSPHARE" ]]; then
+  if [[ -n "$GPG_KEY_ID" && -n "$GPG_KEY" && -n "$GPG_KEY_PASSPHRASE" ]]; then
     echo "$GPG_KEY" | base64 --decode | gpg --batch --import
     rm -rf "$TEMP_GPG_FILE"
     echo '#!/bin/bash' >>"$TEMP_GPG_FILE"
@@ -31,7 +31,7 @@ cleanup() {
     git config --global --unset commit.gpgsign true
     git config --global --unset user.signingkey "$GPG_KEY_ID"
   fi
-  if [[ -n "$GPG_KEY_ID" && -n "$GPG_KEY" && -n "$GPG_PASSPHARE" ]]; then
+  if [[ -n "$GPG_KEY_ID" && -n "$GPG_KEY" && -n "$GPG_KEY_PASSPHRASE" ]]; then
     rm -rf "$TEMP_GPG_FILE"
     git config --global --unset gpg.program
   fi
