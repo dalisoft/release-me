@@ -89,7 +89,7 @@ bash .release-me/release.sh --plugins=git,github-release --preset=conventional-c
 | `workspace`   | Releases every projects on workspace                       | `false`                | No       |
 | `stable`      | If project current version is `0.x`, it will bump to `1.x` | `false`                | No       |
 | `pre-release` | Publish this project as non-production ready               | `false`                | No       |
-| `presets`     | Presets compatibility, see [Presets](#presets)             | `conventional-commits` | No       |
+| `preset`      | Presets compatibility, see [Presets](#presets)             | `conventional-commits` | No       |
 | `plugins`     | Plugins compatibility, see [Plugins](#plugins)             | `git`                  | No       |
 
 ## Environment variables
