@@ -24,10 +24,10 @@ jobs:
 
       - name: Release
         env:
-          GIT_USERNAME: ${{ env.GIT_USERNAME }}
-          GIT_EMAIL: ${{ env.GIT_EMAIL }}
+          GIT_USERNAME: ${{ vars.GIT_USERNAME }}
+          GIT_EMAIL: ${{ vars.GIT_EMAIL }}
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          GPG_KEY_ID: ${{ env.GPG_KEY_ID }}
+          GPG_KEY_ID: ${{ vars.GPG_KEY_ID }}
           GPG_KEY: ${{ secrets.GPG_KEY }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           GIT_TRACE: 1
