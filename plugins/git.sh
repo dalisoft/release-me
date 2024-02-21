@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 set -e
 
+TEMP_GPG_FILE=$(mktemp)
 TMP_GIT_CONFIG_FILE=$(mktemp)
+
+export GPG_TTY=$(tty)
 
 prepare() {
   export GIT_CONFIG="$TMP_GIT_CONFIG_FILE"
@@ -10,11 +13,21 @@ prepare() {
     git config user.name "$GIT_USERNAME"
     log_verbose "Git username and Git e-mail set"
   fi
+  if [[ -n "$GPG_KEY" ]]; then
+    echo "$GPG_KEY" | base64 --decode | gpg --batch --import
+  fi
   if [[ -n "$GPG_KEY_ID" ]]; then
     git config commit.gpgsign true
     git config user.signingkey "$GPG_KEY_ID"
     git config tag.forceSignAnnotated true
     log_verbose "Git GPG sign set"
+  fi
+  if [[ -n "$GPG_KEY_PASSPHRASE" ]]; then
+    rm -rf "$TEMP_GPG_FILE"
+    echo '#!/bin/bash' >>"$TEMP_GPG_FILE"
+    echo 'gpg --batch --pinentry-mode=loopback --passphrase $GPG_KEY_PASSPHRASE $@' >>"$TEMP_GPG_FILE"
+    chmod +x "$TEMP_GPG_FILE"
+    git config gpg.program "$TEMP_GPG_FILE"
   fi
 }
 
@@ -29,6 +42,10 @@ cleanup() {
     git config --unset user.signingkey
     git config --unset tag.forceSignAnnotated
     log_verbose "Git GPG sign unset"
+  fi
+  if [[ -n "$GPG_KEY_ID" && -n "$GPG_KEY" && -n "$GPG_KEY_PASSPHRASE" ]]; then
+    rm -rf "$TEMP_GPG_FILE"
+    git config --unset gpg.program
   fi
 
   git config --unset credential.helper
