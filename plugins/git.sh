@@ -25,7 +25,7 @@ prepare() {
     echo "pinentry-mode loopback" >>~/.gnupg/gpg.conf
     gpg-connect-agent reloadagent /bye
 
-    gpg --passphrase "$GPG_PASSPHRASE" --batch --pinentry-mode loopback --sign
+    gpg --quiet --passphrase "$GPG_PASSPHRASE" --batch --pinentry-mode loopback --sign >/dev/null
     log_verbose "Git GPG passphrase set"
   fi
 }
