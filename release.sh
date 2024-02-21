@@ -42,6 +42,7 @@ IS_DRY_RUN=false
 IS_QUIET=false
 IS_VERBOSE=false
 IS_STABLE_VERSION=false
+PRE_RELEASE_VERSION=false
 PLUGINS=("git")
 PRESET="conventional-commits"
 
@@ -103,6 +104,10 @@ function parseOptions {
     --stable)
       # shellcheck disable=2034
       IS_STABLE_VERSION=true
+      ;;
+    --prerelease)
+      # shellcheck disable=2034
+      PRE_RELEASE_VERSION=true
       ;;
     -d | --dry-run)
       # shellcheck disable=2034
@@ -239,6 +244,10 @@ function getGitVariables {
   if [ -n "$GIT_LAST_PROJECT_TAG_VER" ]; then
     mapfile -d '.' -t SEMANTIC_VERSION < <(printf '%s' "$GIT_LAST_PROJECT_TAG_VER")
     SEMANTIC_VERSION_COPY=("${SEMANTIC_VERSION[@]}")
+
+    if [[ $IS_STABLE_VERSION == false && "${SEMANTIC_VERSION[0]}" -gt 0 ]]; then
+      IS_STABLE_VERSION=true
+    fi
   fi
 }
 
