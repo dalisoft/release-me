@@ -13,3 +13,6 @@ CHANGELOG.md
 
 # release-me
 .release-me
+
+# Secrets
+.env

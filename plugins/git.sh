@@ -1,42 +1,38 @@
 #!/usr/bin/env bash
 set -e
 
-TEMP_GPG_FILE=$(mktemp)
+TMP_GIT_CONFIG_FILE=$(mktemp)
 
 prepare() {
+  export GIT_CONFIG="$TMP_GIT_CONFIG_FILE"
   if [[ -n "$GIT_USERNAME" && -n "$GIT_EMAIL" ]]; then
-    git config --global user.email "$GIT_EMAIL"
-    git config --global user.name "$GIT_USERNAME"
+    git config user.email "$GIT_EMAIL"
+    git config user.name "$GIT_USERNAME"
+    log_verbose "Git username and Git e-mail set"
   fi
   if [[ -n "$GPG_KEY_ID" ]]; then
-    git config --global commit.gpgsign true
-    git config --global user.signingkey "$GPG_KEY_ID"
-  fi
-  if [[ -n "$GPG_KEY_ID" && -n "$GPG_KEY" && -n "$GPG_KEY_PASSPHRASE" ]]; then
-    echo "$GPG_KEY" | base64 --decode | gpg --batch --import
-    rm -rf "$TEMP_GPG_FILE"
-    echo '#!/bin/bash' >>"$TEMP_GPG_FILE"
-    echo "gpg --batch --pinentry-mode=loopback --passphrase $GPG_KEY_PASSPHRASE " >>"$TEMP_GPG_FILE"
-    chmod +x "$TEMP_GPG_FILE"
-    git config --global gpg.program "$TEMP_GPG_FILE"
+    git config commit.gpgsign true
+    git config user.signingkey "$GPG_KEY_ID"
+    git config tag.forceSignAnnotated true
+    log_verbose "Git GPG sign set"
   fi
 }
 
 cleanup() {
   if [[ -n "$GIT_USERNAME" && -n "$GIT_EMAIL" ]]; then
-    git config --global --unset user.email
-    git config --global --unset user.name
+    git config --unset user.email
+    git config --unset user.name
+    log_verbose "Git username and Git e-mail unset"
   fi
   if [[ -n "$GPG_KEY_ID" ]]; then
-    git config --global --unset commit.gpgsign true
-    git config --global --unset user.signingkey "$GPG_KEY_ID"
-  fi
-  if [[ -n "$GPG_KEY_ID" && -n "$GPG_KEY" && -n "$GPG_KEY_PASSPHRASE" ]]; then
-    rm -rf "$TEMP_GPG_FILE"
-    git config --global --unset gpg.program
+    git config --unset commit.gpgsign
+    git config --unset user.signingkey
+    git config --unset tag.forceSignAnnotated
+    log_verbose "Git GPG sign unset"
   fi
 
-  git config --global --unset credential.helper
+  git config --unset credential.helper
+  rm -rf "$TMP_GIT_CONFIG_FILE"
 }
 
 release() {
@@ -48,7 +44,7 @@ release() {
     prepare
 
     if [[ -n "$GPG_KEY_ID" ]]; then
-      git tag --sign "$RELEASE_TAG_NAME" "$CHECKOUT_SHA"
+      git tag --sign "$RELEASE_TAG_NAME" --local-user "$GPG_KEY_ID" "$CHECKOUT_SHA" --message "$RELEASE_BODY"
     else
       git tag "$RELEASE_TAG_NAME" "$CHECKOUT_SHA"
     fi
