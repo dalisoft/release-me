@@ -105,7 +105,7 @@ function parseOptions {
       # shellcheck disable=2034
       IS_STABLE_VERSION=true
       ;;
-    --prerelease)
+    --pre-release)
       # shellcheck disable=2034
       PRE_RELEASE_VERSION=true
       ;;
