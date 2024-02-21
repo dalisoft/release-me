@@ -2,11 +2,9 @@
 set -e
 
 export GPG_TTY=$(tty)
-
-TMP_GIT_CONFIG_FILE=$(mktemp)
+export GIT_CONFIG=$(mktemp)
 
 prepare() {
-  export GIT_CONFIG="$TMP_GIT_CONFIG_FILE"
   if [[ -n "$GIT_USERNAME" && -n "$GIT_EMAIL" ]]; then
     git config user.email "$GIT_EMAIL"
     git config user.name "$GIT_USERNAME"
@@ -51,7 +49,7 @@ cleanup() {
     log_verbose "Git GPG config cleanup"
   fi
 
-  rm -rf "$TMP_GIT_CONFIG_FILE"
+  rm -rf "$GIT_CONFIG"
   log_verbose "Git config cleanup"
 }
 
