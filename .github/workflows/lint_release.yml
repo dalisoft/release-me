@@ -30,6 +30,7 @@ jobs:
           GPG_KEY_ID: ${{ env.GPG_KEY_ID }}
           GPG_KEY: ${{ secrets.GPG_KEY }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GIT_TRACE: 1
         shell: bash
         run: |
           bash ./release.sh --plugins=git,github-release --pre-release
