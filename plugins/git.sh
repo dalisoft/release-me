@@ -20,7 +20,7 @@ prepare() {
     git config --local gpg.program gpg
     log_verbose "Git GPG sign and key ID [$GPG_KEY_ID] are set"
   fi
-  if [[ -n "$GPG_PASSPHRASE" ]]; then
+  if [[ -n "$CI" && -n "$GPG_PASSPHRASE" ]]; then
     echo "allow-loopback-pinentry" >>~/.gnupg/gpg-agent.conf
     echo "pinentry-mode loopback" >>~/.gnupg/gpg.conf
     gpg-connect-agent reloadagent /bye
@@ -43,7 +43,7 @@ cleanup() {
     git config --local --unset gpg.program
     log_verbose "Git GPG sign unset"
   fi
-  if [[ -n "$GPG_PASSPHRASE" ]]; then
+  if [[ -n "$CI" && -n "$GPG_PASSPHRASE" ]]; then
     rm -rf ~/.gnupg/gpg-agent.conf
     rm -rf ~/.gnupg/gpg.conf
     log_verbose "Git GPG config cleanup"
