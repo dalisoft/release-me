@@ -11,8 +11,8 @@ Options:
   -w, --workspace Use in workspace environment for publishing workspaces separately.
   --verbose       Verbose mode, shows more detailed logs.
   --quiet         Quiet mode, shows less logs than default behavior.
-  --plugins=*     Plugins option for loading plugins [Required].
-  --preset=       Presets option for parsing commits [Required].
+  --plugins=*     Plugins option for loading plugins.
+  --preset=       Presets option for parsing commits.
   --stable        If project has a \`0.x\` version, it will bump to \`1.x\`.
   --pre-release   Mark project release as non-production ready.
   -h, --help      Show this help.
