@@ -47,6 +47,8 @@ List of contents:
 
 See this project [workflow](../.github/workflows/lint_release.yml) or see below
 
+> On **homepage** below content may show not properly, so, please check **workflow** file linked above
+
 ```yaml
 name: Release
 on:
