@@ -10,7 +10,7 @@ prepare() {
   if [[ -n "$GIT_USERNAME" && -n "$GIT_EMAIL" ]]; then
     git config user.email "$GIT_EMAIL"
     git config user.name "$GIT_USERNAME"
-    log_verbose "Git username and Git e-mail set"
+    log_verbose "Git username [$GIT_USERNAME] and Git e-mail [$GIT_EMAIL] set"
   fi
   if [[ -n "$GPG_KEY" ]]; then
     echo "$GPG_KEY" | base64 --decode | gpg --batch --import
@@ -20,7 +20,7 @@ prepare() {
     git config user.signingkey "$GPG_KEY_ID"
     git config tag.forceSignAnnotated true
     git config gpg.program gpg
-    log_verbose "Git GPG sign set"
+    log_verbose "Git GPG sign and key ID [$GPG_KEY_ID] are set"
   fi
   if [[ -n "$GPG_PASSPHRASE" ]]; then
     echo "allow-loopback-pinentry" >>~/.gnupg/gpg-agent.conf
