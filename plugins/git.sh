@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+export GPG_TTY=$(tty)
+
 TMP_GIT_CONFIG_FILE=$(mktemp)
 
 prepare() {
@@ -24,6 +26,9 @@ prepare() {
     echo "allow-loopback-pinentry" >>~/.gnupg/gpg-agent.conf
     echo "pinentry-mode loopback" >>~/.gnupg/gpg.conf
     gpg-connect-agent reloadagent /bye
+
+    echo "$GPG_PASSPHRASE" | gpg --passphrase-fd 0 --batch --pinentry-mode loopback --sign
+    log_verbose "Git GPG passphrease set"
   fi
 }
 
@@ -56,7 +61,6 @@ release() {
 
   if ! $IS_DRY_RUN; then
     prepare
-    export GPG_TTY=$(tty)
 
     if [[ -n "$GPG_KEY_ID" && -n "$GPG_PASSPHRASE" ]]; then
       git tag --sign "$RELEASE_TAG_NAME" "$CHECKOUT_SHA" --message "Release, tag and sign $RELEASE_TAG_NAME"
