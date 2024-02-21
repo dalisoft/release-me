@@ -44,8 +44,8 @@ Before you start using release-me, make sure you have the following installed on
 
 ### Limitations
 
-- Currently supports only **Node.js**, **Rust** and **Python** projects
-- Version should be valid, see [Semantic Versioning](https://semver.org)
+- Currently supports only **Node.js**, **Rust** and **Python** projects (library only)
+- Rebased commits tracking are lost so duplicate releases possible
 
 ### Versioning priority
 
