@@ -17,10 +17,12 @@ prepare() {
     git config commit.gpgsign true
     git config user.signingkey "$GPG_KEY_ID"
     git config tag.forceSignAnnotated true
+    git config gpg.program gpg
     log_verbose "Git GPG sign set"
   fi
-  if [[ -n "$GPG_KEY_PASSPHRASE" ]]; then
-    echo 'ALLOW_LOOPBACK_PINENTRY=yes' >>~/.gnupg/gpg-agent.conf
+  if [[ -n "$GPG_PASSPHRASE" ]]; then
+    echo "allow-loopback-pinentry" >>~/.gnupg/gpg-agent.conf
+    echo "pinentry-mode loopback" >>~/.gnupg/gpg.conf
     gpg-connect-agent reloadagent /bye
   fi
 }
@@ -35,7 +37,12 @@ cleanup() {
     git config --unset commit.gpgsign
     git config --unset user.signingkey
     git config --unset tag.forceSignAnnotated
+    git config --unset gpg.program
     log_verbose "Git GPG sign unset"
+  fi
+  if [[ -n "$GPG_PASSPHRASE" ]]; then
+    rm -rf ~/.gnupg/gpg-agent.conf
+    rm -rf ~/.gnupg/gpg.conf
   fi
 
   git config --unset credential.helper
@@ -49,9 +56,10 @@ release() {
 
   if ! $IS_DRY_RUN; then
     prepare
+    export GPG_TTY=$(tty)
 
-    if [[ -n "$GPG_KEY_ID" ]]; then
-      echo "$GPG_KEY_PASSPHRASE" | git tag --sign "$RELEASE_TAG_NAME" --local-user "$GPG_KEY_ID" "$CHECKOUT_SHA" --message "$RELEASE_BODY" --batch --pinentry-mode loopback --passphrase-fd 0
+    if [[ -n "$GPG_KEY_ID" && -n "$GPG_PASSPHRASE" ]]; then
+      git tag --sign "$RELEASE_TAG_NAME" "$CHECKOUT_SHA" --message "Release, tag and sign $RELEASE_TAG_NAME"
     else
       git tag "$RELEASE_TAG_NAME" "$CHECKOUT_SHA"
     fi
