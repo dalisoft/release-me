@@ -12,7 +12,7 @@ Options:
   --verbose       Verbose mode, shows more detailed logs.
   --quiet         Quiet mode, shows less logs than default behavior.
   --plugins=*     Plugins option for loading plugins [Required].
-  --presets=*     Presets option for parsing commits [Required].
+  --preset=       Presets option for parsing commits [Required].
   --stable        If project has a \`0.x\` version, it will bump to \`1.x\`.
   --pre-release   Mark project release as non-production ready.
   -h, --help      Show this help.
