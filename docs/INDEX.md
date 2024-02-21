@@ -21,7 +21,7 @@ Blazing fast minimal [semantic-release](https://github.com/semantic-release/sema
 
 ## Documentation
 
-See [**Getting Started**](./docs/GET_STARTED.md)
+See [**Getting Started**](./GET_STARTED.md)
 
 ## Similar projects
 
