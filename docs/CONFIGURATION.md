@@ -68,12 +68,12 @@ jobs:
           token: ${{ secrets.GH_TOKEN }} # <-- This line is REQUIRED too
       - name: Release
         env:
-          GIT_USERNAME: \${{ vars.GIT_USERNAME }}
-          GIT_EMAIL: \${{ vars.GIT_EMAIL }}
-          GITHUB_TOKEN: \${{ secrets.GH_TOKEN }} # <-- This line is REQUIRED too
-          GPG_KEY_ID: \${{ vars.GPG_KEY_ID }}
-          GPG_KEY: \${{ secrets.GPG_KEY }}
-          GPG_PASSPHRASE: \${{ secrets.GPG_PASSPHRASE }}
+          GIT_USERNAME: ${{ vars.GIT_USERNAME }}
+          GIT_EMAIL: ${{ vars.GIT_EMAIL }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} # <-- This line is REQUIRED too
+          GPG_KEY_ID: ${{ vars.GPG_KEY_ID }}
+          GPG_KEY: ${{ secrets.GPG_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         shell: bash
         run: |
           git clone https://github.com/dalisoft/release-me.git --depth 1 .release-me
