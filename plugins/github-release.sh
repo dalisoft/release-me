@@ -19,7 +19,7 @@ release() {
         -H "Authorization: Bearer $GITHUB_TOKEN" \
         -H "X-GitHub-Api-Version: 2022-11-28" \
         "https://api.github.com/repos/$GIT_REPO_NAME/releases" \
-        -d "{\"tag_name\":\"$RELEASE_TAG_NAME\",\"target_commitish\":\"$CHECKOUT_SHA\",\"name\":\"$RELEASE_TAG_NAME\",\"body\":\"$RELEASE_BODY\",\"draft\":false,\"prerelease\":false,\"generate_release_notes\":false,\"make_latest\":\"true\"}"
+        -d "{\"tag_name\":\"$RELEASE_TAG_NAME\",\"target_commitish\":\"$CHECKOUT_SHA\",\"name\":\"$RELEASE_TAG_NAME\",\"body\":\"$RELEASE_BODY\",\"draft\":false,\"prerelease\":$PRE_RELEASE_VERSION,\"generate_release_notes\":false,\"make_latest\":\"true\"}"
       log "Created GitHub release [$RELEASE_TAG_NAME]!"
       echo "GitHub release available at https://github.com/$GIT_REPO_NAME/releases/tag/$RELEASE_TAG_NAME"
     else
