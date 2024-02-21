@@ -41,3 +41,39 @@ List of contents:
 | `GPG_KEY_ID`     | Public GPG key/ring ID | Variables | **git** plugin  |
 | `GPG_KEY`        | Private GPG key        | Secrets   | **git** plugin  |
 | `GPG_PASSPHRASE` | Private GPG passphrase | Secrets   | **git** plugin  |
+
+### GH Actions Configurations
+
+See this project [workflow](../.github/workflows/lint_release.yml) or see below
+
+```yaml
+name: Release
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+env:
+  CI: true
+
+jobs:
+  release:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # <-- This line is REQUIRED
+          token: ${{ secrets.GH_TOKEN }} # <-- This line is REQUIRED too
+      - name: Release
+        env:
+          GIT_USERNAME: ${{ vars.GIT_USERNAME }}
+          GIT_EMAIL: ${{ vars.GIT_EMAIL }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} # <-- This line is REQUIRED too
+          GPG_KEY_ID: ${{ vars.GPG_KEY_ID }}
+          GPG_KEY: ${{ secrets.GPG_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        shell: bash
+        run: |
+          bash ./release.sh --plugins=git,github-release --pre-release
+```
