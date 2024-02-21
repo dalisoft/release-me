@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 set -e
 
+# Global variables
 export GPG_TTY=$(tty)
-export GIT_CONFIG=$(mktemp)
 
 prepare() {
   if [[ -n "$GIT_USERNAME" && -n "$GIT_EMAIL" ]]; then
-    git config user.email "$GIT_EMAIL"
-    git config user.name "$GIT_USERNAME"
+    git config --global user.email "$GIT_EMAIL"
+    git config --global user.name "$GIT_USERNAME"
     log_verbose "Git username [$GIT_USERNAME] and Git e-mail [$GIT_EMAIL] set"
   fi
   if [[ -n "$GPG_KEY" ]]; then
     echo "$GPG_KEY" | base64 --decode | gpg --batch --import
   fi
   if [[ -n "$GPG_KEY_ID" ]]; then
-    git config commit.gpgsign true
-    git config user.signingkey "$GPG_KEY_ID"
-    git config tag.forceSignAnnotated true
-    git config gpg.program gpg
+    git config --global commit.gpgsign true
+    git config --global user.signingkey "$GPG_KEY_ID"
+    git config --global tag.forceSignAnnotated true
+    git config --global gpg.program gpg
     log_verbose "Git GPG sign and key ID [$GPG_KEY_ID] are set"
   fi
   if [[ -n "$GPG_PASSPHRASE" ]]; then
@@ -32,15 +32,15 @@ prepare() {
 
 cleanup() {
   if [[ -n "$GIT_USERNAME" && -n "$GIT_EMAIL" ]]; then
-    git config --unset user.email
-    git config --unset user.name
+    git config --global --unset user.email
+    git config --global --unset user.name
     log_verbose "Git username and Git e-mail unset"
   fi
   if [[ -n "$GPG_KEY_ID" ]]; then
-    git config --unset commit.gpgsign
-    git config --unset user.signingkey
-    git config --unset tag.forceSignAnnotated
-    git config --unset gpg.program
+    git config --global --unset commit.gpgsign
+    git config --global --unset user.signingkey
+    git config --global --unset tag.forceSignAnnotated
+    git config --global --unset gpg.program
     log_verbose "Git GPG sign unset"
   fi
   if [[ -n "$GPG_PASSPHRASE" ]]; then
@@ -49,7 +49,6 @@ cleanup() {
     log_verbose "Git GPG config cleanup"
   fi
 
-  rm -rf "$GIT_CONFIG"
   log_verbose "Git config cleanup"
 }
 
