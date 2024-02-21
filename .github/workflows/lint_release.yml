@@ -24,7 +24,11 @@ jobs:
 
       - name: Release
         env:
+          GIT_USERNAME: ${{ env.GIT_USERNAME }}
+          GIT_EMAIL: ${{ env.GIT_EMAIL }}
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GPG_KEY_ID: ${{ env.GPG_KEY_ID }}
+          GPG_KEY: ${{ secrets.GPG_KEY }}
         shell: bash
         run: |
           bash ./release.sh --plugins=git,github-release --pre-release
