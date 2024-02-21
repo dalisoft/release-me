@@ -71,3 +71,7 @@ If one of files described below will be found, script parse first matched file a
 
 - [semantic-release](https://semantic-release.gitbook.io)
 - [go-semantic-release](https://github.com/go-semantic-release/semantic-release)
+
+## License
+
+GPL-3 or later
