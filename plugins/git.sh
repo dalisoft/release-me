@@ -51,7 +51,6 @@ cleanup() {
     log_verbose "Git GPG config cleanup"
   fi
 
-  git config --unset credential.helper
   rm -rf "$TMP_GIT_CONFIG_FILE"
   log_verbose "Git config cleanup"
 }
