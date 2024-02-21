@@ -28,7 +28,7 @@ prepare() {
     gpg-connect-agent reloadagent /bye
 
     gpg --passphrase "$GPG_PASSPHRASE" --batch --pinentry-mode loopback --sign
-    log_verbose "Git GPG passphrease set"
+    log_verbose "Git GPG passphrase set"
   fi
 }
 
@@ -48,10 +48,12 @@ cleanup() {
   if [[ -n "$GPG_PASSPHRASE" ]]; then
     rm -rf ~/.gnupg/gpg-agent.conf
     rm -rf ~/.gnupg/gpg.conf
+    log_verbose "Git GPG config cleanup"
   fi
 
   git config --unset credential.helper
   rm -rf "$TMP_GIT_CONFIG_FILE"
+  log_verbose "Git config cleanup"
 }
 
 release() {
