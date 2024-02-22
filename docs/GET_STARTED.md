@@ -46,6 +46,7 @@ Before you start using release-me, make sure you have the following installed on
 
 - Currently supports only **Node.js**, **Rust** and **Python** projects (library only)
 - Rebased commits tracking are lost so duplicate releases possible
+- Available only in **Unix** environments (no Windows support yet)
 
 ### Versioning priority
 
