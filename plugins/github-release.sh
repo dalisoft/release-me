@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -eu
 
 release() {
   log_verbose "Release tag: $NEXT_RELEASE_TAG"

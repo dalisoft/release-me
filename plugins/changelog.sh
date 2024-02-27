@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -eu
 
 release() {
   log_verbose "CHANGELOG version: $NEXT_RELEASE_TAG"

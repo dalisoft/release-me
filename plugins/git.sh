@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -eu
 
 # Global variables
 export GPG_TTY=$(tty)
@@ -61,7 +61,7 @@ release() {
     prepare
 
     if [[ -n "$GPG_KEY_ID" && -n "$GPG_PASSPHRASE" ]]; then
-      git tag --sign "$NEXT_RELEASE_TAG" "$CHECKOUT_SHA" --message "Release, tag and sign $RELEASE_TAG_NAME"
+      git tag --sign "$NEXT_RELEASE_TAG" "$CHECKOUT_SHA" --message "Release, tag and sign $NEXT_RELEASE_TAG"
       echo "Created signed Git tag [$NEXT_RELEASE_TAG]!"
     else
       git tag "$NEXT_RELEASE_TAG" "$CHECKOUT_SHA"
