@@ -200,8 +200,8 @@ fi
 ##############################
 
 PKG_NAME=""
-SEMANTIC_VERSION=(0 0 0)
-SEMANTIC_VERSION_COPY=(0 0 0)
+NEXT_VERSION=(0 0 0)
+CURRENT_VERSION=(0 0 0)
 
 function parsePackages {
   if ! $IS_WORKSPACE; then
@@ -244,10 +244,10 @@ function getGitVariables {
   fi
 
   if [ -n "$GIT_LAST_PROJECT_TAG_VER" ]; then
-    mapfile -d '.' -t SEMANTIC_VERSION < <(printf '%s' "$GIT_LAST_PROJECT_TAG_VER")
-    SEMANTIC_VERSION_COPY=("${SEMANTIC_VERSION[@]}")
+    mapfile -d '.' -t NEXT_VERSION < <(printf '%s' "$GIT_LAST_PROJECT_TAG_VER")
+    CURRENT_VERSION=("${NEXT_VERSION[@]}")
 
-    if [[ $IS_STABLE_VERSION == false && $PRE_RELEASE_VERSION == false && "${SEMANTIC_VERSION[0]}" -gt 0 ]]; then
+    if [[ $IS_STABLE_VERSION == false && $PRE_RELEASE_VERSION == false && "${NEXT_VERSION[0]}" -gt 0 ]]; then
       IS_STABLE_VERSION=true
     fi
   fi
@@ -299,9 +299,9 @@ function getGitCommits {
 ##############################
 #### Git commits handling ####
 ##############################
-BUILD_VERSION=""
-RELEASE_VERSION=""
-RELEASE_TAG_NAME=""
+NEXT_BUILD_VERSION=""
+NEXT_RELEASE_VERSION=""
+NEXT_RELEASE_TAG=""
 RELEASE_BODY=""
 
 PATCH_UPGRADED=false
@@ -325,51 +325,51 @@ function handleGitCommits {
   log_verbose "Analyzed commits!"
 
   log_verbose "Analyzing updates..."
-  if $IS_STABLE_VERSION && "${SEMANTIC_VERSION[0]}" -eq 0; then
-    SEMANTIC_VERSION=(1 0 0)
-  elif [[ $MAJOR_UPGRADED == true && "${SEMANTIC_VERSION[0]}" -gt 0 ]]; then
-    SEMANTIC_VERSION[0]=$((SEMANTIC_VERSION[0] + 1))
-    SEMANTIC_VERSION[1]=0
-    SEMANTIC_VERSION[2]=0
-  elif $MINOR_UPGRADED || [[ $MAJOR_UPGRADED == true && "${SEMANTIC_VERSION[0]}" -eq 0 ]]; then
-    SEMANTIC_VERSION[1]=$((SEMANTIC_VERSION[1] + 1))
-    SEMANTIC_VERSION[2]=0
+  if $IS_STABLE_VERSION && "${NEXT_VERSION[0]}" -eq 0; then
+    NEXT_VERSION=(1 0 0)
+  elif [[ $MAJOR_UPGRADED == true && "${NEXT_VERSION[0]}" -gt 0 ]]; then
+    NEXT_VERSION[0]=$((NEXT_VERSION[0] + 1))
+    NEXT_VERSION[1]=0
+    NEXT_VERSION[2]=0
+  elif $MINOR_UPGRADED || [[ $MAJOR_UPGRADED == true && "${NEXT_VERSION[0]}" -eq 0 ]]; then
+    NEXT_VERSION[1]=$((SEMANTIC_VERSION[1] + 1))
+    NEXT_VERSION[2]=0
   elif $PATCH_UPGRADED; then
-    SEMANTIC_VERSION[2]=$((SEMANTIC_VERSION[2] + 1))
+    NEXT_VERSION[2]=$((SEMANTIC_VERSION[2] + 1))
   fi
 
-  BUILD_VERSION=$(
+  NEXT_BUILD_VERSION=$(
     IFS='.'
-    echo -n "${SEMANTIC_VERSION[*]}"
+    echo -n "${NEXT_VERSION[*]}"
   )
-  PREV_BUILD_VERSION=$(
+  CURRENT_BUILD_VERSION=$(
     IFS='.'
-    echo -n "${SEMANTIC_VERSION_COPY[*]}"
+    echo -n "${CURRENT_VERSION[*]}"
   )
 
-  if [ "$BUILD_VERSION" == "$PREV_BUILD_VERSION" ]; then
+  if [ "$NEXT_BUILD_VERSION" == "$CURRENT_BUILD_VERSION" ]; then
     up_to_date "Your project has no incremental update"
   else
     log_verbose "Analyzing updates done!"
   fi
 
-  RELEASE_PREV_TAG_NAME=""
+  CURRENT_RELEASE_TAG=""
 
   if $IS_WORKSPACE; then
-    RELEASE_VERSION="v${BUILD_VERSION}"
-    RELEASE_TAG_NAME="${PKG_NAME}-${RELEASE_VERSION}"
-    RELEASE_PREV_TAG_NAME="${PKG_NAME}-v${PREV_BUILD_VERSION}"
+    NEXT_RELEASE_VERSION="v${NEXT_BUILD_VERSION}"
+    NEXT_RELEASE_TAG="${PKG_NAME}-${RELEASE_VERSION}"
+    CURRENT_RELEASE_TAG="${PKG_NAME}-v${CURRENT_BUILD_VERSION}"
   else
-    RELEASE_VERSION="v${BUILD_VERSION}"
-    RELEASE_TAG_NAME="${RELEASE_VERSION}"
-    RELEASE_PREV_TAG_NAME="v${PREV_BUILD_VERSION}"
+    NEXT_RELEASE_VERSION="v${CURRENT_BUILD_VERSION}"
+    NEXT_RELEASE_TAG="${RELEASE_VERSION}"
+    CURRENT_RELEASE_TAG="v${CURRENT_BUILD_VERSION}"
   fi
 
   if [ -n "$GIT_LAST_PROJECT_TAG_VER" ]; then
-    RELEASE_DIFF_URL="https://github.com/$GIT_REPO_NAME/compare/${RELEASE_PREV_TAG_NAME}...$RELEASE_TAG_NAME"
-    RELEASE_BODY_TITLE="[$RELEASE_TAG_NAME]($RELEASE_DIFF_URL) ($CURRENT_DATE)"
+    RELEASE_DIFF_URL="https://github.com/$GIT_REPO_NAME/compare/${CURRENT_RELEASE_TAG}...$NEXT_RELEASE_TAG"
+    RELEASE_BODY_TITLE="[$NEXT_RELEASE_VERSION]($RELEASE_DIFF_URL) ($CURRENT_DATE)"
   else
-    RELEASE_BODY_TITLE="$RELEASE_TAG_NAME ($CURRENT_DATE)"
+    RELEASE_BODY_TITLE="$NEXT_RELEASE_VERSION ($CURRENT_DATE)"
   fi
 
   RELEASE_BODY="# $RELEASE_BODY_TITLE\n$RELEASE_BODY"
