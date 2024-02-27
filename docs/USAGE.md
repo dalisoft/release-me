@@ -2,7 +2,7 @@
 
 > Except bugs, errors and/or strange behavior
 
-Blazing fast minimal [semantic-release](https://github.com/semantic-release/semantic-release) alternative written-in **Bash** script with it's **GitHub** and **npm** plugins and presets support
+Blazing fast minimal release workflow script written in **Bash** with plugins and presets support
 
 List of contents:
 

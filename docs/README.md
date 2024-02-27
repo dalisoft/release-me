@@ -2,7 +2,7 @@
 
 > Except bugs, errors and/or strange behavior
 
-Blazing fast minimal [semantic-release](https://github.com/semantic-release/semantic-release) alternative written-in **Bash** script with it's **GitHub** and **npm** plugins and presets support
+Blazing fast minimal release workflow script written in **Bash** with plugins and presets support
 
 ## Features
 
@@ -11,13 +11,10 @@ Blazing fast minimal [semantic-release](https://github.com/semantic-release/sema
 - No pre-install, just use
 - Blazing fast, no wait
 - Workspace support out-of-box
-- Much stable/reliable than **semantic-release** as does not loses commits\*
-- Programming language agnostic\*
+- Programming language agnostic
 - Fast (<5 sec with all plugins execution)
 - Plugins available/compatible
 - Presets available/compatible
-
-> \* - It's still in `0.x` phase but still handles much better and faster
 
 ## Documentation
 
@@ -32,4 +29,4 @@ Go-to [repository page](https://github.com/dalisoft/release-me) or see [**Gettin
 
 ## License
 
-GPL-3 or later
+GPL-3
