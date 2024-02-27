@@ -2,7 +2,7 @@
 set -e
 
 readonly CLI_PREFIX="[release-me]"
-readonly DESCRIPTION="Blazing fast minimal semantic-release alternative written-in Bash script with it's GitHub and npm plugins and presets support"
+readonly DESCRIPTION="Blazing fast minimal release workflow script written in Bash with plugins and presets support"
 readonly USAGE="$CLI_PREFIX Usage: release-me [options]
 $DESCRIPTION
 
