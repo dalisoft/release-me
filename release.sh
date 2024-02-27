@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -eu
 
 readonly CLI_PREFIX="[release-me]"
 readonly DESCRIPTION="Blazing fast minimal release workflow script written in Bash with plugins and presets support"
@@ -48,7 +48,7 @@ PLUGINS=("git")
 PRESET="conventional-commits"
 
 # set `verbose` on `CI`
-if [ "$CI" == true ]; then
+if [ "${CI:-}" == true ]; then
   IS_VERBOSE=true
 fi
 
@@ -82,7 +82,7 @@ glc() {
 
 function parseOptions {
   while :; do
-    local KEY="$1"
+    local KEY="${1:-}"
     case $KEY in
     -v | --version)
       echo "$CLI_PREFIX last version available at GitHub"
@@ -160,7 +160,7 @@ function isValidCommitType {
 ##############################
 log() {
   if ! $IS_QUIET; then
-    if [ "$2" == "-q" ]; then
+    if [ "${2:-}" == "-q" ]; then
       echo -e "$1"
     else
       echo -e "$CLI_PREFIX $1"
@@ -332,10 +332,10 @@ function handleGitCommits {
     NEXT_VERSION[1]=0
     NEXT_VERSION[2]=0
   elif $MINOR_UPGRADED || [[ $MAJOR_UPGRADED == true && "${NEXT_VERSION[0]}" -eq 0 ]]; then
-    NEXT_VERSION[1]=$((SEMANTIC_VERSION[1] + 1))
+    NEXT_VERSION[1]=$((NEXT_VERSION[1] + 1))
     NEXT_VERSION[2]=0
   elif $PATCH_UPGRADED; then
-    NEXT_VERSION[2]=$((SEMANTIC_VERSION[2] + 1))
+    NEXT_VERSION[2]=$((NEXT_VERSION[2] + 1))
   fi
 
   NEXT_BUILD_VERSION=$(
@@ -357,11 +357,11 @@ function handleGitCommits {
 
   if $IS_WORKSPACE; then
     NEXT_RELEASE_VERSION="v${NEXT_BUILD_VERSION}"
-    NEXT_RELEASE_TAG="${PKG_NAME}-${RELEASE_VERSION}"
+    NEXT_RELEASE_TAG="${PKG_NAME}-${NEXT_RELEASE_VERSION}"
     CURRENT_RELEASE_TAG="${PKG_NAME}-v${CURRENT_BUILD_VERSION}"
   else
     NEXT_RELEASE_VERSION="v${CURRENT_BUILD_VERSION}"
-    NEXT_RELEASE_TAG="${RELEASE_VERSION}"
+    NEXT_RELEASE_TAG="${NEXT_RELEASE_VERSION}"
     CURRENT_RELEASE_TAG="v${CURRENT_BUILD_VERSION}"
   fi
 
