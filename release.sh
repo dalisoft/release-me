@@ -160,7 +160,7 @@ function isValidCommitType {
 ##############################
 log() {
   if ! $IS_QUIET; then
-    if [ "${2:-}" == "-q" ]; then
+    if [ "${2-}" == "-q" ]; then
       echo -e "$1"
     else
       echo -e "$CLI_PREFIX $1"
@@ -169,7 +169,7 @@ log() {
 }
 log_verbose() {
   if $IS_VERBOSE; then
-    if [ "$2" == "-q" ]; then
+    if [ "${2-}" == "-q" ]; then
       echo -e "$1"
     else
       echo -e "$CLI_PREFIX $1"
