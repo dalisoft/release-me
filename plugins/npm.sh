@@ -3,7 +3,7 @@ set -eu
 
 release() {
   # Publish a `npm` tag
-  if [[ "$NPM_TOKEN" != "" ]]; then
+  if [[ "${NPM_TOKEN-}" != "" ]]; then
     log "Publishing npm tag..."
     log_verbose "npm tag: $NEXT_RELEASE_TAG and version: $NEXT_RELEASE_VERSION!"
 
