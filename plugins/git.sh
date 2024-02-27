@@ -61,18 +61,18 @@ release() {
     prepare
 
     if [[ -n "$GPG_KEY_ID" && -n "$GPG_PASSPHRASE" ]]; then
-      git tag --sign "$RELEASE_TAG_NAME" "$CHECKOUT_SHA" --message "Release, tag and sign $RELEASE_TAG_NAME"
-      echo "Created signed Git tag [$RELEASE_TAG_NAME]!"
+      git tag --sign "$NEXT_RELEASE_TAG" "$CHECKOUT_SHA" --message "Release, tag and sign $RELEASE_TAG_NAME"
+      echo "Created signed Git tag [$NEXT_RELEASE_TAG]!"
     else
-      git tag "$RELEASE_TAG_NAME" "$CHECKOUT_SHA"
-      echo "Created Git tag [$RELEASE_TAG_NAME]!"
+      git tag "$NEXT_RELEASE_TAG" "$CHECKOUT_SHA"
+      echo "Created Git tag [$NEXT_RELEASE_TAG]!"
     fi
 
-    git push origin "refs/tags/$RELEASE_TAG_NAME"
+    git push origin "refs/tags/$NEXT_RELEASE_TAG"
     log_verbose "Pushed Git tag to remote"
 
     cleanup
   else
-    log "Skipped Git tag [$RELEASE_TAG_NAME] in DRY-RUN mode."
+    log "Skipped Git tag [$NEXT_RELEASE_TAG] in DRY-RUN mode."
   fi
 }

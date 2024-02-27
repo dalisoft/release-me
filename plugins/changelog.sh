@@ -2,7 +2,7 @@
 set -e
 
 release() {
-  log_verbose "CHANGELOG version: $RELEASE_TAG_NAME"
+  log_verbose "CHANGELOG version: $NEXT_RELEASE_TAG"
   log_verbose "CHANGELOG content: \n$RELEASE_BODY"
 
   log "Generating Changelog..."

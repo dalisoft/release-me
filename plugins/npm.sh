@@ -5,7 +5,7 @@ release() {
   # Publish a `npm` tag
   if [[ "$NPM_TOKEN" != "" ]]; then
     log "Publishing npm tag..."
-    log_verbose "npm tag: $RELEASE_TAG_NAME and version: $RELEASE_VERSION!"
+    log_verbose "npm tag: $NEXT_RELEASE_TAG and version: $NEXT_RELEASE_VERSION!"
 
     if ! $IS_DRY_RUN; then
       TEMP_FILE=$(mktemp)
@@ -15,12 +15,12 @@ release() {
       sed -i '' "s/\"version\": \"[^\"]*\",/\"version\": \"$BUILD_VERSION\",/" "$EXEC_DIR/package.json"
 
       export NODE_AUTH_TOKEN="$NPM_TOKEN"
-      npm publish "$RELEASE_VERSION" --userconfig "$TEMP_FILE"
+      npm publish "$NEXT_RELEASE_VERSION" --userconfig "$TEMP_FILE"
 
-      echo "Published [$RELEASE_TAG_NAME]!"
+      echo "Published [$NEXT_RELEASE_TAG]!"
       rm -rf "$TEMP_FILE"
     else
-      log "Skipped npm tag [$RELEASE_TAG_NAME] in DRY-RUN mode."
+      log "Skipped npm tag [$NEXT_RELEASE_TAG] in DRY-RUN mode."
     fi
   else
     echo "
