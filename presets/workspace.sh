@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -eu
 
 # RegExp as variable
 regexp_commit_primary="^([a-z]+)(\(([^\)]+)\))?:\ (.+)$"
