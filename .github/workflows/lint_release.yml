@@ -13,6 +13,12 @@ on:
 
 env:
   CI: true
+  GIT_USERNAME: ${{ vars.GIT_USERNAME }}
+  GIT_EMAIL: ${{ vars.GIT_EMAIL }}
+  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+  GPG_KEY_ID: ${{ vars.GPG_KEY_ID }}
+  GPG_KEY: ${{ secrets.GPG_KEY }}
+  GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
 jobs:
   lint:
@@ -46,13 +52,6 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
 
       - name: Release
-        env:
-          GIT_USERNAME: ${{ vars.GIT_USERNAME }}
-          GIT_EMAIL: ${{ vars.GIT_EMAIL }}
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          GPG_KEY_ID: ${{ vars.GPG_KEY_ID }}
-          GPG_KEY: ${{ secrets.GPG_KEY }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         shell: bash
         run: |
           bash ./release.sh --plugins=git,github-release --pre-release
