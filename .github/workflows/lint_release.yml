@@ -15,25 +15,35 @@ env:
   CI: true
 
 jobs:
-  lint_test_release:
+  lint:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GH_TOKEN }}
 
       - name: Lint
         shell: bash
         run: |
-            apt install shellcheck -y
+            sudo apt install shellcheck -y
             shellcheck *.sh
+  test:
+    needs: lint
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Test
         shell: bash
         run: |
           bash <(curl -s https://raw.githubusercontent.com/pgrange/bash_unit/master/install.sh)
           ./bash_unit tests/**.test.sh
+  release:
+    needs: test
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN }}
 
       - name: Release
         env:
