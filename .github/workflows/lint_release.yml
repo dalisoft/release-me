@@ -15,13 +15,25 @@ env:
   CI: true
 
 jobs:
-  release:
+  lint_test_release:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GH_TOKEN }}
+
+      - name: Lint
+        shell: bash
+        run: |
+            apt install shellcheck -y
+            shellcheck *.sh
+
+      - name: Test
+        shell: bash
+        run: |
+          bash <(curl -s https://raw.githubusercontent.com/pgrange/bash_unit/master/install.sh)
+          ./bash_unit tests/**.test.sh
 
       - name: Release
         env:

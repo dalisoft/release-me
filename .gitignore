@@ -14,8 +14,8 @@ CHANGELOG.md
 # release-me
 .release-me
 
-#bashunit
-bashunit
+#testing library
+bash_unit
 
 # Secrets
 .env
