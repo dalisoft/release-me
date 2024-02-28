@@ -68,8 +68,12 @@ release() {
       echo "Created Git tag [$NEXT_RELEASE_TAG]!"
     fi
 
-    git push origin "refs/tags/$NEXT_RELEASE_TAG"
-    log_verbose "Pushed Git tag to remote"
+    if [[ -n "$GIT_REMOTE_ORIGIN" ]]; then
+      git push origin "refs/tags/$NEXT_RELEASE_TAG"
+      log_verbose "Pushed Git tag to remote"
+    else
+      log_verbose "No Git remote to push tag"
+    fi
 
     cleanup
   else
