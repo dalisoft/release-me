@@ -17,13 +17,16 @@ setup_suite() {
 }
 
 teardown_suite() {
+  cd "$REPO_FOLDER"
+
   git config --local --unset user.email
   git config --local --unset user.name
   git config --local --unset init.defaultBranch
 
+  cd "$PROJECT_DIR"
+
   rm -rf "$REPO_FOLDER"
   unset REPO_FOLDER
-  cd "$PROJECT_DIR"
 
   unset GIT_DIR
   unset GIT_WORK_TREE
