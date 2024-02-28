@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eu
+set -e
 
 PROJECT_DIR=$(pwd)
 REPO_FOLDER=$(mktemp -d)
@@ -7,7 +7,7 @@ REPO_FOLDER=$(mktemp -d)
 setup_suite() {
   git config --local user.email "$GIT_EMAIL"
   git config --local user.name "$GIT_USERNAME"
-  git config --global init.defaultBranch master
+  git config --local init.defaultBranch master
 
   cd "$REPO_FOLDER"
   git init
@@ -17,9 +17,9 @@ setup_suite() {
 }
 
 teardown_suite() {
-  git config --global --unset user.email
-  git config --global --unset user.name
-  git config --global --unset init.defaultBranch
+  git config --local --unset user.email
+  git config --local --unset user.name
+  git config --local --unset init.defaultBranch
 
   rm -rf "$REPO_FOLDER"
   unset REPO_FOLDER
