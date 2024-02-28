@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-set -e
+set -eu
 
 PROJECT_DIR=$(pwd)
 REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
-  git config --global user.email "test@dalisoft.uz"
-  git config --global user.name "Test git account"
+  git config --local user.email "$GIT_EMAIL"
+  git config --local user.name "$GIT_USERNAME"
   git config --global init.defaultBranch master
 
   cd "$REPO_FOLDER"
