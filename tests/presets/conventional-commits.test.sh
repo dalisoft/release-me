@@ -5,6 +5,10 @@ PROJECT_DIR=$(pwd)
 REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
+  git config --global user.email "test@dalisoft.uz"
+  git config --global user.name "Test git account"
+  git config --global init.defaultBranch master
+
   cd "$REPO_FOLDER"
   git init
 
@@ -13,6 +17,10 @@ setup_suite() {
 }
 
 teardown_suite() {
+  git config --global --unset user.email
+  git config --global --unset user.name
+  git config --global --unset init.defaultBranch
+
   rm -rf "$REPO_FOLDER"
   unset REPO_FOLDER
   cd "$PROJECT_DIR"

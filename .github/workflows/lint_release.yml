@@ -32,12 +32,6 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Test
-        env:
-          GIT_USERNAME: ${{ vars.GIT_USERNAME }}
-          GIT_EMAIL: ${{ vars.GIT_EMAIL }}
-          GPG_KEY_ID: ${{ vars.GPG_KEY_ID }}
-          GPG_KEY: ${{ secrets.GPG_KEY }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         shell: bash
         run: |
           bash <(curl -s https://raw.githubusercontent.com/pgrange/bash_unit/master/install.sh)
