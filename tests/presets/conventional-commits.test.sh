@@ -5,12 +5,12 @@ PROJECT_DIR=$(pwd)
 REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
+  cd "$REPO_FOLDER"
+  git init
+
   git config --local user.email "$GIT_EMAIL"
   git config --local user.name "$GIT_USERNAME"
   git config --local init.defaultBranch master
-
-  cd "$REPO_FOLDER"
-  git init
 
   export GIT_DIR="$REPO_FOLDER/.git"
   export GIT_WORK_TREE="$REPO_FOLDER"
