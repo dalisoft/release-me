@@ -25,10 +25,11 @@ Options:
 EXEC_DIR=$(pwd)
 SCRIPT_DIR=$(dirname -- "$(readlink -f -- "$0")")
 CURRENT_DATE=$(date +'%Y-%m-%d')
+IS_GIT_REPO=$(git rev-parse --is-inside-work-tree)
 GIT_LOG_ENTRY_SEPARATOR='%n'
 GIT_LOG_FORMAT="%s$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
 #GIT_LOG_FORMAT+="%(trailers:only=true)$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
-GIT_REMOTE_ORIGIN=$(git remote get-url origin)
+GIT_REMOTE_ORIGIN=$(git remote get-url origin || echo "")
 GIT_CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 GIT_REPO_NAME=
 
@@ -181,6 +182,11 @@ log_verbose() {
 ##### Early exit errors ######
 ##############################
 
+if ! $IS_GIT_REPO; then
+  log "Current directory is not a Git repository!"
+  exit 1
+fi
+
 parseOptions "$@"
 
 up_to_date() {
@@ -231,6 +237,7 @@ EOF
 ##############################
 
 GIT_LAST_PROJECT_TAG=""
+GIT_LAST_PROJECT_TAG_VER=""
 
 function getGitVariables {
   if $IS_WORKSPACE; then
