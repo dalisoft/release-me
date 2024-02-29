@@ -1,1 +1,0 @@
-feat(api)!: send an email to the customer when a product is shipped
