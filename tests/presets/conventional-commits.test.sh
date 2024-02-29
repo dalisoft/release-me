@@ -31,21 +31,45 @@ teardown_suite() {
   unset GIT_WORK_TREE
 }
 
-test_commit_fix_message() {
-  git commit -m "fix: initial commit" --allow-empty --no-gpg-sign
-  bash "$PROJECT_DIR/../../release.sh" --plugins=git --quiet
+#####################################
+## This tests of specification at  ##
+## https://conventionalcommits.org ##
+#####################################
 
-  assert_equals "v0.0.1" "$(git tag -l | tail -1)"
+test_commit_1_feat_breaking_major_message() {
+  git commit -m "feat: allow provided config object to extend other configs" -m "BREAKING CHANGE: \`extends\` key in config file is now used for extending other config files" --allow-empty --no-gpg-sign
+  bash "$PROJECT_DIR/../../release.sh" --plugins=git --stable
+
+  assert_equals "v1.0.0" "$(git tag -l | tail -1)"
 }
-test_commit_feat_message() {
-  git commit -m "feat: update commit" --allow-empty --no-gpg-sign
-  bash "$PROJECT_DIR/../../release.sh" --plugins=git --quiet
+test_commit_2_feat_mark_major_message() {
+  git commit -m "feat!: send an email to the customer when a product is shipped" --allow-empty --no-gpg-sign
+  bash "$PROJECT_DIR/../../release.sh" --plugins=git
 
-  assert_equals "v0.1.0" "$(git tag -l | tail -1)"
+  assert_equals "v2.0.0" "$(git tag -l | tail -1)"
 }
-test_commit_feat_major_message() {
-  git commit -m "feat!: breaking change commit" --allow-empty --no-gpg-sign
-  bash "$PROJECT_DIR/../../release.sh" --plugins=git --quiet
+test_commit_3_feat_mark_scope_major_message() {
+  git commit -m "feat(api)!: send an email to the customer when a product is shipped" --allow-empty --no-gpg-sign
+  bash "$PROJECT_DIR/../../release.sh" --plugins=git
 
-  assert_equals "v0.2.0" "$(git tag -l | tail -1)"
+  assert_equals "v3.0.0" "$(git tag -l | tail -1)"
+}
+test_commit_4_feat_mark_breaking_scope_major_message() {
+  git commit -m "chore!: drop support for Node 6" -m "BREAKING CHANGE: use JavaScript features not available in Node 6." --allow-empty --no-gpg-sign
+  bash "$PROJECT_DIR/../../release.sh" --plugins=git
+
+  assert_equals "v4.0.0" "$(git tag -l | tail -1)"
+}
+test_commit_5_docs_no_update_message() {
+  git commit -m "docs: correct spelling of CHANGELOG" --allow-empty --no-gpg-sign
+  bash "$PROJECT_DIR/../../release.sh" --plugins=git
+
+  assert_equals "v4.0.0" "$(git tag -l | tail -1)"
+}
+test_commit_6_feat_scope_message() {
+  git commit -m "feat(lang): add Polish language" --allow-empty --no-gpg-sign
+
+  bash "$PROJECT_DIR/../../release.sh" --plugins=git
+
+  assert_equals "v4.1.0" "$(git tag -l | tail -1)"
 }
