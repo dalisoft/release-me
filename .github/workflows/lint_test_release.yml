@@ -42,9 +42,13 @@ jobs:
 
       - name: Test w/ Coverage
         shell: bash
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: |
           bash <(curl -s https://raw.githubusercontent.com/pgrange/bash_unit/master/install.sh)
           find . -iname '*.test.sh' | ROOT_DIR=$(pwd) xargs -L1 bundle exec bashcov ./bash_unit --mute
+          bundle exec rspec spec
+
       - name: Report Coveralls
         uses: coverallsapp/github-action@v2
         with:
