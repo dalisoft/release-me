@@ -19,7 +19,6 @@ bash_unit
 
 # Testing coverage
 coverage
-!coverage/upload_results_v2.rb
 
 # Secrets
 .env
