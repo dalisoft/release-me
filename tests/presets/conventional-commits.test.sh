@@ -6,28 +6,24 @@ REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
   cd "$REPO_FOLDER"
-  git init
-
-  git config --local user.email "$GIT_EMAIL"
-  git config --local user.name "$GIT_USERNAME"
-  git config --local init.defaultBranch master
+  git init --initial-branch=master
 
   export GIT_DIR="$REPO_FOLDER/.git"
   export GIT_WORK_TREE="$REPO_FOLDER"
+  export GIT_COMMITTER_NAME="$GIT_USERNAME"
+  export GIT_COMMITTER_EMAIL="$GIT_EMAIL"
+  export GIT_AUTHOR_NAME="$GIT_USERNAME"
+  export GIT_AUTHOR_EMAIL="$GIT_EMAIL"
+
+  git config --local user.email "$GIT_EMAIL"
+  git config --local user.name "$GIT_USERNAME"
 }
 
 teardown_suite() {
-  cd "$REPO_FOLDER"
-
-  git config --local --unset user.email
-  git config --local --unset user.name
-  git config --local --unset init.defaultBranch
-
   cd "$PROJECT_DIR"
 
-  rm -rf "$REPO_FOLDER"
+  rm -rf "$GIT_WORK_TREE"
   unset REPO_FOLDER
-
   unset GIT_DIR
   unset GIT_WORK_TREE
 }
