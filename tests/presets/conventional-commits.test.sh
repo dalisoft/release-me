@@ -10,13 +10,16 @@ setup_suite() {
 
   export GIT_DIR="$REPO_FOLDER/.git"
   export GIT_WORK_TREE="$REPO_FOLDER"
-  export GIT_COMMITTER_NAME="$GIT_USERNAME"
-  export GIT_COMMITTER_EMAIL="$GIT_EMAIL"
-  export GIT_AUTHOR_NAME="$GIT_USERNAME"
-  export GIT_AUTHOR_EMAIL="$GIT_EMAIL"
 
-  git config --local user.email "$GIT_EMAIL"
-  git config --local user.name "$GIT_USERNAME"
+  if [[ -n "$GIT_USERNAME" && -n "$GIT_EMAIL" ]]; then
+    export GIT_COMMITTER_NAME="$GIT_USERNAME"
+    export GIT_COMMITTER_EMAIL="$GIT_EMAIL"
+    export GIT_AUTHOR_NAME="$GIT_USERNAME"
+    export GIT_AUTHOR_EMAIL="$GIT_EMAIL"
+
+    git config --local user.email "$GIT_EMAIL"
+    git config --local user.name "$GIT_USERNAME"
+  fi
 }
 
 teardown_suite() {
