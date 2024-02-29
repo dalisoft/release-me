@@ -45,11 +45,12 @@ jobs:
         shell: bash
         run: |
           bash <(curl -s https://raw.githubusercontent.com/pgrange/bash_unit/master/install.sh)
-          find . -iname '*.test.sh' | ROOT_DIR=$(pwd) xargs -L1 bashcov ./bash_unit
+          find . -iname '*.test.sh' | ROOT_DIR=$(pwd) xargs -L1 bashcov ./bash_unit --mute
       - name: Report Coveralls
         uses: coverallsapp/github-action@v2
         with:
           format: simplecov
+          github-token: ${{ secrets.GITHUB_TOKEN }}
   release:
     needs: test
     runs-on: ubuntu-22.04
