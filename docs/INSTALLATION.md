@@ -2,6 +2,8 @@
 
 > Except bugs, errors and/or strange behavior
 
+[![Coverage Status](https://coveralls.io/repos/github/dalisoft/release-me/badge.svg?branch=master)](https://coveralls.io/github/dalisoft/release-me?branch=master)
+
 Blazing fast minimal release workflow script written in **Bash** with plugins and presets support
 
 List of contents:
