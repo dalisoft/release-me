@@ -1,2 +1,2 @@
 gem 'bashcov', '3.1.2', git: 'https://github.com/dalisoft/bashcov', branch: 'simplecov-upgrade'
-gem 'simplecov-lcov', '~> 0.8.0'
+gem 'coveralls_reborn', require: false
