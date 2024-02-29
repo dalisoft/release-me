@@ -14,8 +14,11 @@ CHANGELOG.md
 # release-me
 .release-me
 
-#testing library
+# Testing library
 bash_unit
+
+# Testing coverage
+coverage
 
 # Secrets
 .env
