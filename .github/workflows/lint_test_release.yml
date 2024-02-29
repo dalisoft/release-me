@@ -40,7 +40,7 @@ jobs:
         shell: bash
         run: |
           bash <(curl -s https://raw.githubusercontent.com/pgrange/bash_unit/master/install.sh)
-          find . -iname '*.test.sh' | xargs -L1 ./bash_unit
+          find . -iname '*.test.sh' | ROOT_DIR=$(pwd) xargs -L1 ./bash_unit
   release:
     needs: test
     runs-on: ubuntu-22.04
