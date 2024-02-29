@@ -28,7 +28,7 @@ SCRIPT_DIR=$(dirname -- "$(readlink -f -- "$0")")
 CURRENT_DATE=$(date +'%Y-%m-%d')
 IS_GIT_REPO=$(git rev-parse --is-inside-work-tree)
 GIT_LOG_ENTRY_SEPARATOR='%n'
-GIT_LOG_FORMAT="%s$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
+GIT_LOG_FORMAT="%B$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
 #GIT_LOG_FORMAT+="%(trailers:only=true)$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
 GIT_REMOTE_ORIGIN=$(git remote get-url origin || echo "")
 # shellcheck disable=2034
@@ -256,7 +256,7 @@ function getGitVariables {
     mapfile -d '.' -t NEXT_VERSION < <(printf '%s' "$GIT_LAST_PROJECT_TAG_VER")
     CURRENT_VERSION=("${NEXT_VERSION[@]}")
 
-    if [[ $IS_STABLE_VERSION == false && $PRE_RELEASE_VERSION == false && "${NEXT_VERSION[0]}" -gt 0 ]]; then
+    if [[ "$IS_STABLE_VERSION" == false && $PRE_RELEASE_VERSION == false && "${NEXT_VERSION[0]}" -gt 0 ]]; then
       IS_STABLE_VERSION=true
     fi
   fi
@@ -334,7 +334,7 @@ function handleGitCommits {
   log_verbose "Analyzed commits!"
 
   log_verbose "Analyzing updates..."
-  if $IS_STABLE_VERSION && "${NEXT_VERSION[0]}" -eq 0; then
+  if [[ "$IS_STABLE_VERSION" == true && "${NEXT_VERSION[0]}" -eq 0 ]]; then
     NEXT_VERSION=(1 0 0)
   elif [[ $MAJOR_UPGRADED == true && "${NEXT_VERSION[0]}" -gt 0 ]]; then
     NEXT_VERSION[0]=$((NEXT_VERSION[0] + 1))
