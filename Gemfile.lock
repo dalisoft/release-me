@@ -7,6 +7,16 @@ GIT
       simplecov (~> 0.22.0)
 
 GIT
+  remote: https://github.com/simplecov-ruby/simplecov
+  revision: 862c93708a0259f97419350d89e2814f69d47cb4
+  branch: main
+  specs:
+    simplecov (0.22.0)
+      docile (~> 1.1)
+      simplecov-html (~> 0.11)
+      simplecov_json_formatter (~> 0.1)
+
+GIT
   remote: https://github.com/tagliala/coveralls-ruby-reborn
   revision: 9461139f1d4a8f80deb5a7a47f6e39dda68e8de4
   branch: main
@@ -20,10 +30,6 @@ GIT
 GEM
   specs:
     docile (1.4.0)
-    simplecov (0.22.0)
-      docile (~> 1.1)
-      simplecov-html (~> 0.11)
-      simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
     sync (0.5.0)
@@ -40,6 +46,7 @@ PLATFORMS
 DEPENDENCIES
   bashcov (= 3.1.2)!
   coveralls_reborn!
+  simplecov (= 0.22.0)!
 
 BUNDLED WITH
    2.5.4
