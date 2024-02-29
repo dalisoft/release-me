@@ -1,3 +1,4 @@
+require 'simplecov'
 require 'coveralls'
 
 SimpleCov.start do
