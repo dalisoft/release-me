@@ -1,6 +1,8 @@
 require 'simplecov'
 
 SimpleCov.start do
+  command_name 'Unit Tests'
+
   if ENV['CI']
     require 'simplecov-lcov'
 
@@ -11,7 +13,12 @@ SimpleCov.start do
 
     formatter SimpleCov::Formatter::LcovFormatter
   else
-    SimpleCov::Formatter::HTMLFormatter
+    require 'coveralls'
+
+    formatters = [
+      SimpleCov::Formatter::HTMLFormatter,
+      Coveralls::SimpleCov::Formatter
+    ]
   end
 
   minimum_coverage 15
@@ -19,6 +26,5 @@ SimpleCov.start do
   add_filter "/.git/"
   add_filter "bash_unit"
 
-  command_name 'Unit Tests'
   coverage_dir 'coverage'
 end
