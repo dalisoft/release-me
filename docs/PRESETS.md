@@ -20,5 +20,4 @@ List of contents:
 | Name                   | Description                              |
 | ---------------------- | ---------------------------------------- |
 | `conventional-commits` | Default preset like **semantic-release** |
-| `library`              | Same as `conventional-commits` for now   |
 | `workspace`            | Workspace preset for monorepos           |
