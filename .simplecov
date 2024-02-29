@@ -1,5 +1,3 @@
-require 'simplecov'
-require 'coveralls'
 
 SimpleCov.start do
   minimum_coverage 15
@@ -8,5 +6,7 @@ SimpleCov.start do
   add_filter "bash_unit"
 end
 
-SimpleCov.formatters = [Coveralls::SimpleCov::Formatter]
-SimpleCov::ResultMerger.merged_result.format!
+require 'coveralls'
+SimpleCov.profiles.define 'coveralls' do
+  SimpleCov.formatters = [Coveralls::SimpleCov::Formatter]
+end
