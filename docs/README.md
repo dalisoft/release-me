@@ -27,6 +27,13 @@ Go-to [repository page](https://github.com/dalisoft/release-me) or see [**Gettin
 - [changesets](https://github.com/changesets/changesets)
 - [release-please](https://github.com/googleapis/release-please)
 
+## Credits to
+
+- [Bash](https://www.gnu.org/software/bash)
+- [ShellCheck](https://github.com/koalaman/shellcheck)
+- [Bashcov](https://github.com/infertux/bashcov)
+- [bash_unit](https://github.com/pgrange/bash_unit)
+
 ## License
 
 GPL-3
