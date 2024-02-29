@@ -30,7 +30,7 @@ IS_GIT_REPO=$(git rev-parse --is-inside-work-tree)
 GIT_LOG_ENTRY_SEPARATOR='%n'
 GIT_LOG_FORMAT="%B$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
 #GIT_LOG_FORMAT+="%(trailers:only=true)$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
-GIT_REMOTE_ORIGIN=$(git remote get-url origin || echo "")
+GIT_REMOTE_ORIGIN=$(git remote get-url origin 2>/dev/null || echo "")
 # shellcheck disable=2034
 GIT_CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 GIT_REPO_NAME=
