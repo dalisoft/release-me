@@ -6,13 +6,19 @@ GIT
     bashcov (3.1.2)
       simplecov (~> 0.22.0)
 
-GEM
+GIT
+  remote: https://github.com/tagliala/coveralls-ruby-reborn
+  revision: 9461139f1d4a8f80deb5a7a47f6e39dda68e8de4
+  branch: main
   specs:
     coveralls_reborn (0.28.0)
       simplecov (~> 0.22.0)
       term-ansicolor (~> 1.7)
       thor (~> 1.2)
       tins (~> 1.32)
+
+GEM
+  specs:
     docile (1.4.0)
     simplecov (0.22.0)
       docile (~> 1.1)
@@ -33,7 +39,7 @@ PLATFORMS
 
 DEPENDENCIES
   bashcov (= 3.1.2)!
-  coveralls_reborn
+  coveralls_reborn!
 
 BUNDLED WITH
    2.5.4
