@@ -39,13 +39,12 @@ jobs:
         with:
           ruby-version: '3.3' # Not needed with a .ruby-version file
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-      - run: gem install bashcov
 
       - name: Test w/ Coverage
         shell: bash
         run: |
           bash <(curl -s https://raw.githubusercontent.com/pgrange/bash_unit/master/install.sh)
-          find . -iname '*.test.sh' | ROOT_DIR=$(pwd) xargs -L1 bashcov ./bash_unit --mute
+          find . -iname '*.test.sh' | ROOT_DIR=$(pwd) xargs -L1 bundle exec bashcov ./bash_unit --mute
       - name: Report Coveralls
         uses: coverallsapp/github-action@v2
         with:
