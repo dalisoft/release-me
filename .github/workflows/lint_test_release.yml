@@ -35,12 +35,17 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3' # Not needed with a .ruby-version file
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - run: gem install bashcov
 
-      - name: Test
+      - name: Test w/ Coverage
         shell: bash
         run: |
           bash <(curl -s https://raw.githubusercontent.com/pgrange/bash_unit/master/install.sh)
-          find . -iname '*.test.sh' | ROOT_DIR=$(pwd) xargs -L1 ./bash_unit
+          find . -iname '*.test.sh' | ROOT_DIR=$(pwd) xargs -L1 bashcov ./bash_unit
   release:
     needs: test
     runs-on: ubuntu-22.04
