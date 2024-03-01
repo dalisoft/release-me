@@ -18,8 +18,7 @@ CHANGELOG.md
 bash_unit
 
 # Testing coverage
-coverage/*
-!coverage/coverage_badge_total.svg
+coverage
 
 # Secrets
 .env
