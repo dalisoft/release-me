@@ -33,10 +33,6 @@ teardown_suite() {
   unset GIT_COMMITTER_EMAIL
   unset GIT_AUTHOR_NAME
   unset GIT_AUTHOR_EMAIL
-
-  if [[ -n "${GPG_KEY_ID-}" ]]; then
-    gpg --batch --yes --delete-secret-and-public-key "$GPG_KEY_ID"
-  fi
 }
 
 #####################################
@@ -44,6 +40,12 @@ teardown_suite() {
 ## https://conventionalcommits.org ##
 #####################################
 
+test_commit_0_initial_message() {
+  git commit -m "fix: initial commit" --allow-empty --no-gpg-sign
+
+  GPG_NO_SIGN=1 bash "$ROOT_DIR/release.sh" --plugins=git --quiet
+  assert_equals "v0.0.1" "$(git tag -l | tail -1)"
+}
 test_commit_1_feat_breaking_major_message() {
   git commit -m "feat: allow provided config object to extend other configs" -m "BREAKING CHANGE: \`extends\` key in config file is now used for extending other config files" --allow-empty --no-gpg-sign
 
