@@ -23,7 +23,7 @@ setup_suite() {
   "author": "",
   "license": "ISC"
 }
-' >>package.json
+' >>"$REPO_FOLDER/package.json"
 
   export GIT_DIR="$REPO_FOLDER/.git"
   export GIT_CONFIG="$REPO_FOLDER/.gitconfig"
