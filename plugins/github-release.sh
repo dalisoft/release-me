@@ -30,5 +30,6 @@ release() {
 GitHub Token is not found
 Please export GitHub Token so this plugin can be used
 "
+    exit 1
   fi
 }
