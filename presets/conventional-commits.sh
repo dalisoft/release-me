@@ -73,7 +73,8 @@ parse_commit() {
   if isValidCommitType "$type" "${INCLUDE_SCOPE[@]}"; then
     RELEASE_BODY+="**\`[$type]\`** "
   fi
-  if [ -n "$scope" ]; then
+
+  if [ -n "${scope-}" ]; then
     RELEASE_BODY+="**$scope**: "
   fi
   RELEASE_BODY+="$description "
