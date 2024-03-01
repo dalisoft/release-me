@@ -40,11 +40,15 @@ teardown_suite() {
 ## https://conventionalcommits.org ##
 #####################################
 
-test_commit_0_initial_message() {
+test_commit_0_1_initial_message() {
   git commit -m "fix: initial commit" --allow-empty --no-gpg-sign
 
-  GPG_NO_SIGN=1 bash "$ROOT_DIR/release.sh" --plugins=git --quiet
+  GPG_NO_SIGN=1 bash "$ROOT_DIR/release.sh" --plugins=git --preset=conventional-commits
   assert_equals "v0.0.1" "$(git tag -l | tail -1)"
+}
+test_commit_0_2_initial_message_no_change() {
+
+  assert_matches "Your project has no new commits" "$(GPG_NO_SIGN=1 bash "$ROOT_DIR/release.sh" --plugins=git --preset=conventional-commits)"
 }
 test_commit_1_feat_breaking_major_message() {
   git commit -m "feat: allow provided config object to extend other configs" -m "BREAKING CHANGE: \`extends\` key in config file is now used for extending other config files" --allow-empty --no-gpg-sign
@@ -84,7 +88,7 @@ test_commit_4_feat_mark_breaking_scope_major_message() {
 test_commit_5_docs_no_update_message() {
   git commit -m "docs: correct spelling of CHANGELOG" --allow-empty --no-gpg-sign
 
-  bash "$ROOT_DIR/release.sh" --plugins=git --quiet --dry-run
+  bash "$ROOT_DIR/release.sh" --plugins=git --verbose --dry-run
   assert_equals "v4.0.0" "$(git tag -l | tail -1)"
 
   bash "$ROOT_DIR/release.sh" --plugins=git --quiet
