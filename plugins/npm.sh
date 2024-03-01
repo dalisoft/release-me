@@ -27,5 +27,6 @@ release() {
 npm Token is not found
 Please export npm Token so this plugin can be used
 "
+    exit 1
   fi
 }
