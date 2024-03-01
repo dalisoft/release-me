@@ -40,8 +40,9 @@ setup_suite() {
   fi
 
   _npm() {
+    echo "ran"
     # shellcheck disable=SC2317
-    if [[ "${FAKE_PARAMS[0]}" == "publish" ]]; then
+    if [[ "${FAKE_PARAMS[0]}" == "publish" && "${NPM_TOKEN-}" == "FAKE_TOKEN" ]]; then
       return 0
     else
       exit 1
@@ -74,13 +75,13 @@ teardown_suite() {
 test_plugin_npm_0_1_initial_message_dryrun() {
   git commit -m "fix: initial commit" --allow-empty --no-gpg-sign
 
-  NPM_TOKEN="FAKE_TOKEN" bash "$ROOT_DIR/release.sh" --plugins=git,npm --quiet --dry-run
+  NPM_TOKEN="FAKE_TOKEN" bash "$ROOT_DIR/release.sh" --plugins=npm --quiet --dry-run
   assert_matches "1.0.0" "$(cat package.json)"
 }
 test_plugin_npm_0_2_initial_message() {
-  assert_matches "v0.0.1" "$(NPM_TOKEN="FAKE_TOKEN" bash "$ROOT_DIR/release.sh" --plugins=git,npm --quiet)"
+  assert_matches "v0.0.1" "$(NPM_TOKEN="FAKE_TOKEN" bash "$ROOT_DIR/release.sh" --plugins=npm --quiet)"
   assert_matches "0.0.1" "$(cat package.json)"
 }
 test_plugin_npm_no_token_fail_message() {
-  assert_status_code 1 "$(bash "$ROOT_DIR/release.sh" --plugins=git,npm --quiet)"
+  assert_status_code 1 "$(bash "$ROOT_DIR/release.sh" --plugins=npm --quiet)"
 }
