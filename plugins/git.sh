@@ -12,17 +12,17 @@ prepare() {
     git config --local user.name "$GIT_USERNAME"
     log_verbose "Git username [$GIT_USERNAME] and Git e-mail [$GIT_EMAIL] set"
   fi
-  if [[ -n "${GPG_KEY-}" ]]; then
+  if [[ -z "${GPG_NO_SIGN-}" && -n "${GPG_KEY-}" ]]; then
     echo "$GPG_KEY" | base64 --decode | gpg --quiet --batch --import
   fi
-  if [[ -n "${GPG_KEY_ID-}" ]]; then
+  if [[ -z "${GPG_NO_SIGN-}" && -n "${GPG_KEY_ID-}" ]]; then
     git config --local commit.gpgsign true
     git config --local user.signingkey "$GPG_KEY_ID"
     git config --local tag.forceSignAnnotated true
     git config --local gpg.program gpg
     log_verbose "Git GPG sign and key ID [$GPG_KEY_ID] are set"
   fi
-  if [[ -n "${CI-}" && -n "${GPG_PASSPHRASE-}" ]]; then
+  if [[ -z "${GPG_NO_SIGN-}" && -n "${CI-}" && -n "${GPG_PASSPHRASE-}" ]]; then
     echo "allow-loopback-pinentry" >>~/.gnupg/gpg-agent.conf
     echo "pinentry-mode loopback" >>~/.gnupg/gpg.conf
     gpg-connect-agent reloadagent /bye
@@ -38,17 +38,23 @@ cleanup() {
     git config --local --unset user.name
     log_verbose "Git username and Git e-mail unset"
   fi
-  if [[ -n "${GPG_KEY_ID-}" ]]; then
+  if [[ -z "${GPG_NO_SIGN-}" && -n "${GPG_KEY_ID-}" ]]; then
     git config --local --unset commit.gpgsign
     git config --local --unset user.signingkey
     git config --local --unset tag.forceSignAnnotated
     git config --local --unset gpg.program
     log_verbose "Git GPG sign unset"
   fi
-  if [[ -n "${CI-}" && -n "${GPG_PASSPHRASE-}" ]]; then
+  if [[ -z "${GPG_NO_SIGN-}" && -n "${CI-}" && -n "${GPG_PASSPHRASE-}" ]]; then
+    gpg --quiet --passphrase "$GPG_PASSPHRASE" --batch --yes --delete-secret-and-public-key "$GPG_KEY_ID"
+    log_verbose "Git GPG key deleted"
+
     rm -rf ~/.gnupg/gpg-agent.conf
     rm -rf ~/.gnupg/gpg.conf
     log_verbose "Git GPG config cleanup"
+  elif [[ -z "${GPG_NO_SIGN-}" && -n "${GPG_KEY_ID-}" ]]; then
+    gpg --quiet --passphrase "$GPG_PASSPHRASE" --batch --yes --delete-secret-and-public-key "$GPG_KEY_ID"
+    log_verbose "Git GPG key deleted"
   fi
 
   log_verbose "Git config cleanup"
@@ -62,7 +68,7 @@ release() {
   if ! $IS_DRY_RUN; then
     prepare
 
-    if [[ -n "${GPG_KEY_ID-}" && -n "${GPG_PASSPHRASE-}" ]]; then
+    if [[ -z "${GPG_NO_SIGN-}" && -n "${GPG_KEY_ID-}" && -n "${GPG_PASSPHRASE-}" ]]; then
       git tag --sign "$NEXT_RELEASE_TAG" "$CHECKOUT_SHA" --message "Release, tag and sign $NEXT_RELEASE_TAG"
       echo "Created signed Git tag [$NEXT_RELEASE_TAG]!"
     else
