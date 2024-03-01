@@ -4,9 +4,9 @@ SimpleCov.start do
   if ENV['CI']
     require 'coveralls'
 
-    formatter = Coveralls::SimpleCov::Formatter
+    SimpleCov.formatter = Coveralls::SimpleCov::Formatter
   else
-    formatter = SimpleCov::Formatter::HTMLFormatter
+    SimpleCov.formatter = SimpleCov::Formatter::HTMLFormatter
   end
 
   minimum_coverage 15
