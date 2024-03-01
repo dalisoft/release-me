@@ -47,6 +47,9 @@ jobs:
         run: |
           bash <(curl -s https://raw.githubusercontent.com/pgrange/bash_unit/master/install.sh)
           find . -iname '*.test.sh' | ROOT_DIR=$(pwd) xargs -L1 bundle exec bashcov ./bash_unit --mute
+          git add -A coverage/coverage_badge_total.svg
+          git commit -m "chore(tests): update coverage"
+          git push
 
         # - run: bundle exec rspec spec
         # - run: bundle exec coveralls push

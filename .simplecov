@@ -1,24 +1,20 @@
-require 'simplecov'
+require 'simplecov_small_badge'
 
 SimpleCov.start do
   command_name 'Unit Tests'
 
   if ENV['CI']
-    require 'simplecov-lcov'
-
-    SimpleCov::Formatter::LcovFormatter.config do |c|
-      c.report_with_single_file = true
-      c.single_report_path = 'coverage/lcov.info'
-    end
-
-    formatter SimpleCov::Formatter::LcovFormatter
-  else
     require 'coveralls'
 
-    formatters = [
-      SimpleCov::Formatter::HTMLFormatter,
+    SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new([
+      SimpleCovSmallBadge::Formatter,
       Coveralls::SimpleCov::Formatter
-    ]
+    ])
+  else
+    SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new([
+      SimpleCov::Formatter::HTMLFormatter,
+      SimpleCovSmallBadge::Formatter,
+    ])
   end
 
   minimum_coverage 15
@@ -27,4 +23,10 @@ SimpleCov.start do
   add_filter "bash_unit"
 
   coverage_dir 'coverage'
+end
+
+# configure any options you want for SimpleCov::Formatter::BadgeFormatter
+SimpleCovSmallBadge.configure do |config|
+  # does not created rounded borders
+  config.rounded_border = true
 end
