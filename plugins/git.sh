@@ -5,6 +5,8 @@ set -eu
 export GPG_TTY=$(tty)
 
 prepare() {
+  unset GIT_CONFIG
+
   if [[ -n "${GIT_USERNAME-}" && -n "${GIT_EMAIL-}" ]]; then
     git config --local user.email "$GIT_EMAIL"
     git config --local user.name "$GIT_USERNAME"
