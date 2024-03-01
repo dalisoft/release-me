@@ -33,6 +33,10 @@ teardown_suite() {
   unset GIT_COMMITTER_EMAIL
   unset GIT_AUTHOR_NAME
   unset GIT_AUTHOR_EMAIL
+
+  if [[ -n "${GPG_KEY_ID-}" ]]; then
+    gpg --batch --yes --delete-secret-and-public-key "$GPG_KEY_ID"
+  fi
 }
 
 #####################################
@@ -40,16 +44,10 @@ teardown_suite() {
 ## https://conventionalcommits.org ##
 #####################################
 
-test_commit_2_gpg_key() {
-  export GPG_PASSPHRASE="11223344"
-  export GPG_KEY_ID="6EB40690B8C34211EABA6515DFC46D3D3108DD2D"
-  export GPG_KEY="lIYEZeFVYxYJKwYBBAHaRw8BAQdAI6JeIeMBTcieJj9zxKQe66BczKAvVd3VtQ9eueVhENz+BwMC5JAd+/zHpWD7fVe0reQnXJ/bWsGZiqEhhsyo8TUHoZo/yvJ+pM1cQgjtM6ksAhGG9tcW6XSCbdXvQBuPBID+C1eQDaDsc/K99wQ1BveUP7QZVGVzdCBVc2VyIDx0ZXN0QHRlc3QuY29tPoiTBBMWCgA7FiEEbrQGkLjDQhHqumUV38RtPTEI3S0FAmXhVWMCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQ38RtPTEI3S2bDwEAwyV9Xl3K3AH1RQtaeI9LMKOiVfyBIY77YN/ZrRi5+48A/19n4n35AqIUU5YvCUkM0n5723B+NgJqFpElJoXChhEJ"
-}
-
 test_commit_1_feat_breaking_major_message() {
   git commit -m "feat: allow provided config object to extend other configs" -m "BREAKING CHANGE: \`extends\` key in config file is now used for extending other config files" --allow-empty --no-gpg-sign
 
-  bash "$ROOT_DIR/release.sh" --plugins=git --quiet --stable
+  GPG_NO_SIGN=1 bash "$ROOT_DIR/release.sh" --plugins=git --quiet --stable
   assert_equals "v1.0.0" "$(git tag -l | tail -1)"
 }
 test_commit_2_feat_mark_major_message() {
@@ -60,7 +58,7 @@ test_commit_2_feat_mark_major_message() {
 
   assert_matches "v2.0.0" "$(bash "$ROOT_DIR/release.sh" --plugins=git --verbose --dry-run)"
 
-  bash "$ROOT_DIR/release.sh" --plugins=git --quiet
+  GPG_NO_SIGN=1 bash "$ROOT_DIR/release.sh" --plugins=git --quiet
   assert_equals "v2.0.0" "$(git tag -l | tail -1)"
 }
 test_commit_3_feat_mark_scope_major_message() {
