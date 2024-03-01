@@ -41,13 +41,14 @@ List of contents:
 
 | Name             | Description            | Type      | Depended plugin |
 | ---------------- | ---------------------- | --------- | --------------- |
+| `GPG_NO_SIGN`    | Skips Git Signing      | Variables | **git** plugin  |
 | `GPG_KEY_ID`     | Public GPG key/ring ID | Variables | **git** plugin  |
 | `GPG_KEY`        | Private GPG key        | Secrets   | **git** plugin  |
 | `GPG_PASSPHRASE` | Private GPG passphrase | Secrets   | **git** plugin  |
 
 ### GH Actions Configurations
 
-See this project [workflow](../.github/workflows/lint_release.yml) or see below
+See this project [workflow](../.github/workflows/lint_test_release.yml) or see below
 
 > On **homepage** below content may show not properly, so, please check **workflow** file linked above
 

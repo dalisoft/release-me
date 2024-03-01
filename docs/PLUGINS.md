@@ -19,9 +19,9 @@ List of contents:
 
 ## Plugins
 
-| Name             | Description                                      |
-| ---------------- | ------------------------------------------------ |
-| `git`            | Creates **Git** tag and push to origin           |
-| `github-release` | Release a tag with proper `CHANGELOG` and commit |
-| `npm`            | Updates version field and Publishes **npm** tag  |
-| `changelog`      | Generates `CHANGELOG` within your project        |
+| Name             | Description                                      | Required |
+| ---------------- | ------------------------------------------------ | -------- |
+| `git`            | Creates **Git** tag and push to origin           | Yes      |
+| `github-release` | Release a tag with proper `CHANGELOG` and commit | No       |
+| `npm`            | Updates version field and Publishes **npm** tag  | No       |
+| `changelog`      | Generates `CHANGELOG` within your project        | No       |
