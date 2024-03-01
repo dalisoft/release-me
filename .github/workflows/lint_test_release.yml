@@ -13,11 +13,6 @@ on:
 
 env:
   CI: true
-  GIT_USERNAME: ${{ vars.GIT_USERNAME }}
-  GIT_EMAIL: ${{ vars.GIT_EMAIL }}
-  GPG_KEY_ID: ${{ vars.GPG_KEY_ID }}
-  GPG_KEY: ${{ secrets.GPG_KEY }}
-  GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
 jobs:
   lint:
@@ -43,25 +38,12 @@ jobs:
       - name: Test w/ Coverage
         shell: bash
         env:
+          GIT_USERNAME: ${{ vars.GIT_USERNAME }}
+          GIT_EMAIL: ${{ vars.GIT_EMAIL }}
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: |
           bash <(curl -s https://raw.githubusercontent.com/pgrange/bash_unit/master/install.sh)
           ROOT_DIR=$(pwd) bundle exec bashcov ./bash_unit tests/**/*.test.sh
-
-      - name: Update local coverage badge
-        run: |
-          git add -A coverage/coverage_badge_total.svg
-          git commit -m "chore(tests): update coverage"
-          git push
-
-        # - run: bundle exec rspec spec
-        # - run: bundle exec coveralls push
-
-      - name: Report Coveralls
-        uses: coverallsapp/github-action@v2
-        with:
-          format: simplecov
-          github-token: ${{ secrets.GITHUB_TOKEN }}
   release:
     needs: test
     runs-on: ubuntu-22.04
@@ -73,7 +55,12 @@ jobs:
 
       - name: Release
         env:
+          GIT_USERNAME: ${{ vars.GIT_USERNAME }}
+          GIT_EMAIL: ${{ vars.GIT_EMAIL }}
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GPG_KEY_ID: ${{ vars.GPG_KEY_ID }}
+          GPG_KEY: ${{ secrets.GPG_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         shell: bash
         run: |
           bash ./release.sh --plugins=git,github-release --pre-release
