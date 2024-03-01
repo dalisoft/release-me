@@ -20,6 +20,8 @@ setup_suite() {
     git config user.email "$GIT_EMAIL"
     git config user.name "$GIT_USERNAME"
   fi
+
+  export GPG_NO_SIGN=1
 }
 
 teardown_suite() {
@@ -43,5 +45,5 @@ teardown_suite() {
 test_plugin_template() {
   git commit -m "fix: initial commit" --allow-empty --no-gpg-sign
 
-  bash "$ROOT_DIR/release.sh" --plugins=PLUGIN_TEMPLATE --quiet
+  bash "$ROOT_DIR/release.sh" --plugins=git,PLUGIN_TEMPLATE --quiet
 }

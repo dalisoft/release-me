@@ -20,6 +20,8 @@ setup_suite() {
     git config user.email "$GIT_EMAIL"
     git config user.name "$GIT_USERNAME"
   fi
+
+  export GPG_NO_SIGN=1
 }
 
 teardown_suite() {
@@ -43,7 +45,7 @@ teardown_suite() {
 test_plugin_changelog_1() {
   git commit -m "fix: initial commit" --allow-empty --no-gpg-sign
 
-  bash "$ROOT_DIR/release.sh" --plugins=changelog --quiet
+  bash "$ROOT_DIR/release.sh" --plugins=git,changelog --quiet
 
   assert_matches "v0.0.1" "$(cat CHANGELOG.md)"
   assert_matches "initial commit" "$(cat CHANGELOG.md)"
@@ -52,7 +54,7 @@ test_plugin_changelog_1() {
 test_plugin_changelog_2_dryun() {
   git commit -m "fix: bump version" --allow-empty --no-gpg-sign
 
-  bash "$ROOT_DIR/release.sh" --plugins=changelog --quiet --dry-run
+  bash "$ROOT_DIR/release.sh" --plugins=git,changelog --quiet --dry-run
 
   assert_not_matches "v0.0.2" "$(cat CHANGELOG.md)"
   assert_not_matches "bump version" "$(cat CHANGELOG.md)"
@@ -61,7 +63,7 @@ test_plugin_changelog_2_dryun() {
 test_plugin_changelog_3_update() {
   git commit -m "feat: feat version" --allow-empty --no-gpg-sign
 
-  bash "$ROOT_DIR/release.sh" --plugins=changelog --quiet
+  bash "$ROOT_DIR/release.sh" --plugins=git,changelog --quiet
 
   assert_matches "v0.1.0" "$(cat CHANGELOG.md)"
   assert_matches "feat version" "$(cat CHANGELOG.md)"
