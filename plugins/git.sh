@@ -45,16 +45,14 @@ cleanup() {
     git config --local --unset gpg.program
     log_verbose "Git GPG sign unset"
   fi
-  if [[ -z "${GPG_NO_SIGN-}" && -n "${CI-}" && -n "${GPG_PASSPHRASE-}" ]]; then
+  if [[ -z "${GPG_NO_SIGN-}" && -n "${GPG_KEY_ID-}" && -n "${GPG_PASSPHRASE-}" ]]; then
     gpg --quiet --passphrase "$GPG_PASSPHRASE" --batch --yes --delete-secret-and-public-key "$GPG_KEY_ID"
     log_verbose "Git GPG key deleted"
-
+  fi
+  if [[ -z "${GPG_NO_SIGN-}" && -n "${CI-}" ]]; then
     rm -rf ~/.gnupg/gpg-agent.conf
     rm -rf ~/.gnupg/gpg.conf
     log_verbose "Git GPG config cleanup"
-  elif [[ -z "${GPG_NO_SIGN-}" && -n "${GPG_KEY_ID-}" ]]; then
-    gpg --quiet --passphrase "$GPG_PASSPHRASE" --batch --yes --delete-secret-and-public-key "$GPG_KEY_ID"
-    log_verbose "Git GPG key deleted"
   fi
 
   log_verbose "Git config cleanup"
