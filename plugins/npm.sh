@@ -12,7 +12,13 @@ release() {
       echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >>"$TEMP_FILE"
 
       # Bump `package.json` `version` for properly publishing
-      sed -i '' "s/\"version\": \"[^\"]*\",/\"version\": \"$NEXT_BUILD_VERSION\",/" "package.json"
+      if [[ "$(uname)" == "Darwin" ]]; then
+        # BSD sed
+        sed -i '' "s/\"version\": \"[^\"]*\",/\"version\": \"$NEXT_BUILD_VERSION\",/" "package.json"
+      elif [[ "$(uname)" == "Linux" ]]; then
+        # GNU sed
+        sed -i "s/\"version\": \"[^\"]*\",/\"version\": \"$NEXT_BUILD_VERSION\",/" "package.json"
+      fi
 
       export NODE_AUTH_TOKEN="$NPM_TOKEN"
       npm publish "$NEXT_RELEASE_VERSION" --userconfig "$TEMP_FILE"
