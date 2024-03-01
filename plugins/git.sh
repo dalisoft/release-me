@@ -13,7 +13,7 @@ prepare() {
     log_verbose "Git username [$GIT_USERNAME] and Git e-mail [$GIT_EMAIL] set"
   fi
   if [[ -n "${GPG_KEY-}" ]]; then
-    echo "$GPG_KEY" | base64 --decode | gpg --batch --import
+    echo "$GPG_KEY" | base64 --decode | gpg --quiet --batch --import
   fi
   if [[ -n "${GPG_KEY_ID-}" ]]; then
     git config --local commit.gpgsign true
