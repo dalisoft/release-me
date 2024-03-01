@@ -11,7 +11,7 @@ setup_suite() {
   export GIT_CONFIG="$REPO_FOLDER/.gitconfig"
   export GIT_WORK_TREE="$REPO_FOLDER"
 
-  if [[ -n "$GIT_USERNAME" && -n "$GIT_EMAIL" ]]; then
+  if [[ -n "${GIT_USERNAME-}" && -n "${GIT_EMAIL-}" ]]; then
     export GIT_COMMITTER_NAME="$GIT_USERNAME"
     export GIT_COMMITTER_EMAIL="$GIT_EMAIL"
     export GIT_AUTHOR_NAME="$GIT_USERNAME"
@@ -41,26 +41,9 @@ teardown_suite() {
 #####################################
 
 test_commit_2_gpg_key() {
-  export GPG_PASSPHRASE="123456890"
-  export GNUPGHOME="$(mktemp -d)"
-  cat >fakegpg <<EOF
-     %echo Generating a basic OpenPGP key
-     Key-Type: RSA
-     Key-Length: 4096
-     Subkey-Type: ELG-E
-     Subkey-Length: 4096
-     Name-Real: $GIT_USERNAME
-     Name-Comment: with stupid passphrase
-     Name-Email: $GIT_EMAIL
-     Expire-Date: 0
-     Passphrase: $GPG_PASSPHRASE
-     # Do a commit here, so that we can later print "done" :-)
-     %commit
-     %echo done
-EOF
-  gpg --batch --generate-key fakegpg
-  export GPG_KEY_ID=$(gpg -k opensource@dalisoft.uz | head -2 | tail -1 | xargs)
-  export GPG_KEY=$(gpg --quiet --passphrase "$GPG_PASSPHRASE" --batch --pinentry-mode loopback --export-secret-keys "$GPG_KEY_ID" | base64)
+  export GPG_PASSPHRASE="11223344"
+  export GPG_KEY_ID="6EB40690B8C34211EABA6515DFC46D3D3108DD2D"
+  export GPG_KEY="lIYEZeFVYxYJKwYBBAHaRw8BAQdAI6JeIeMBTcieJj9zxKQe66BczKAvVd3VtQ9eueVhENz+BwMC5JAd+/zHpWD7fVe0reQnXJ/bWsGZiqEhhsyo8TUHoZo/yvJ+pM1cQgjtM6ksAhGG9tcW6XSCbdXvQBuPBID+C1eQDaDsc/K99wQ1BveUP7QZVGVzdCBVc2VyIDx0ZXN0QHRlc3QuY29tPoiTBBMWCgA7FiEEbrQGkLjDQhHqumUV38RtPTEI3S0FAmXhVWMCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQ38RtPTEI3S2bDwEAwyV9Xl3K3AH1RQtaeI9LMKOiVfyBIY77YN/ZrRi5+48A/19n4n35AqIUU5YvCUkM0n5723B+NgJqFpElJoXChhEJ"
 }
 
 test_commit_1_feat_breaking_major_message() {
