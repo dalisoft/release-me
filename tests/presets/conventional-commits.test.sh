@@ -53,7 +53,7 @@ test_commit_0_2_initial_message_no_change() {
 test_commit_0_3_skip_change() {
   git commit -m "chore: chore commit" --allow-empty --no-gpg-sign
 
-  GPG_NO_SIGN=1 bash "$ROOT_DIR/release.sh" --plugins=git --preset=conventional-commits --dry-run
+  GPG_NO_SIGN=1 bash "$ROOT_DIR/release.sh" --plugins=git --preset=conventional-commits --dry-run --pre-release
   assert_equals "v0.0.1" "$(git tag -l | tail -1)"
 
   GPG_NO_SIGN=1 bash "$ROOT_DIR/release.sh" --plugins=git --preset=conventional-commits
