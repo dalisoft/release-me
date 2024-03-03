@@ -40,7 +40,6 @@ setup_suite() {
   fi
 
   _npm() {
-    echo "ran"
     # shellcheck disable=SC2317
     if [[ "${FAKE_PARAMS[0]}" == "publish" && "${NPM_TOKEN-}" == "FAKE_TOKEN" ]]; then
       return 0
