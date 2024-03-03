@@ -3,6 +3,7 @@ set -eu
 
 # Global variables
 export GPG_TTY=$(tty)
+export GNUPGHOME=$(mktemp -d)
 
 prepare() {
   unset GIT_CONFIG
@@ -13,7 +14,7 @@ prepare() {
     log_verbose "Git username [$GIT_USERNAME] and Git e-mail [$GIT_EMAIL] set"
   fi
   if [[ -z "${GPG_NO_SIGN-}" && -n "${GPG_KEY-}" ]]; then
-    echo "$GPG_KEY" | base64 --decode | gpg --quiet --batch --import
+    echo "$GPG_KEY" | base64 --decode | gpg --homedir "$GNUPGHOME" --quiet --batch --import
   fi
   if [[ -z "${GPG_NO_SIGN-}" && -n "${GPG_KEY_ID-}" ]]; then
     git config --local commit.gpgsign true
@@ -22,12 +23,13 @@ prepare() {
     git config --local gpg.program gpg
     log_verbose "Git GPG sign and key ID [$GPG_KEY_ID] are set"
   fi
-  if [[ -z "${GPG_NO_SIGN-}" && -n "${CI-}" && -n "${GPG_PASSPHRASE-}" ]]; then
-    echo "allow-loopback-pinentry" >>~/.gnupg/gpg-agent.conf
-    echo "pinentry-mode loopback" >>~/.gnupg/gpg.conf
-    gpg-connect-agent reloadagent /bye
 
-    gpg --quiet --passphrase "$GPG_PASSPHRASE" --batch --pinentry-mode loopback --sign >/dev/null
+  if [[ -z "${GPG_NO_SIGN-}" && -n "${GPG_PASSPHRASE-}" ]]; then
+    echo "allow-loopback-pinentry" >>"$GNUPGHOME/gpg-agent.conf"
+    echo "pinentry-mode loopback" >>"$GNUPGHOME/gpg.conf"
+    gpg-connect-agent --homedir "$GNUPGHOME" reloadagent /bye
+
+    echo "" | gpg --homedir "$GNUPGHOME" --quiet --passphrase "$GPG_PASSPHRASE" --batch --pinentry-mode loopback --sign >/dev/null
     log_verbose "Git GPG passphrase set"
   fi
 }
@@ -46,12 +48,12 @@ cleanup() {
     log_verbose "Git GPG sign unset"
   fi
   if [[ -z "${GPG_NO_SIGN-}" && -n "${GPG_KEY_ID-}" && -n "${GPG_PASSPHRASE-}" ]]; then
-    gpg --quiet --passphrase "$GPG_PASSPHRASE" --batch --yes --delete-secret-and-public-key "$GPG_KEY_ID"
+    gpg --homedir "$GNUPGHOME" --quiet --passphrase "$GPG_PASSPHRASE" --batch --yes --delete-secret-and-public-key "$GPG_KEY_ID"
     log_verbose "Git GPG key deleted"
   fi
-  if [[ -z "${GPG_NO_SIGN-}" && -n "${CI-}" ]]; then
-    rm -rf ~/.gnupg/gpg-agent.conf
-    rm -rf ~/.gnupg/gpg.conf
+  if [[ -z "${GPG_NO_SIGN-}" ]]; then
+    rm -rf "$GNUPGHOME/gpg-agent.conf"
+    rm -rf "$GNUPGHOME/gpg.conf"
     log_verbose "Git GPG config cleanup"
   fi
 
