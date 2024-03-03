@@ -24,7 +24,7 @@ Options:
 ##############################
 SCRIPT_DIR=$(dirname -- "$(readlink -f -- "$0")")
 CURRENT_DATE=$(date +'%Y-%m-%d')
-IS_GIT_REPO=$(git rev-parse --is-inside-work-tree)
+IS_GIT_REPO=$(git rev-parse --is-inside-work-tree 2>/dev/null || echo -n "")
 GIT_LOG_ENTRY_SEPARATOR='%n'
 GIT_LOG_FORMAT="%B$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
 #GIT_LOG_FORMAT+="%(trailers:only=true)$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
@@ -180,7 +180,7 @@ log_verbose() {
 ##### Early exit errors ######
 ##############################
 
-if ! $IS_GIT_REPO; then
+if [[ "$IS_GIT_REPO" != true ]]; then
   log "Current directory is not a Git repository!"
   exit 1
 fi
