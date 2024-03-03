@@ -21,4 +21,7 @@ bash_unit
 coverage
 
 # Secrets
-.env
+.env*
+.secrets*
+!.env.example
+!.secrets.example
