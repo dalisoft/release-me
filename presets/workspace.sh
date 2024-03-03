@@ -51,7 +51,7 @@ parse_commit() {
   fi
 
   # Early catching non-workspace commits
-  if [ "$scope" != "$PKG_NAME" ]; then
+  if [ "${scope-}" != "$PKG_NAME" ]; then
     return 0
   fi
 
