@@ -50,6 +50,15 @@ test_commit_0_2_initial_message_no_change() {
 
   assert_matches "Your project has no new commits" "$(GPG_NO_SIGN=1 bash "$ROOT_DIR/release.sh" --plugins=git --preset=conventional-commits)"
 }
+test_commit_0_3_skip_change() {
+  git commit -m "chore: chore commit" --allow-empty --no-gpg-sign
+
+  GPG_NO_SIGN=1 bash "$ROOT_DIR/release.sh" --plugins=git --preset=conventional-commits --dry-run
+  assert_equals "v0.0.1" "$(git tag -l | tail -1)"
+
+  GPG_NO_SIGN=1 bash "$ROOT_DIR/release.sh" --plugins=git --preset=conventional-commits
+  assert_equals "v0.0.1" "$(git tag -l | tail -1)"
+}
 test_commit_1_feat_breaking_major_message() {
   git commit -m "feat: allow provided config object to extend other configs" -m "BREAKING CHANGE: \`extends\` key in config file is now used for extending other config files" --allow-empty --no-gpg-sign
 
