@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -eu
 
+ROOT_DIR="$(realpath ../../)"
 REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
@@ -82,5 +83,5 @@ test_plugin_npm_0_2_initial_message() {
   assert_matches "0.0.1" "$(cat package.json)"
 }
 test_plugin_npm_no_token_fail_message() {
-  assert_status_code 1 "$(bash "$ROOT_DIR/release.sh" --plugins=npm --quiet)"
+  assert_status_code 1 "$ROOT_DIR/release.sh --plugins=npm --quiet"
 }
