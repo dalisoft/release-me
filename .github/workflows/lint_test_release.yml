@@ -47,6 +47,9 @@ jobs:
         run: |
           bash <(curl -s https://raw.githubusercontent.com/pgrange/bash_unit/master/install.sh)
           ROOT_DIR=$(pwd) bundle exec bashcov ./bash_unit tests/**/*.test.sh
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
   release:
     needs: test
     if: github.ref == 'refs/heads/master'
