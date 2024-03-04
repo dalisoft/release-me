@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -eu
 
+ROOT_DIR="$(realpath ../../)"
 REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {

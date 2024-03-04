@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -eu
 
+ROOT_DIR="$(realpath ../../)"
 REPO_FOLDER=$(mktemp -d)
-ORIGINAL_GH_TOKEN="$GITHUB_TOKEN"
+ORIGINAL_GH_TOKEN="${GITHUB_TOKEN-}"
 
 setup_suite() {
   cd "$REPO_FOLDER"
@@ -26,7 +27,6 @@ setup_suite() {
   fi
 
   fake_curl() {
-    echo "curl??"
     # shellcheck disable=SC2317
     echo "${GITHUB_TOKEN-}"
     # shellcheck disable=SC2317
@@ -69,5 +69,9 @@ test_plugin_gh_0_2_initial_message() {
   assert_matches "v0.0.1" "$(git tag -l)"
 }
 test_plugin_gh_no_token_fail_message() {
-  assert_status_code 1 "$(bash "$ROOT_DIR/release.sh" --plugins=github-release --quiet)"
+  git commit -m "fix: initial commit" --allow-empty --no-gpg-sign
+
+  assert_matches "v0.0.1" "$(git tag -l)"
+  assert_not_matches "v0.0.2" "$(git tag -l)"
+  assert_status_code 1 "$ROOT_DIR/release.sh --plugins=github-release --quiet"
 }
