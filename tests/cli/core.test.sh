@@ -5,7 +5,6 @@ ROOT_DIR="$(realpath ../../)"
 REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
-  ROOT_DIR="$(realpath ../../)"
   cd "$REPO_FOLDER"
   git init --initial-branch=master
 
@@ -51,10 +50,10 @@ test_core_cli_version() {
   assert_matches "last version available at GitHub" "$(bash "$ROOT_DIR/release.sh" --version)"
 }
 test_core_cli_invalid_option() {
-  assert_equals "[release-me] Unknown option: --i" "$(bash "$ROOT_DIR/release.sh" --i)"
-  assert_status_code 1 "$ROOT_DIR/release.sh --i"
+  assert_equals "[release-me] Unknown option: --invalid" "$(bash "$ROOT_DIR/release.sh" --invalid)"
+  assert_status_code 1 "$ROOT_DIR/release.sh --invalid"
 }
 test_core_cli_invalid_arg() {
-  assert_equals "[release-me] Unknown argument: i" "$(bash "$ROOT_DIR/release.sh" i)"
-  assert_status_code 1 "$ROOT_DIR/release.sh i"
+  assert_equals "[release-me] Unknown argument: invalid" "$(bash "$ROOT_DIR/release.sh" invalid)"
+  assert_status_code 1 "$ROOT_DIR/release.sh invalid"
 }
