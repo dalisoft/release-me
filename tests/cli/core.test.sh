@@ -4,6 +4,7 @@ set -eu
 REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
+  ROOT_DIR="$(realpath ../../)"
   cd "$REPO_FOLDER"
   git init --initial-branch=master
 
@@ -50,9 +51,9 @@ test_core_cli_version() {
 }
 test_core_cli_invalid_option() {
   assert_equals "[release-me] Unknown option: --i" "$(bash "$ROOT_DIR/release.sh" --i)"
-  assert_status_code 1 "$(bash "$ROOT_DIR/release.sh" --i)"
+  assert_status_code 1 "$ROOT_DIR/release.sh --i"
 }
 test_core_cli_invalid_arg() {
   assert_equals "[release-me] Unknown argument: i" "$(bash "$ROOT_DIR/release.sh" i)"
-  assert_status_code 1 "$(bash "$ROOT_DIR/release.sh" i)"
+  assert_status_code 1 "$ROOT_DIR/release.sh i"
 }

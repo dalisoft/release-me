@@ -4,6 +4,7 @@ set -eu
 REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
+  ROOT_DIR="$(realpath ../../)"
   cd "$REPO_FOLDER"
 }
 
