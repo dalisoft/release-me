@@ -22,15 +22,11 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  lint:
-    uses: ./.github/workflows/lint.yml
   test:
     uses: ./.github/workflows/test.yml
   # Build job
   build:
-    needs:
-      - lint
-      - test
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
