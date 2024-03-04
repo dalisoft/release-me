@@ -81,14 +81,14 @@ glc() {
 
 function parseOptions {
   while :; do
-    local KEY="${1:-}"
-    case $KEY in
+    local KEY="${1-}"
+    case "$KEY" in
     -v | --version)
-      echo "$CLI_PREFIX last version available at GitHub"
+      echo -n "$CLI_PREFIX last version available at GitHub"
       exit 0
       ;;
     -h | -\? | --help)
-      echo "$USAGE"
+      echo -n "$USAGE"
       exit 0
       ;;
     -w | --workspace)
@@ -124,13 +124,11 @@ function parseOptions {
       # export GIT_TRACE=1
       ;;
     -?*)
-      echo "Unknown option: $KEY" >&2
-      echo "$USAGE"
+      echo -n "$CLI_PREFIX Unknown option: $KEY"
       exit 1
       ;;
     ?*)
-      echo "Unknown argument: $KEY" >&2
-      echo "$USAGE"
+      echo -n "$CLI_PREFIX Unknown argument: $KEY"
       exit 1
       ;;
     "")
