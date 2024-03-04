@@ -49,6 +49,7 @@ jobs:
           ROOT_DIR=$(pwd) bundle exec bashcov ./bash_unit tests/**/*.test.sh
   release:
     needs: test
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
