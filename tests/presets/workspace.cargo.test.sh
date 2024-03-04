@@ -9,7 +9,7 @@ setup_suite() {
   git init --initial-branch=master
 
   echo '[package]
-name = "foo"
+name = "workspace1"
 version = "0.0.1"
 ' >>"$REPO_FOLDER/Cargo.toml"
 

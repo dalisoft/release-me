@@ -12,8 +12,8 @@ setup_suite() {
 
 
 setup(
-    name="foo",
-    version="1.0",
+    name="workspace1",
+    version="0.0.0",
     packages=find_packages(),
 )
 ' >>"$REPO_FOLDER/setup.py"
