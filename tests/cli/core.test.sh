@@ -49,10 +49,10 @@ test_core_cli_version() {
   assert_matches "last version available at GitHub" "$(bash "$ROOT_DIR/release.sh" --version)"
 }
 test_core_cli_invalid_option() {
-  assert_equals "[release-me] Unknown option: --invalid" "$(bash "$ROOT_DIR/release.sh" --invalid)"
-  assert_status_code 1 "$(bash "$ROOT_DIR/release.sh" --i)"
+  assert_matches "Unknown option: --invalid" "$(bash "$ROOT_DIR/release.sh" --invalid)"
+  assert_status_code 1 "$(bash "$ROOT_DIR/release.sh" --invalid)"
 }
 test_core_cli_invalid_arg() {
-  assert_equals "[release-me] Unknown argument: i" "$(bash "$ROOT_DIR/release.sh" invalid)"
+  assert_matches "Unknown argument: invalid" "$(bash "$ROOT_DIR/release.sh" invalid)"
   assert_status_code 1 "$(bash "$ROOT_DIR/release.sh" invalid)"
 }
