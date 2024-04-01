@@ -77,6 +77,12 @@ If one of files described below will be found, script parse first matched file a
 - [changesets](https://github.com/changesets/changesets)
 - [release-please](https://github.com/googleapis/release-please)
 
+## Inspirations
+
+- [semantic-release-bash](https://gitlab.com/mccleanp/semantic-release-bash)
+- [semantic-release.sh](https://github.com/itninja-hue/semantic-release.sh)
+- [conventional-commit-version-parser](https://github.com/djaustin/conventional-commit-parser)
+
 ## Credits to
 
 - [Bash](https://www.gnu.org/software/bash)
