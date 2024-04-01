@@ -82,6 +82,7 @@ If one of files described below will be found, script parse first matched file a
 - [semantic-release-bash](https://gitlab.com/mccleanp/semantic-release-bash)
 - [semantic-release.sh](https://github.com/itninja-hue/semantic-release.sh)
 - [conventional-commit-version-parser](https://github.com/djaustin/conventional-commit-parser)
+- [publish.sh](https://gist.github.com/shuckster/246e3d5f98d51d20cdf00ade25029d04)
 
 ## Credits to
 
