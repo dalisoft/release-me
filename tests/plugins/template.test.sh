@@ -1,10 +1,12 @@
-#!/usr/bin/env bash
+#!/bin/sh
 set -eu
 
-ROOT_DIR="$(realpath ../../)"
 REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
+  ROOT_DIR="$(realpath ../../)"
+  sh "$ROOT_DIR/install.sh" --outdir="$REPO_FOLDER" --preset=conventional-commits --plugins=git,PLUGIN_TEMPLATE
+
   cd "$REPO_FOLDER"
   git init --initial-branch=master
 
@@ -12,7 +14,7 @@ setup_suite() {
   export GIT_CONFIG="$REPO_FOLDER/.gitconfig"
   export GIT_WORK_TREE="$REPO_FOLDER"
 
-  if [[ -n "${GIT_USERNAME-}" && -n "${GIT_EMAIL-}" ]]; then
+  if [ -n "${GIT_USERNAME-}" ] && [ -n "${GIT_EMAIL-}" ]; then
     export GIT_COMMITTER_NAME="$GIT_USERNAME"
     export GIT_COMMITTER_EMAIL="$GIT_EMAIL"
     export GIT_AUTHOR_NAME="$GIT_USERNAME"
@@ -46,5 +48,5 @@ teardown_suite() {
 test_plugin_template() {
   git commit -m "fix: initial commit" --allow-empty --no-gpg-sign
 
-  bash "$ROOT_DIR/release.sh" --plugins=git,PLUGIN_TEMPLATE --quiet
+  bash "release.sh" --quiet
 }

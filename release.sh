@@ -1,5 +1,6 @@
-#!/usr/bin/env bash
-set -eu
+#!/bin/bash
+set -euo pipefail
+# See https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
 
 readonly CLI_PREFIX="[release-me]"
 readonly DESCRIPTION="Blazing fast minimal release workflow script written in Bash with plugins and presets support"
@@ -22,11 +23,10 @@ Options:
 ##############################
 ####### Root variables #######
 ##############################
-SCRIPT_DIR=$(dirname -- "$(readlink -f -- "$0")")
 CURRENT_DATE=$(date +'%Y-%m-%d')
 IS_GIT_REPO=$(git rev-parse --is-inside-work-tree 2>/dev/null || echo -n "")
 GIT_LOG_ENTRY_SEPARATOR='%n'
-GIT_LOG_FORMAT="%B$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
+GIT_LOG_FORMAT="%s$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
 #GIT_LOG_FORMAT+="%(trailers:only=true)$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
 GIT_REMOTE_ORIGIN=$(git remote get-url origin 2>/dev/null || echo "")
 GIT_REPO_NAME=
@@ -43,8 +43,7 @@ IS_QUIET=false
 IS_VERBOSE=false
 IS_STABLE_VERSION=false
 PRE_RELEASE_VERSION=false
-PLUGINS=("git")
-PRESET="conventional-commits"
+PLUGINS="git"
 
 # set `verbose` on `CI`
 if [ "${CI:-}" == true ]; then
@@ -61,25 +60,19 @@ fi
 # so this utility was made
 
 glc() {
-  local input="$1"
-
-  if [[ -p /dev/stdin ]]; then
-    input="$(cat -)"
-  else
-    input="${*}"
-  fi
-
   local COUNT=0
   while read -r line; do
     if [ -n "$line" ]; then
       COUNT=$((COUNT + 1))
     fi
-  done <<<"$input"
+  done
 
   echo -n $COUNT
 }
 
-function parseOptions {
+parse_options() {
+  local IFS=','
+
   while :; do
     local KEY="${1-}"
     case "$KEY" in
@@ -93,13 +86,6 @@ function parseOptions {
       ;;
     -w | --workspace)
       IS_WORKSPACE=true
-      ;;
-    --plugins=*)
-      local IFS=','
-      read -ra PLUGINS <<<"${KEY#*=}"
-      ;;
-    --preset=*)
-      read -r PRESET <<<"${KEY#*=}"
       ;;
     --stable)
       IS_STABLE_VERSION=true
@@ -139,7 +125,7 @@ function parseOptions {
   done
 }
 
-function isValidCommitType {
+is_valid_commit_type() {
   local key="$1"
   shift
   local arr=("$@")
@@ -183,19 +169,13 @@ if [[ "$IS_GIT_REPO" != true ]]; then
   exit 1
 fi
 
-parseOptions "$@"
+parse_options "$@"
 
 up_to_date() {
   log "$CLI_PREFIX $1" -q
   echo "$CLI_PREFIX Your project is up-to-date"
   exit 0
 }
-
-if [ "$PRESET" != "" ]; then
-  SOURCE_PRESET_FILE="$SCRIPT_DIR/presets/${PRESET}.sh"
-  # shellcheck disable=SC1090
-  source "$SOURCE_PRESET_FILE"
-fi
 
 ##############################
 ##### Package variables ######
@@ -205,7 +185,7 @@ PKG_NAME=""
 NEXT_VERSION=(0 0 0)
 CURRENT_VERSION=(0 0 0)
 
-function parsePackages {
+parse_packages() {
   if ! $IS_WORKSPACE; then
     return 0
   fi
@@ -235,7 +215,7 @@ EOF
 GIT_LAST_PROJECT_TAG=""
 GIT_LAST_PROJECT_TAG_VER=""
 
-function getGitVariables {
+get_git_variables() {
   if $IS_WORKSPACE; then
     GIT_LAST_PROJECT_TAG=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | grep "$PKG_NAME" | tail -1 | cut -d '/' -f 3)
   else
@@ -247,7 +227,9 @@ function getGitVariables {
   fi
 
   if [ -n "$GIT_LAST_PROJECT_TAG_VER" ]; then
-    mapfile -d '.' -t NEXT_VERSION < <(printf '%s' "$GIT_LAST_PROJECT_TAG_VER")
+    IFS="."
+    read -ra NEXT_VERSION <<<"$GIT_LAST_PROJECT_TAG_VER"
+
     CURRENT_VERSION=("${NEXT_VERSION[@]}")
 
     if [[ "$IS_STABLE_VERSION" == false && $PRE_RELEASE_VERSION == false && "${NEXT_VERSION[0]}" -gt 0 ]]; then
@@ -262,9 +244,10 @@ function getGitVariables {
 
 GIT_LOGS=""
 
-function getGitCommits {
+get_git_commits() {
   local IFS=
   local GIT_LOGS_LENGTH=0
+
   # Check if exists last tag and is not empty
   if [ -n "$GIT_LAST_PROJECT_TAG" ]; then
     log_verbose "Last project tag [$GIT_LAST_PROJECT_TAG] found"
@@ -311,19 +294,22 @@ PATCH_UPGRADED=false
 MINOR_UPGRADED=false
 MAJOR_UPGRADED=false
 
-function handleGitCommits {
+handle_git_commits() {
+  local IFS
+  local is_parse_commit
+
   log_verbose "Analyzing commits...\n"
-  local IFS=
+  is_parse_commit=$(command -v parse_commit)
+  IFS=
   while read -r subject && read -r hash && read -r sha256; do
-    # shellcheck disable=SC2034
-    local COMMIT_ARRAY=("$subject" "$hash" "$sha256")
 
     log_verbose "$subject" "-q"
 
-    if [ "$(command -v parse_commit)" ]; then
-      parse_commit COMMIT_ARRAY
+    if [ -n "$is_parse_commit" ]; then
+      parse_commit "$subject" "$hash" "$sha256"
     fi
   done <<<"$GIT_LOGS"
+
   log_verbose "" "-q"
   log_verbose "Analyzed commits!"
 
@@ -382,22 +368,19 @@ function handleGitCommits {
 ######## Handle push ########
 ##############################
 
-function handlePushes {
+handle_pushes() {
   log_verbose "Applying changes..."
 
   CHECKOUT_SHA=$(echo "$GIT_LOGS" | tail -1)
 
   log_verbose "Found tag commit [$CHECKOUT_SHA]"
 
-  for plugin in "${PLUGINS[@]}"; do
-    log_verbose "Loading plugin \`$plugin\`..."
-    local SOURCE_PLUGIN_FILE="$SCRIPT_DIR/plugins/${plugin}.sh"
-    # shellcheck disable=SC1090
-    source "$SOURCE_PLUGIN_FILE"
-    if [ "$(command -v release)" ]; then
-      release
+  local IFS=' '
+  for plugin in ${PLUGINS}; do
+    log_verbose "Applying plugin \`$plugin\`..."
+    if command -v "plugin_${plugin}_release"; then
+      plugin_${plugin}_release
     fi
-    unset release
     log_verbose "Applied plugin $plugin!"
   done
 
@@ -407,8 +390,8 @@ function handlePushes {
 ##############################
 ######## Initializate ########
 ##############################
-parsePackages
-getGitVariables
-getGitCommits
-handleGitCommits
-handlePushes
+parse_packages
+get_git_variables
+get_git_commits
+handle_git_commits
+handle_pushes

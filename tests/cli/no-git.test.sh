@@ -1,10 +1,12 @@
-#!/usr/bin/env bash
+#!/bin/sh
 set -eu
 
-ROOT_DIR="$(realpath ../../)"
 REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
+  ROOT_DIR="$(realpath ../../)"
+  sh "$ROOT_DIR/install.sh" --outdir="$REPO_FOLDER" --preset=conventional-commits --plugins=git
+
   cd "$REPO_FOLDER"
 }
 
@@ -18,5 +20,5 @@ teardown_suite() {
 #####################################
 
 test_nogit_1() {
-  assert_matches "Current directory is not a Git repository!" "$(bash "$ROOT_DIR/release.sh" --plugin=PLUGIN_TEMPLATE)"
+  assert_matches "Current directory is not a Git repository!" "$(bash "release.sh" --plugin=PLUGIN_TEMPLATE)"
 }

@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 set -eu
 
-ROOT_DIR="$(realpath ../../)"
 REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
+  ROOT_DIR="$(realpath ../../)"
+  sh "$ROOT_DIR/install.sh" --outdir="$REPO_FOLDER" --preset=workspace --plugins=git
+
   cd "$REPO_FOLDER"
   git init --initial-branch=master
 
@@ -49,9 +51,9 @@ teardown_suite() {
 test_commit_initial_message() {
   git commit -m "fix(workspace1): initial commit" --allow-empty --no-gpg-sign
 
-  assert_status_code 1 "GPG_NO_SIGN=1 $ROOT_DIR/release.sh --plugins=git --preset=workspace --workspace"
+  assert_status_code 1 "GPG_NO_SIGN=1 ./release.sh --workspace"
   assert_not_equals "workspace1-v0.0.1" "$(git tag -l | tail -1)"
 }
 test_commit_initial_message_2_no_change() {
-  assert_status_code 1 "GPG_NO_SIGN=1 $ROOT_DIR/release.sh --plugins=git --preset=workspace --workspace"
+  assert_status_code 1 "GPG_NO_SIGN=1 ./release.sh --workspace"
 }

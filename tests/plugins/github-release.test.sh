@@ -1,11 +1,13 @@
-#!/usr/bin/env bash
+#!/bin/sh
 set -eu
 
-ROOT_DIR="$(realpath ../../)"
 REPO_FOLDER=$(mktemp -d)
 ORIGINAL_GH_TOKEN="${GITHUB_TOKEN-}"
 
 setup_suite() {
+  ROOT_DIR="$(realpath ../../)"
+  sh "$ROOT_DIR/install.sh" --outdir="$REPO_FOLDER" --preset=conventional-commits --plugins=git,github-release
+
   cd "$REPO_FOLDER"
   git init --initial-branch=master
 
@@ -16,7 +18,7 @@ setup_suite() {
   export GIT_CONFIG="$REPO_FOLDER/.gitconfig"
   export GIT_WORK_TREE="$REPO_FOLDER"
 
-  if [[ -n "${GIT_USERNAME-}" && -n "${GIT_EMAIL-}" ]]; then
+  if [ -n "${GIT_USERNAME-}" ] && [ -n "${GIT_EMAIL-}" ]; then
     export GIT_COMMITTER_NAME="$GIT_USERNAME"
     export GIT_COMMITTER_EMAIL="$GIT_EMAIL"
     export GIT_AUTHOR_NAME="$GIT_USERNAME"
@@ -30,7 +32,7 @@ setup_suite() {
     # shellcheck disable=SC2317
     echo "${GITHUB_TOKEN-}"
     # shellcheck disable=SC2317
-    echo "${FAKE_PARAMS[@]}"
+    echo ${FAKE_PARAMS}
   }
   export -f fake_curl
   export GPG_NO_SIGN=1
@@ -61,11 +63,11 @@ teardown_suite() {
 test_plugin_gh_0_1_initial_message_dryrun() {
   git commit -m "fix: initial commit" --allow-empty --no-gpg-sign
 
-  GITHUB_TOKEN="FAKE_TOKEN" bash "$ROOT_DIR/release.sh" --plugins=git,github-release --quiet --dry-run --pre-release
+  GITHUB_TOKEN="FAKE_TOKEN" bash "release.sh" --quiet --dry-run --pre-release
   assert_not_matches "v0.0.1" "$(git tag -l)"
 }
 test_plugin_gh_0_2_initial_message() {
-  assert_matches "v0.0.1" "$(GITHUB_TOKEN="FAKE_TOKEN" bash "$ROOT_DIR/release.sh" --plugins=git,github-release --quiet)"
+  assert_matches "v0.0.1" "$(GITHUB_TOKEN="FAKE_TOKEN" bash "release.sh" --quiet)"
   assert_matches "v0.0.1" "$(git tag -l)"
 }
 test_plugin_gh_no_token_fail_message() {
@@ -73,5 +75,5 @@ test_plugin_gh_no_token_fail_message() {
 
   assert_matches "v0.0.1" "$(git tag -l)"
   assert_not_matches "v0.0.2" "$(git tag -l)"
-  assert_status_code 1 "$ROOT_DIR/release.sh --plugins=github-release --quiet"
+  assert_status_code 1 "./release.sh --quiet"
 }
