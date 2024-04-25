@@ -225,7 +225,6 @@ EOF
 This release aims to being workspace release
 but missing name and could not be release
 EOF
-    cat setup.py
     exit 1
   fi
 
