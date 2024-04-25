@@ -72,7 +72,7 @@ glc() {
   echo -n $COUNT
 }
 
-function parseOptions {
+parse_options() {
   while :; do
     local KEY="${1-}"
     case "$KEY" in
@@ -132,7 +132,7 @@ function parseOptions {
   done
 }
 
-function isValidCommitType {
+is_valid_commit_type() {
   local key="$1"
   shift
   local arr=("$@")
@@ -176,7 +176,7 @@ if [[ "$IS_GIT_REPO" != true ]]; then
   exit 1
 fi
 
-parseOptions "$@"
+parse_options "$@"
 
 up_to_date() {
   log "$CLI_PREFIX $1" -q
@@ -198,7 +198,7 @@ PKG_NAME=""
 NEXT_VERSION=(0 0 0)
 CURRENT_VERSION=(0 0 0)
 
-function parsePackages {
+parse_packages() {
   if ! $IS_WORKSPACE; then
     return 0
   fi
@@ -244,7 +244,7 @@ EOF
 GIT_LAST_PROJECT_TAG=""
 GIT_LAST_PROJECT_TAG_VER=""
 
-function getGitVariables {
+get_git_variables() {
   if $IS_WORKSPACE; then
     GIT_LAST_PROJECT_TAG=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | grep "$PKG_NAME" | tail -1 | cut -d '/' -f 3)
   else
@@ -271,7 +271,7 @@ function getGitVariables {
 
 GIT_LOGS=""
 
-function getGitCommits {
+get_git_commits() {
   local IFS=
   local GIT_LOGS_LENGTH=0
   # Check if exists last tag and is not empty
@@ -320,7 +320,7 @@ PATCH_UPGRADED=false
 MINOR_UPGRADED=false
 MAJOR_UPGRADED=false
 
-function handleGitCommits {
+handle_git_commits() {
   log_verbose "Analyzing commits...\n"
   local IFS=
   while read -r line; do
@@ -395,7 +395,7 @@ function handleGitCommits {
 ######## Handle push ########
 ##############################
 
-function handlePushes {
+handle_pushes() {
   log_verbose "Applying changes..."
   log_verbose "Found tag commit [$CHECKOUT_SHA]"
 
@@ -417,8 +417,8 @@ function handlePushes {
 ##############################
 ######## Initializate ########
 ##############################
-parsePackages
-getGitVariables
-getGitCommits
-handleGitCommits
-handlePushes
+parse_packages
+get_git_variables
+get_git_commits
+handle_git_commits
+handle_pushes
