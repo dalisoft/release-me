@@ -24,12 +24,12 @@ Options:
 ##############################
 SCRIPT_DIR=$(dirname -- "$(readlink -f -- "$0")")
 CURRENT_DATE=$(date +'%Y-%m-%d')
-IS_GIT_REPO=$(git rev-parse --is-inside-work-tree 2>/dev/null || echo -n "")
+IS_GIT_REPO=$(git rev-parse --is-inside-work-tree 2>/dev/null || printf "%s" "")
 GIT_LOG_ENTRY_SEPARATOR='____'
 GIT_LOG_COMMIT_SEPARATOR='START_OF_COMMIT'
 GIT_LOG_FORMAT="$GIT_LOG_COMMIT_SEPARATOR%n%h$GIT_LOG_ENTRY_SEPARATOR%H$GIT_LOG_ENTRY_SEPARATOR%s$GIT_LOG_ENTRY_SEPARATOR%b"
 GIT_LOG_PARSE_REGEX="(.*)$GIT_LOG_ENTRY_SEPARATOR(.*)$GIT_LOG_ENTRY_SEPARATOR(.*)($GIT_LOG_ENTRY_SEPARATOR(.*)?)"
-GIT_REMOTE_ORIGIN=$(git remote get-url origin 2>/dev/null || echo "")
+GIT_REMOTE_ORIGIN=$(git remote get-url origin 2>/dev/null || printf "%s" "")
 GIT_REPO_NAME=
 
 if [[ "$GIT_REMOTE_ORIGIN" == "git@"* ]]; then
@@ -69,7 +69,7 @@ glc() {
     fi
   done <<<"$(cat /dev/stdin)"
 
-  echo -n $COUNT
+  printf "%s" $COUNT
 }
 
 parse_options() {
@@ -77,11 +77,11 @@ parse_options() {
     local KEY="${1-}"
     case "$KEY" in
     -v | --version)
-      echo -n "$CLI_PREFIX last version available at GitHub"
+      printf "%s" "$CLI_PREFIX last version available at GitHub"
       exit 0
       ;;
     -h | -\? | --help)
-      echo -n "$USAGE"
+      printf "%s" "$USAGE"
       exit 0
       ;;
     -w | --workspace)
@@ -117,11 +117,11 @@ parse_options() {
       # export GIT_TRACE=1
       ;;
     -?*)
-      echo -n "$CLI_PREFIX Unknown option: $KEY"
+      printf "%s" "$CLI_PREFIX Unknown option: $KEY"
       exit 1
       ;;
     ?*)
-      echo -n "$CLI_PREFIX Unknown argument: $KEY"
+      printf "%s" "$CLI_PREFIX Unknown argument: $KEY"
       exit 1
       ;;
     "")
@@ -151,18 +151,18 @@ is_valid_commit_type() {
 log() {
   if ! $IS_QUIET; then
     if [ "${2-}" == "-q" ]; then
-      echo -e "$1"
+      printf "%b\n" "$1"
     else
-      echo -e "$CLI_PREFIX $1"
+      printf "%b\n" "$CLI_PREFIX $1"
     fi
   fi
 }
 log_verbose() {
   if $IS_VERBOSE; then
     if [ "${2-}" == "-q" ]; then
-      echo -e "$1"
+      printf "%b\n" "$1"
     else
-      echo -e "$CLI_PREFIX $1"
+      printf "%b\n" "$CLI_PREFIX $1"
     fi
   fi
 }
@@ -180,7 +180,7 @@ parse_options "$@"
 
 up_to_date() {
   log "$CLI_PREFIX $1" -q
-  echo "$CLI_PREFIX Your project is up-to-date"
+  printf "%s\n" "$CLI_PREFIX Your project is up-to-date"
   exit 0
 }
 
@@ -251,7 +251,7 @@ get_git_variables() {
   fi
 
   if [[ $GIT_LAST_PROJECT_TAG != "" ]]; then
-    GIT_LAST_PROJECT_TAG_VER=$(echo "$GIT_LAST_PROJECT_TAG" | rev | cut -d 'v' -f 1 | rev)
+    GIT_LAST_PROJECT_TAG_VER=$(printf "%s" "$GIT_LAST_PROJECT_TAG" | rev | cut -d 'v' -f 1 | rev)
   fi
 
   if [ -n "$GIT_LAST_PROJECT_TAG_VER" ]; then
