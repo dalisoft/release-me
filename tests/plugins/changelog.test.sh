@@ -48,8 +48,8 @@ test_plugin_changelog_1() {
 
   bash "$ROOT_DIR/release.sh" --plugins=git,changelog --quiet
 
-  assert_matches "v0.0.1" "$(cat CHANGELOG.md)"
-  assert_matches "initial commit" "$(cat CHANGELOG.md)"
+  assert_matches "v0.0.1" "$(cat "$REPO_FOLDER"/CHANGELOG.md)"
+  assert_matches "initial commit" "$(cat "$REPO_FOLDER"/CHANGELOG.md)"
 }
 
 test_plugin_changelog_2_dryun() {
@@ -57,8 +57,8 @@ test_plugin_changelog_2_dryun() {
 
   bash "$ROOT_DIR/release.sh" --plugins=git,changelog --quiet --dry-run
 
-  assert_not_matches "v0.0.2" "$(cat CHANGELOG.md)"
-  assert_not_matches "bump version" "$(cat CHANGELOG.md)"
+  assert_not_matches "v0.0.2" "$(cat "$REPO_FOLDER"/CHANGELOG.md)"
+  assert_not_matches "bump version" "$(cat "$REPO_FOLDER"/CHANGELOG.md)"
 }
 
 test_plugin_changelog_3_update() {
@@ -66,6 +66,6 @@ test_plugin_changelog_3_update() {
 
   bash "$ROOT_DIR/release.sh" --plugins=git,changelog --quiet
 
-  assert_matches "v0.1.0" "$(cat CHANGELOG.md)"
-  assert_matches "feat version" "$(cat CHANGELOG.md)"
+  assert_matches "v0.1.0" "$(cat "$REPO_FOLDER"/CHANGELOG.md)"
+  assert_matches "feat version" "$(cat "$REPO_FOLDER"/CHANGELOG.md)"
 }
