@@ -353,14 +353,9 @@ handle_git_commits() {
     NEXT_VERSION[2]=$((NEXT_VERSION[2] + 1))
   fi
 
-  NEXT_BUILD_VERSION=$(
-    IFS='.'
-    echo -n "${NEXT_VERSION[*]}"
-  )
-  CURRENT_BUILD_VERSION=$(
-    IFS='.'
-    echo -n "${CURRENT_VERSION[*]}"
-  )
+  local IFS='.'
+  NEXT_BUILD_VERSION="${NEXT_VERSION[*]}"
+  CURRENT_BUILD_VERSION="${CURRENT_VERSION[*]}"
 
   if [ "$NEXT_BUILD_VERSION" == "$CURRENT_BUILD_VERSION" ]; then
     up_to_date "Your project has no incremental update"
