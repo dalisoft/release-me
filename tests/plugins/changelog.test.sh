@@ -44,7 +44,7 @@ teardown_suite() {
 #####################################
 
 test_plugin_changelog_1() {
-  git commit --quiet -m "fix: initial commit" --allow-empty
+  git commit -m "fix: initial commit" --allow-empty
 
   bash "$ROOT_DIR/release.sh" --plugins=git,changelog --quiet
 
@@ -53,7 +53,7 @@ test_plugin_changelog_1() {
 }
 
 test_plugin_changelog_2_dryun() {
-  git commit --quiet --m "fix: bump version" --allow-empty
+  git commit --m "fix: bump version" --allow-empty
 
   bash "$ROOT_DIR/release.sh" --plugins=git,changelog --quiet --dry-run
 
@@ -62,7 +62,7 @@ test_plugin_changelog_2_dryun() {
 }
 
 test_plugin_changelog_3_update() {
-  git commit --quiet -m "feat: feat version" --allow-empty
+  git commit -m "feat: feat version" --allow-empty
 
   bash "$ROOT_DIR/release.sh" --plugins=git,changelog --quiet
 

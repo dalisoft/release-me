@@ -59,7 +59,7 @@ teardown_suite() {
 #####################################
 
 test_plugin_gh_0_1_initial_message_dryrun() {
-  git commit --quiet -m "fix: initial commit" --allow-empty --no-gpg-sign
+  git commit -m "fix: initial commit" --allow-empty --no-gpg-sign
 
   GITHUB_TOKEN="FAKE_TOKEN" bash "$ROOT_DIR/release.sh" --plugins=git,github-release --quiet --dry-run --pre-release
   assert_not_matches "v0.0.1" "$(git tag -l)"
@@ -69,7 +69,7 @@ test_plugin_gh_0_2_initial_message() {
   assert_matches "v0.0.1" "$(git tag -l)"
 }
 test_plugin_gh_no_token_fail_message() {
-  git commit --quiet -m "fix: initial commit" --allow-empty --no-gpg-sign
+  git commit -m "fix: initial commit" --allow-empty --no-gpg-sign
 
   assert_matches "v0.0.1" "$(git tag -l)"
   assert_not_matches "v0.0.2" "$(git tag -l)"

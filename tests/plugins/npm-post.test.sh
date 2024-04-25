@@ -74,7 +74,7 @@ teardown_suite() {
 #####################################
 
 test_plugin_npm_0_1_initial_message_dryrun() {
-  git commit --quiet -m "fix: initial commit" --allow-empty
+  git commit -m "fix: initial commit" --allow-empty
 
   NPM_TOKEN="FAKE_TOKEN" bash "$ROOT_DIR/release.sh" --plugins=npm,npm-post --quiet --dry-run
   assert_matches "1.0.0" "$(cat package.json)"
