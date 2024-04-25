@@ -13,8 +13,8 @@ release() {
       CONTENT+=$(cat CHANGELOG.md)
     fi
     rm -rf CHANGELOG.md
-    log "$RELEASE_BODY$CONTENT" >>CHANGELOG.md
-    echo "Generated Changelog!"
+    echo -e "$RELEASE_BODY$CONTENT" >>CHANGELOG.md
+    log "Generated Changelog!"
   else
     log "Skipped Changelog creation in DRY-RUN mode..."
   fi
