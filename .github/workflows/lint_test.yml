@@ -24,7 +24,12 @@ jobs:
           shellcheck *.sh
   test:
     needs: lint
-    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        os:
+          - ubuntu-22.04
+          - macos-14
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
