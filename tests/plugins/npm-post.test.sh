@@ -36,8 +36,6 @@ setup_suite() {
     export GIT_AUTHOR_NAME="$GIT_USERNAME"
     export GIT_AUTHOR_EMAIL="$GIT_EMAIL"
 
-    git config commit.gpgsign false
-
     git config user.email "$GIT_EMAIL"
     git config user.name "$GIT_USERNAME"
   fi
