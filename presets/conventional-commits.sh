@@ -22,9 +22,10 @@ INCLUDE_SCOPE=("refactor" "perf" "revert")
 parse_commit() {
   local -n COMMIT_MSG="$1"
 
-  local subject="${COMMIT_MSG[0]}"
   local hash="${COMMIT_MSG[1]}"
   local sha256="${COMMIT_MSG[2]}"
+  local subject="${COMMIT_MSG[3]}"
+  local body="${COMMIT_MSG[5]}"
 
   local type
   local scope
@@ -42,7 +43,7 @@ parse_commit() {
     description="${BASH_REMATCH[4]}"
 
     type="BREAKING CHANGE"
-  elif [[ "$subject" =~ $string_commit_major ]]; then
+  elif [[ "$body" =~ $string_commit_major ]]; then
     type="BREAKING CHANGE"
 
     description="$subject"
