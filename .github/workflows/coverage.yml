@@ -1,35 +1,24 @@
-name: Lint and Test
+name: Coverage
 
 on:
   push:
     branches: [master]
-  pull_request:
+  pull_request_target:
     branches: [master]
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Lint and Test"]
+    branches: [master]
+    types:
+      - completed
 
 env:
   CI: true
 
 jobs:
-  lint:
+  coverage:
     runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Lint
-        shell: bash
-        run: |
-          sudo apt install shellcheck -y
-          shellcheck *.sh
-  test:
-    needs: lint
-    strategy:
-      matrix:
-        os:
-          - ubuntu-22.04
-          - macos-14
-    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
@@ -37,7 +26,7 @@ jobs:
           ruby-version: "3.3" # Not needed with a .ruby-version file
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
-      - name: Test
+      - name: Coverage
         shell: bash
         env:
           GIT_USERNAME: ${{ vars.GIT_FAKE_USERNAME }}
@@ -45,7 +34,11 @@ jobs:
           GPG_KEY_ID: ${{ vars.GPG_FAKE_KEY_ID }}
           GPG_KEY: ${{ vars.GPG_FAKE_KEY }}
           GPG_PASSPHRASE: ${{ vars.GPG_FAKE_PASSPHRASE }}
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
           GITHUB_TOKEN: "ACTUAL_YOUR_TOKEN"
         run: |
           curl -s https://raw.githubusercontent.com/pgrange/bash_unit/master/install.sh | bash
-          FORCE_COLOR=true ./bash_unit tests/**/*.test.sh
+          bundle exec bashcov ./bash_unit tests/**/*.test.sh
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
