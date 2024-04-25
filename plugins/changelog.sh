@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -eu
 
 release() {
@@ -12,7 +12,7 @@ release() {
       CONTENT="\n$(cat CHANGELOG.md)"
     fi
     rm -rf CHANGELOG.md
-    printf "%s%s" "$RELEASE_BODY" "$CONTENT" >>CHANGELOG.md
+    echo -e "$RELEASE_BODY$CONTENT" >>CHANGELOG.md
     log "Generated Changelog!"
   else
     log "Skipped Changelog creation in DRY-RUN mode..."
