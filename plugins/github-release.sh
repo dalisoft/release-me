@@ -21,7 +21,7 @@ release() {
         "https://api.github.com/repos/$GIT_REPO_NAME/releases" \
         -d "{\"tag_name\":\"$NEXT_RELEASE_TAG\",\"target_commitish\":\"$CHECKOUT_SHA\",\"name\":\"$NEXT_RELEASE_TAG\",\"body\":\"$RELEASE_BODY\",\"draft\":false,\"prerelease\":$PRE_RELEASE_VERSION,\"generate_release_notes\":false,\"make_latest\":\"true\"}"
       log "Created GitHub release [$NEXT_RELEASE_TAG]!"
-      echo "GitHub release available at https://github.com/$GIT_REPO_NAME/releases/tag/$NEXT_RELEASE_TAG"
+      log "GitHub release available at https://github.com/$GIT_REPO_NAME/releases/tag/$NEXT_RELEASE_TAG"
     else
       log "Skipped GitHub release [$NEXT_RELEASE_TAG] in DRY-RUN mode."
     fi
