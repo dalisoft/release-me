@@ -64,10 +64,6 @@ cleanup() {
   log_verbose "Git config cleanup"
 }
 
-# Used for GPG re-using
-export GIT_PREPARE=prepare
-export GIT_CLEANUP=cleanup
-
 release() {
   # Create a `git` tag
   log "Creating Git tag..."
