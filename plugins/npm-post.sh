@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 set -eu
 
 prepare() {
@@ -29,7 +29,7 @@ release() {
       git commit -m "Bump package.json version to ${NEXT_RELEASE_VERSION}"
     fi
 
-    if [[ -n "$GIT_REMOTE_ORIGIN" ]]; then
+    if [ -n "$GIT_REMOTE_ORIGIN" ]; then
       git push
       log_verbose "Pushed update to remote"
     else
