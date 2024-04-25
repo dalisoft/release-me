@@ -38,11 +38,10 @@ parse_commit() {
     description="${BASH_REMATCH[4]}"
 
   elif [[ "$subject" =~ $regexp_commit_major ]]; then
-    # type="${BASH_REMATCH[1]}"
+    type="BREAKING CHANGE"
     scope="${BASH_REMATCH[3]}"
     description="${BASH_REMATCH[4]}"
 
-    type="BREAKING CHANGE"
   fi
 
   # Early catching non-workspace commits
@@ -52,9 +51,8 @@ parse_commit() {
 
   # Extract body
   if [[ "$body" =~ $string_commit_major ]]; then
-    description="$subject"
-
     type="BREAKING CHANGE"
+    description="$subject"
   fi
 
   # Handle other type of commits
