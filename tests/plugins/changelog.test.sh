@@ -53,9 +53,9 @@ test_plugin_changelog_1() {
 }
 
 test_plugin_changelog_2_dryun() {
-  git commit --m "fix: bump version" --allow-empty --no-gpg-sign
+  git commit -m "fix: bump version" --allow-empty --no-gpg-sign
 
-  bash "$ROOT_DIR/release.sh" --plugins=git,changelog --dry-run
+  bash "$ROOT_DIR/release.sh" --plugins=git,changelog --quiet --dry-run
 
   assert_not_matches "v0.0.2" "$(cat CHANGELOG.md)"
   assert_not_matches "bump version" "$(cat CHANGELOG.md)"
