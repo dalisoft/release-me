@@ -13,8 +13,6 @@ RELEASE_SKIP_TYPES=("build" "chore" "docs" "test" "style" "ci" "skip ci")
 RELEASE_PATCH_TYPES=("fix" "close" "closes" "perf" "revert")
 # shellcheck disable=2034
 RELEASE_MINOR_TYPES=("refactor" "feat")
-# shellcheck disable=2034
-RELEASE_MAJOR_TYPES=("BREAKING CHANGE")
 
 INCLUDE_SCOPE=("refactor" "perf" "revert")
 
@@ -43,12 +41,11 @@ parse_commit() {
     description="${BASH_REMATCH[4]}"
 
     type="BREAKING CHANGE"
-  elif [[ "$body" =~ $string_commit_major ]]; then
-    type="BREAKING CHANGE"
 
-    description="$subject"
-  else
-    return 0
+    if ! $MAJOR_UPGRADED; then
+      MAJOR_UPGRADED=true
+      RELEASE_BODY+="\n## BREAKING CHANGES\n\n"
+    fi
   fi
 
   # Early catching non-workspace commits
@@ -56,7 +53,18 @@ parse_commit() {
     return 0
   fi
 
-  if is_valid_commit_type "$type" "${RELEASE_SKIP_TYPES[@]}"; then
+  # Extract body
+  if [[ "$body" =~ $string_commit_major ]]; then
+    type="BREAKING CHANGE"
+
+    description="$subject"
+
+    if ! $MAJOR_UPGRADED; then
+      MAJOR_UPGRADED=true
+      RELEASE_BODY+="\n## BREAKING CHANGES\n\n"
+    fi
+  # Handle other type of commits
+  elif is_valid_commit_type "$type" "${RELEASE_SKIP_TYPES[@]}"; then
     return 0
   elif is_valid_commit_type "$type" "${RELEASE_PATCH_TYPES[@]}"; then
     if ! $PATCH_UPGRADED; then
@@ -67,11 +75,6 @@ parse_commit() {
     if ! $MINOR_UPGRADED; then
       MINOR_UPGRADED=true
       RELEASE_BODY+="\n## Features\n\n"
-    fi
-  elif is_valid_commit_type "$type" "${RELEASE_MAJOR_TYPES[@]}"; then
-    if ! $MAJOR_UPGRADED; then
-      MAJOR_UPGRADED=true
-      RELEASE_BODY+="\n## BREAKING CHANGES\n\n"
     fi
   fi
 
