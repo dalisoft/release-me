@@ -3,7 +3,7 @@ set -eu
 
 release() {
   # Publish a `npm` tag
-  if [[ "${NPM_TOKEN-}" != "" ]]; then
+  if [[ -n "${NPM_TOKEN-}" ]]; then
     log "Publishing npm tag..."
     log_verbose "npm tag: $NEXT_RELEASE_TAG and version: $NEXT_RELEASE_VERSION!"
 
@@ -13,6 +13,7 @@ release() {
 
       # Bump `package.json` `version` for properly publishing
       sed -i.bak "s/\"version\": \"[^\"]*\",/\"version\": \"$NEXT_BUILD_VERSION\",/" "package.json"
+      rm -rf package.json.bak
 
       export NODE_AUTH_TOKEN="$NPM_TOKEN"
       npm publish "$NEXT_RELEASE_VERSION" --userconfig "$TEMP_FILE"
