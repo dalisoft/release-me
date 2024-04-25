@@ -57,6 +57,11 @@ test_commit_0_1_initial_message() {
   bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace --quiet
   assert_matches "workspace1-v0.0.1" "$(git tag -l)"
 }
+test_commit_0_2_invalid_workspace() {
+  git commit --quiet -m "fix(workspace3): initial commit" --allow-empty
+  bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace --quiet
+  assert_matches "workspace1-v0.0.1" "$(git tag -l)"
+}
 test_commit_0_2_initial_message_no_change() {
 
   assert_matches "Your project has no new commits" "$(bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace)"

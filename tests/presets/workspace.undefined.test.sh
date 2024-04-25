@@ -52,6 +52,11 @@ test_commit_initial_message() {
   assert_status_code 1 "GPG_NO_SIGN=1 $ROOT_DIR/release.sh --plugins=git --preset=workspace --workspace"
   assert_not_equals "workspace1-v0.0.1" "$(git tag -l | tail -1)"
 }
+test_commit_0_2_invalid_workspace() {
+  git commit --quiet -m "fix(workspace3): initial commit" --allow-empty
+
+  assert_matches "This project currently supports only Node.js, Rust and Python projects" "$(bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace --dry-run)"
+}
 test_commit_initial_message_2_no_change() {
   assert_status_code 1 "GPG_NO_SIGN=1 $ROOT_DIR/release.sh --plugins=git --preset=workspace --workspace"
 }
