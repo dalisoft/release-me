@@ -75,9 +75,17 @@ release() {
     git add package.json
 
     if $IS_WORKSPACE; then
-      git commit -m "Bump project ${PKG_NAME} version to ${NEXT_RELEASE_VERSION}"
+      if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY_ID-}" ] && [ -n "${GPG_PASSPHRASE-}" ]; then
+        git commit --sign -m "Bump project ${PKG_NAME} version to ${NEXT_RELEASE_VERSION}"
+      else
+        git commit --no-gpg-sign -m "Bump project ${PKG_NAME} version to ${NEXT_RELEASE_VERSION}"
+      fi
     else
-      git commit -m "Bump package.json version to ${NEXT_RELEASE_VERSION}"
+      if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY_ID-}" ] && [ -n "${GPG_PASSPHRASE-}" ]; then
+        git commit --sign -m "Bump package.json version to ${NEXT_RELEASE_VERSION}"
+      else
+        git commit --no-gpg-sign -m "Bump package.json version to ${NEXT_RELEASE_VERSION}"
+      fi
     fi
 
     if [ -n "$GIT_REMOTE_ORIGIN" ]; then
