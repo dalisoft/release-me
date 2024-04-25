@@ -51,19 +51,19 @@ parse_commit() {
     return 0
   fi
 
-  if isValidCommitType "$type" "${RELEASE_SKIP_TYPES[@]}"; then
+  if is_valid_commit_type "$type" "${RELEASE_SKIP_TYPES[@]}"; then
     return 0
-  elif isValidCommitType "$type" "${RELEASE_PATCH_TYPES[@]}"; then
+  elif is_valid_commit_type "$type" "${RELEASE_PATCH_TYPES[@]}"; then
     if ! $PATCH_UPGRADED; then
       PATCH_UPGRADED=true
       RELEASE_BODY+="\n## Bug Fixes\n\n"
     fi
-  elif isValidCommitType "$type" "${RELEASE_MINOR_TYPES[@]}"; then
+  elif is_valid_commit_type "$type" "${RELEASE_MINOR_TYPES[@]}"; then
     if ! $MINOR_UPGRADED; then
       MINOR_UPGRADED=true
       RELEASE_BODY+="\n## Features\n\n"
     fi
-  elif isValidCommitType "$type" "${RELEASE_MAJOR_TYPES[@]}"; then
+  elif is_valid_commit_type "$type" "${RELEASE_MAJOR_TYPES[@]}"; then
     if ! $MAJOR_UPGRADED; then
       MAJOR_UPGRADED=true
       RELEASE_BODY+="\n## BREAKING CHANGES\n\n"
@@ -71,7 +71,7 @@ parse_commit() {
   fi
 
   RELEASE_BODY+="- "
-  if isValidCommitType "$type" "${INCLUDE_SCOPE[@]}"; then
+  if is_valid_commit_type "$type" "${INCLUDE_SCOPE[@]}"; then
     RELEASE_BODY+="**\`[$type]\`** "
   fi
 
