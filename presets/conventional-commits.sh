@@ -41,10 +41,12 @@ parse_commit() {
     type="BREAKING CHANGE"
     scope="${BASH_REMATCH[3]}"
     description="${BASH_REMATCH[4]}"
+  else
+    return 0
   fi
 
   # Extract body
-  if [[ "$body" =~ $string_commit_major ]]; then
+  if [[ -n "$body" && "$body" =~ $string_commit_major ]]; then
     type="BREAKING CHANGE"
     description="$subject"
   fi
@@ -67,6 +69,8 @@ parse_commit() {
       MAJOR_UPGRADED=true
       RELEASE_BODY+="\n## BREAKING CHANGES\n\n"
     fi
+  else
+    return 0
   fi
 
   RELEASE_BODY+="- "
