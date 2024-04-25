@@ -7,6 +7,7 @@ export GNUPGHOME=$(mktemp -d)
 
 prepare() {
   unset GIT_CONFIG
+  mkdir -p "$GNUPGHOME"
 
   if [[ -n "${GIT_USERNAME-}" && -n "${GIT_EMAIL-}" ]]; then
     git config --local user.email "$GIT_EMAIL"
@@ -49,16 +50,20 @@ cleanup() {
   fi
   if [[ -z "${GPG_NO_SIGN-}" && -n "${GPG_KEY_ID-}" && -n "${GPG_PASSPHRASE-}" ]]; then
     gpg --homedir "$GNUPGHOME" --quiet --passphrase "$GPG_PASSPHRASE" --batch --yes --delete-secret-and-public-key "$GPG_KEY_ID"
+
     log_verbose "Git GPG key deleted"
   fi
   if [[ -z "${GPG_NO_SIGN-}" ]]; then
-    rm -rf "$GNUPGHOME/gpg-agent.conf"
-    rm -rf "$GNUPGHOME/gpg.conf"
+    rm -rf "$GNUPGHOME"
     log_verbose "Git GPG config cleanup"
   fi
 
   log_verbose "Git config cleanup"
 }
+
+# Used for GPG re-using
+export GIT_PREPARE=prepare
+export GIT_CLEANUP=cleanup
 
 release() {
   # Create a `git` tag
@@ -70,10 +75,10 @@ release() {
 
     if [[ -z "${GPG_NO_SIGN-}" && -n "${GPG_KEY_ID-}" && -n "${GPG_PASSPHRASE-}" ]]; then
       git tag --sign "$NEXT_RELEASE_TAG" "$CHECKOUT_SHA" --message "Release, tag and sign $NEXT_RELEASE_TAG"
-      echo "Created signed Git tag [$NEXT_RELEASE_TAG]!"
+      log "Created signed Git tag [$NEXT_RELEASE_TAG]!"
     else
       git tag "$NEXT_RELEASE_TAG" "$CHECKOUT_SHA"
-      echo "Created Git tag [$NEXT_RELEASE_TAG]!"
+      log "Created Git tag [$NEXT_RELEASE_TAG]!"
     fi
 
     if [[ -n "$GIT_REMOTE_ORIGIN" ]]; then
