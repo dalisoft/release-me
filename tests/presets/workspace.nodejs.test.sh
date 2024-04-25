@@ -80,7 +80,7 @@ teardown_suite() {
 test_commit_0_1_initial_message() {
   git commit --quiet -m "fix(workspace1): initial commit" --allow-empty
 
-  bash "$ROOT_DIR/release.sh" --plugins=git,npm,npm-post --preset=workspace --workspace --quiet
+  bash "$ROOT_DIR/release.sh" --plugins=git,npm --preset=workspace --workspace --quiet
   assert_matches "workspace1-v0.0.1" "$(git tag -l)"
 }
 test_commit_0_2_initial_message_no_change() {
@@ -105,7 +105,7 @@ test_commit_1_feat_breaking_major_message() {
 test_commit_2_feat_mark_major_message() {
   git commit --quiet -m "feat!: send an email to the customer when a product is shipped" --allow-empty
 
-  bash "$ROOT_DIR/release.sh" --plugins=git,npm,npm-post --preset=workspace --workspace --dry-run --quiet --quiet
+  bash "$ROOT_DIR/release.sh" --plugins=git,npm --preset=workspace --workspace --dry-run --quiet --quiet
   assert_matches "workspace1-v1.0.0" "$(git tag -l)"
 
   assert_matches "Your project has no new commits" "$(bash "$ROOT_DIR/release.sh" --plugins=git,npm,npm-post --preset=workspace --workspace --dry-run)"
