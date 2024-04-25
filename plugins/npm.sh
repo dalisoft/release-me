@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -eu
 
 release() {
   # Publish a `npm` tag
-  if [ -n "${NPM_TOKEN-}" ]; then
+  if [[ -n "${NPM_TOKEN-}" ]]; then
     log "Publishing npm tag..."
     log_verbose "npm tag: $NEXT_RELEASE_TAG and version: $NEXT_RELEASE_VERSION!"
 

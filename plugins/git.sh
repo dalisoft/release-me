@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -eu
 
 # Global variables
@@ -11,13 +11,13 @@ prepare() {
   GPG_TTY=$(tty)
   GNUPGHOME=$(mktemp -d)
 
-  if [ -n "${GIT_USERNAME-}" ] && [ -n "${GIT_EMAIL-}" ]; then
+  if [[ -n "${GIT_USERNAME-}" && -n "${GIT_EMAIL-}" ]]; then
     git config --local user.email "$GIT_EMAIL"
     git config --local user.name "$GIT_USERNAME"
     log_verbose "Git username [$GIT_USERNAME] and Git e-mail [$GIT_EMAIL] set"
   fi
 
-  if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
+  if [[ -z "${GPG_NO_SIGN-}" && -n "${GPG_KEY_ID-}" ]]; then
     echo "$GPG_KEY" | base64 --decode | gpg --homedir "$GNUPGHOME" --quiet --batch --import
 
     git config --local commit.gpgsign true
@@ -30,7 +30,7 @@ prepare() {
     echo "pinentry-mode loopback" >>"$GNUPGHOME/gpg.conf"
     gpg-connect-agent --homedir "$GNUPGHOME" reloadagent /bye
 
-    if [ -n "${GPG_PASSPHRASE}" ]; then
+    if [[ -n "${GPG_PASSPHRASE}" ]]; then
       echo "" | gpg --homedir "$GNUPGHOME" --quiet --passphrase "$GPG_PASSPHRASE" --batch --pinentry-mode loopback --sign >/dev/null
       log_verbose "Git GPG passphrase set"
     fi
@@ -38,20 +38,20 @@ prepare() {
 }
 
 cleanup() {
-  if [ -n "${GIT_USERNAME-}" ] && [ -n "${GIT_EMAIL-}" ]; then
+  if [[ -n "${GIT_USERNAME-}" && -n "${GIT_EMAIL-}" ]]; then
     git config --local --unset user.email
     git config --local --unset user.name
     log_verbose "Git username and Git e-mail unset"
   fi
 
-  if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
+  if [[ -z "${GPG_NO_SIGN-}" && -n "${GPG_KEY_ID-}" ]]; then
     git config --local --unset commit.gpgsign
     git config --local --unset user.signingkey
     git config --local --unset tag.forceSignAnnotated
     git config --local --unset gpg.program
     log_verbose "Git GPG sign unset"
 
-    if [ -n "${GPG_PASSPHRASE}" ]; then
+    if [[ -n "${GPG_PASSPHRASE}" ]]; then
       gpg --homedir "$GNUPGHOME" --quiet --passphrase "$GPG_PASSPHRASE" --batch --yes --delete-secret-and-public-key "$GPG_KEY_ID"
 
       log_verbose "Git GPG key deleted"
@@ -76,7 +76,7 @@ release() {
   if ! $IS_DRY_RUN; then
     prepare
 
-    if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY_ID-}" ] && [ -n "${GPG_PASSPHRASE-}" ]; then
+    if [[ -z "${GPG_NO_SIGN-}" && -n "${GPG_KEY_ID-}" && -n "${GPG_PASSPHRASE-}" ]]; then
       git tag --sign "$NEXT_RELEASE_TAG" "$CHECKOUT_SHA" --message "Release, tag and sign $NEXT_RELEASE_TAG"
       log "Created signed Git tag [$NEXT_RELEASE_TAG]!"
     else
@@ -84,7 +84,7 @@ release() {
       log "Created Git tag [$NEXT_RELEASE_TAG]!"
     fi
 
-    if [ -n "$GIT_REMOTE_ORIGIN" ]; then
+    if [[ -n "$GIT_REMOTE_ORIGIN" ]]; then
       git push origin "refs/tags/$NEXT_RELEASE_TAG"
       log_verbose "Pushed Git tag to remote"
     else
