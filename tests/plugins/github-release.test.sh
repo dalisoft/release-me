@@ -28,9 +28,9 @@ setup_suite() {
 
   fake_curl() {
     # shellcheck disable=SC2317
-    echo "${GITHUB_TOKEN-}"
+    printf "%s\n" "${GITHUB_TOKEN-}"
     # shellcheck disable=SC2317
-    echo "${FAKE_PARAMS[@]}"
+    printf "%s\n" "${FAKE_PARAMS[@]}"
   }
   export -f fake_curl
   export GPG_NO_SIGN=1
