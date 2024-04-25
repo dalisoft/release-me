@@ -6,7 +6,7 @@ REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
   cd "$REPO_FOLDER"
-  git init --quiet --initial-branch=master
+  git init --initial-branch=master
 
   echo '[package]
 name = "workspace1"
@@ -74,7 +74,7 @@ test_commit_0_3_skip_change() {
 test_commit_1_0_stable_major_no_message() {
   git commit -m "fix(workspace1): patch update" --allow-empty
 
-  bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace --quiet --stable --quiet
+  bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace --stable --quiet
   assert_matches "workspace1-v1.0.0" "$(git tag -l)"
 }
 test_commit_1_1_feat_breaking_major_message() {
@@ -92,7 +92,7 @@ test_commit_1_1_feat_breaking_major_message_skip() {
 test_commit_2_feat_mark_major_message() {
   git commit -m "feat!: send an email to the customer when a product is shipped" --allow-empty
 
-  bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace --dry-run --quiet --quiet
+  bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace --dry-run --quiet
   assert_matches "workspace1-v2.0.0" "$(git tag -l)"
 
   assert_matches "Your project has no new commits" "$(bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace --dry-run)"

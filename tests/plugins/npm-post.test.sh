@@ -6,7 +6,7 @@ REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
   cd "$REPO_FOLDER"
-  git init --quiet --initial-branch=master
+  git init --initial-branch=master
 
   echo '{
   "name": "fake-me",
@@ -76,7 +76,7 @@ teardown_suite() {
 test_plugin_npm_0_1_initial_message_dryrun() {
   git commit -m "fix: initial commit" --allow-empty
 
-  NPM_TOKEN="FAKE_TOKEN" bash "$ROOT_DIR/release.sh" --plugins=npm,npm-post --quiet --dry-run
+  NPM_TOKEN="FAKE_TOKEN" bash "$ROOT_DIR/release.sh" --plugins=npm,npm-post --dry-run
   assert_matches "1.0.0" "$(cat package.json)"
 }
 test_plugin_npm_0_2_initial_message() {

@@ -6,7 +6,7 @@ REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
   cd "$REPO_FOLDER"
-  git init --quiet --initial-branch=master
+  git init --initial-branch=master
 
   echo 'from setuptools import setup, find_packages
 
