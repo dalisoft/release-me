@@ -15,7 +15,7 @@ cleanup() {
 
 release() {
   # Commiting a `npm` tag
-  log "Commiting npm tag..."
+  log "Committing npm tag..."
   log_verbose "Git hash: $CHECKOUT_SHA!"
 
   if ! $IS_DRY_RUN; then
