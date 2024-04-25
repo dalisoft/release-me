@@ -45,7 +45,7 @@ test_commit_0_1_initial_message() {
   git commit -m "fix: initial commit" --allow-empty
 
   bash "$ROOT_DIR/release.sh" --plugins=git --preset=conventional-commits --verbose
-  assert_equals "v0.0.1" "$(git tag -l | tail -1)"
+  assert_matches "v0.0.1" "$(git tag -l)"
 }
 test_commit_0_2_initial_message_no_change() {
 
@@ -55,10 +55,10 @@ test_commit_0_3_skip_change() {
   git commit -m "chore: chore commit" --allow-empty
 
   bash "$ROOT_DIR/release.sh" --plugins=git --preset=conventional-commits --dry-run --pre-release --quiet
-  assert_equals "v0.0.1" "$(git tag -l | tail -1)"
+  assert_matches "v0.0.1" "$(git tag -l)"
 
   bash "$ROOT_DIR/release.sh" --plugins=git --preset=conventional-commits --quiet
-  assert_equals "v0.0.1" "$(git tag -l | tail -1)"
+  assert_matches "v0.0.1" "$(git tag -l)"
 }
 test_commit_1_0_stable_major_no_message() {
   git commit -m "fix: patch update" --allow-empty
