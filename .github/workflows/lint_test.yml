@@ -46,8 +46,8 @@ jobs:
           GPG_KEY: ${{ vars.GPG_FAKE_KEY }}
           GPG_PASSPHRASE: ${{ vars.GPG_FAKE_PASSPHRASE }}
         run: |
-          bash <(curl -s https://raw.githubusercontent.com/pgrange/bash_unit/master/install.sh)
-          ./bash_unit tests/**/*.test.sh
+          curl -s https://raw.githubusercontent.com/pgrange/bash_unit/master/install.sh | bash
+          FORCE_COLOR=true ./bash_unit tests/**/*.test.sh
   coverage:
     needs: test
     runs-on: ubuntu-22.04
@@ -68,7 +68,7 @@ jobs:
           GPG_PASSPHRASE: ${{ vars.GPG_FAKE_PASSPHRASE }}
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: |
-          bash <(curl -s https://raw.githubusercontent.com/pgrange/bash_unit/master/install.sh)
+          curl -s https://raw.githubusercontent.com/pgrange/bash_unit/master/install.sh | bash
           bundle exec bashcov ./bash_unit tests/**/*.test.sh
 
       - name: Coveralls
