@@ -25,9 +25,10 @@ Options:
 SCRIPT_DIR=$(dirname -- "$(readlink -f -- "$0")")
 CURRENT_DATE=$(date +'%Y-%m-%d')
 IS_GIT_REPO=$(git rev-parse --is-inside-work-tree 2>/dev/null || echo -n "")
-GIT_LOG_ENTRY_SEPARATOR='%n'
-GIT_LOG_FORMAT="%B$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
-#GIT_LOG_FORMAT+="%(trailers:only=true)$GIT_LOG_ENTRY_SEPARATOR%h$GIT_LOG_ENTRY_SEPARATOR%H"
+GIT_LOG_ENTRY_SEPARATOR='____'
+GIT_LOG_COMMIT_SEPARATOR='START_OF_COMMIT'
+GIT_LOG_FORMAT="$GIT_LOG_COMMIT_SEPARATOR%n%h$GIT_LOG_ENTRY_SEPARATOR%H$GIT_LOG_ENTRY_SEPARATOR%s$GIT_LOG_ENTRY_SEPARATOR%b"
+GIT_LOG_PARSE_REGEX="(.*)$GIT_LOG_ENTRY_SEPARATOR(.*)$GIT_LOG_ENTRY_SEPARATOR(.*)($GIT_LOG_ENTRY_SEPARATOR(.*)?)"
 GIT_REMOTE_ORIGIN=$(git remote get-url origin 2>/dev/null || echo "")
 GIT_REPO_NAME=
 
@@ -61,20 +62,12 @@ fi
 # so this utility was made
 
 glc() {
-  local input="$1"
-
-  if [[ -p /dev/stdin ]]; then
-    input="$(cat -)"
-  else
-    input="${*}"
-  fi
-
   local COUNT=0
   while read -r line; do
     if [ -n "$line" ]; then
       COUNT=$((COUNT + 1))
     fi
-  done <<<"$input"
+  done <<<"$(cat /dev/stdin)"
 
   echo -n $COUNT
 }
@@ -212,10 +205,13 @@ function parsePackages {
 
   if [ -f "./package.json" ]; then
     PKG_NAME=$(awk -F': ' '/"name":/ {gsub(/[",]/, "", $2); print $2}' "./package.json")
+    # PKG_VERSION=$(awk -F': ' '/"version":/ {gsub(/[",]/, "", $2); print $2}' "./package.json")
   elif [ -f "./Cargo.toml" ]; then
     PKG_NAME=$(sed -n 's/^name = "\(.*\)"/\1/p' "./Cargo.toml")
+    # PKG_VERSION=$(sed -n 's/^version = "\(.*\)"/\1/p' "./Cargo.toml")
   elif [ -f "./setup.py" ]; then
-    PKG_NAME=$(sed -n 's/^setup(\s*name\s*=\s*["'\'']\([^"'\'']*\)["'\''].*/\1/p' "./setup.py")
+    PKG_NAME=$(sed -n "s/.*name=['\"]\([^'\"]*\)['\"].*/\1/p" "./setup.py")
+    # PKG_VERSION=$(cat "./setup.py" | sed -n 's/^ *version\s*=\s*["'\'']\([^"'\'']*\)["'\''].*/\1/p')
   else
     cat <<EOF
 This project currently supports only Node.js, Rust and Python projects.
@@ -223,6 +219,19 @@ Please wait for updates to get support in other languages!
 EOF
     exit 1
   fi
+
+  if $IS_WORKSPACE && [[ -z "${PKG_NAME}" ]]; then
+    cat <<EOF
+This release aims to being workspace release
+but missing name and could not be release
+EOF
+    cat setup.py
+    exit 1
+  fi
+
+  # local IFS='.'
+  # read -ra NEXT_VERSION <<<"${PKG_VERSION}"
+  # CURRENT_VERSION=("${NEXT_VERSION[@]}")
 
   log_verbose "Workspace mode is enabled"
   log_verbose "Workspace project name: $PKG_NAME"
@@ -314,14 +323,18 @@ MAJOR_UPGRADED=false
 function handleGitCommits {
   log_verbose "Analyzing commits...\n"
   local IFS=
-  while read -r subject && read -r hash && read -r sha256; do
-    # shellcheck disable=SC2034
-    local COMMIT_ARRAY=("$subject" "$hash" "$sha256")
+  while read -r line; do
+    if [[ "$line" == "${GIT_LOG_COMMIT_SEPARATOR}" ]]; then
+      read -r commit
 
-    log_verbose "$subject" "-q"
+      if [[ "$commit" =~ $GIT_LOG_PARSE_REGEX ]]; then
+        log_verbose "${BASH_REMATCH[3]}" "-q"
+        CHECKOUT_SHA=${BASH_REMATCH[1]}
 
-    if [ "$(command -v parse_commit)" ]; then
-      parse_commit COMMIT_ARRAY
+        if [ "$(command -v parse_commit)" ]; then
+          parse_commit BASH_REMATCH
+        fi
+      fi
     fi
   done <<<"$GIT_LOGS"
   log_verbose "" "-q"
@@ -384,9 +397,6 @@ function handleGitCommits {
 
 function handlePushes {
   log_verbose "Applying changes..."
-
-  CHECKOUT_SHA=$(echo "$GIT_LOGS" | tail -1)
-
   log_verbose "Found tag commit [$CHECKOUT_SHA]"
 
   for plugin in "${PLUGINS[@]}"; do
