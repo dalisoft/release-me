@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 set -eu
 
 release() {
@@ -7,7 +7,7 @@ release() {
   log_verbose "Release body: \n$RELEASE_BODY"
 
   # Create a `GitHub` release
-  if [[ -n "${GITHUB_TOKEN-}" ]]; then
+  if [ -n "${GITHUB_TOKEN-}" ]; then
     log "Creating GitHub release..."
     log_verbose "GitHub release hash: $CHECKOUT_SHA!"
 

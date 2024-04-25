@@ -1,14 +1,14 @@
-#!/usr/bin/env bash
+#!/bin/sh
 set -eu
 
 prepare() {
-  if [[ "$(command -v GIT_PREPARE)" ]]; then
+  if [ "$(command -v GIT_PREPARE)" ]; then
     GIT_PREPARE
   fi
 }
 
 cleanup() {
-  if [[ "$(command -v GIT_CLEANUP)" ]]; then
+  if [ "$(command -v GIT_CLEANUP)" ]; then
     GIT_CLEANUP
   fi
 }
@@ -29,7 +29,7 @@ release() {
       git commit -m "Bump package.json version to ${NEXT_RELEASE_VERSION}"
     fi
 
-    if [[ -n "$GIT_REMOTE_ORIGIN" ]]; then
+    if [ -n "$GIT_REMOTE_ORIGIN" ]; then
       git push
       log_verbose "Pushed update to remote"
     else
