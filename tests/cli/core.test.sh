@@ -6,7 +6,7 @@ REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
   cd "$REPO_FOLDER"
-  git init --initial-branch=master
+  git init --quiet --initial-branch=master
 
   export GIT_DIR="$REPO_FOLDER/.git"
   export GIT_CONFIG="$REPO_FOLDER/.gitconfig"
@@ -21,8 +21,6 @@ setup_suite() {
     git config user.email "$GIT_EMAIL"
     git config user.name "$GIT_USERNAME"
   fi
-
-  export GPG_NO_SIGN=1
 }
 
 teardown_suite() {

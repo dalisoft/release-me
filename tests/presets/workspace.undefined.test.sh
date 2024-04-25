@@ -6,7 +6,7 @@ REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
   cd "$REPO_FOLDER"
-  git init --initial-branch=master
+  git init --quiet --initial-branch=master
 
   echo '[package]
 name = "workspace1"
@@ -47,7 +47,7 @@ teardown_suite() {
 #####################################
 
 test_commit_initial_message() {
-  git commit -m "fix(workspace1): initial commit" --allow-empty --no-gpg-sign
+  git commit --quiet -m "fix(workspace1): initial commit" --allow-empty
 
   assert_status_code 1 "GPG_NO_SIGN=1 $ROOT_DIR/release.sh --plugins=git --preset=workspace --workspace"
   assert_not_equals "workspace1-v0.0.1" "$(git tag -l | tail -1)"

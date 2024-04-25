@@ -6,7 +6,7 @@ REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
   cd "$REPO_FOLDER"
-  git init --initial-branch=master
+  git init --quiet --initial-branch=master
 
   echo '{
   "name": "fake-me",
@@ -27,18 +27,8 @@ setup_suite() {
 ' >>"$REPO_FOLDER/package.json"
 
   export GIT_DIR="$REPO_FOLDER/.git"
-  export GIT_CONFIG="$REPO_FOLDER/.gitconfig"
+  export GIT_CONFIG="$GIT_DIR/.gitconfig"
   export GIT_WORK_TREE="$REPO_FOLDER"
-
-  if [[ -n "${GIT_USERNAME-}" && -n "${GIT_EMAIL-}" ]]; then
-    export GIT_COMMITTER_NAME="$GIT_USERNAME"
-    export GIT_COMMITTER_EMAIL="$GIT_EMAIL"
-    export GIT_AUTHOR_NAME="$GIT_USERNAME"
-    export GIT_AUTHOR_EMAIL="$GIT_EMAIL"
-
-    git config user.email "$GIT_EMAIL"
-    git config user.name "$GIT_USERNAME"
-  fi
 
   _npm() {
     # shellcheck disable=SC2317
@@ -49,7 +39,6 @@ setup_suite() {
     fi
   }
   export -f _npm
-  export GPG_NO_SIGN=1
 
   fake npm _npm
 }
@@ -60,11 +49,6 @@ teardown_suite() {
   unset GIT_DIR
   unset GIT_CONFIG
   unset GIT_WORK_TREE
-
-  unset GIT_COMMITTER_NAME
-  unset GIT_COMMITTER_EMAIL
-  unset GIT_AUTHOR_NAME
-  unset GIT_AUTHOR_EMAIL
 }
 
 #####################################
@@ -73,7 +57,7 @@ teardown_suite() {
 #####################################
 
 test_plugin_npm_0_1_initial_message_dryrun() {
-  git commit -m "fix: initial commit" --allow-empty --no-gpg-sign
+  git commit --quiet -m "fix: initial commit" --allow-empty
 
   NPM_TOKEN="FAKE_TOKEN" bash "$ROOT_DIR/release.sh" --plugins=npm --quiet --dry-run
   assert_matches "1.0.0" "$(cat package.json)"
