@@ -28,7 +28,7 @@ jobs:
 
       - name: Install current Bash on macOS
         if: runner.os == 'macOS'
-        run: brew install bash
+        run: brew install bash curl
 
       - name: Coverage
         shell: bash
