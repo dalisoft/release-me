@@ -10,7 +10,12 @@ release() {
     # Don't load this plugin if
     # - `--dry-run` used
     # - `package.json` is missing
-    if ! $IS_DRY_RUN && [ -f package.json ]; then
+    if ! $IS_DRY_RUN; then
+      if [ ! -f package.json ]; then
+        log "Project does not have package.json"
+        return 1
+      fi
+
       TEMP_FILE=$(mktemp)
       printf "%s\n" "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >>"$TEMP_FILE"
 
