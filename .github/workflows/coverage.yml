@@ -1,12 +1,12 @@
 name: Coverage
 
 on:
-  workflow_call:
   workflow_run:
     workflows: ["Lint and Test"]
     branches: [master]
     types:
       - completed
+  workflow_call:
 
 env:
   CI: true
