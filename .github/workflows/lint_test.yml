@@ -52,4 +52,5 @@ jobs:
           GITHUB_TOKEN: "ACTUAL_YOUR_TOKEN"
         run: |
           curl -O https://raw.githubusercontent.com/pgrange/bash_unit/master/bash_unit
+          chmod +x ./bash_unit
           FORCE_COLOR=true ./bash_unit tests/**/*.test.sh
