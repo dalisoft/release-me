@@ -5,19 +5,18 @@ on:
     branches: [master]
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  workflow_run:
-    workflows: ["Lint and Test", "Coverage"]
-    branches: [master]
-    types:
-      - completed
 
 env:
   CI: true
 
 jobs:
+  lint_test:
+    uses: ./.github/workflows/lint_test.yml
+  coverage:
+      uses: ./.github/workflows/coverage.yml
   release:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-22.04
+    needs: [lint_test, coverage]
     steps:
       - uses: actions/checkout@v4
         with:
