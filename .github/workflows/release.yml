@@ -10,13 +10,11 @@ env:
   CI: true
 
 jobs:
-  lint_test:
-    uses: ./.github/workflows/lint_test.yml
-  coverage:
-      uses: ./.github/workflows/coverage.yml
+  lint_test_coverage:
+    uses: ./.github/workflows/lint_test_coverage.yml
   release:
     runs-on: ubuntu-22.04
-    needs: [lint_test, coverage]
+    needs: [lint_test_coverage]
     steps:
       - uses: actions/checkout@v4
         with:

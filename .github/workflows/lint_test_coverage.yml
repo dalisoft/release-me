@@ -3,7 +3,7 @@ name: Lint and Test
 on:
   push:
     branches: [master]
-  pull_request:
+  pull_request_target:
     branches: [master]
   # Allows you to run this workflow manually from the Actions tab
   workflow_call:
@@ -54,3 +54,34 @@ jobs:
           curl -O https://raw.githubusercontent.com/pgrange/bash_unit/master/bash_unit
           chmod +x ./bash_unit
           FORCE_COLOR=true ./bash_unit tests/**/*.test.sh
+  coverage:
+    runs-on: ubuntu-22.04
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3" # Not needed with a .ruby-version file
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+
+      - name: Install current Bash on macOS
+        if: runner.os == 'macOS'
+        run: brew install bash curl
+
+      - name: Coverage
+        shell: bash
+        env:
+          GIT_USERNAME: ${{ vars.GIT_FAKE_USERNAME }}
+          GIT_EMAIL: ${{ vars.GIT_FAKE_EMAIL }}
+          GPG_KEY_ID: ${{ vars.GPG_FAKE_KEY_ID }}
+          GPG_KEY: ${{ vars.GPG_FAKE_KEY }}
+          GPG_PASSPHRASE: ${{ vars.GPG_FAKE_PASSPHRASE }}
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+          GITHUB_TOKEN: "ACTUAL_YOUR_TOKEN"
+        run: |
+          curl -O https://raw.githubusercontent.com/pgrange/bash_unit/master/bash_unit
+          chmod +x ./bash_unit
+          bundle exec bashcov ./bash_unit tests/**/*.test.sh
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
