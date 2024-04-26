@@ -80,7 +80,7 @@ test_plugin_npm_0_1_initial_message_dryrun() {
   assert_matches "1.0.0" "$(cat package.json)"
 }
 test_plugin_npm_0_2_initial_message() {
-  assert_matches "v0.0.1" "$(NPM_TOKEN="FAKE_TOKEN" bash "$ROOT_DIR/release.sh" --plugins=npm,npm-post --quiet)"
+  assert_matches "v0.0.1" "$(NPM_TOKEN="FAKE_TOKEN" bash "$ROOT_DIR/release.sh" --plugins=npm,npm-post)"
   assert_matches "0.0.1" "$(cat package.json)"
 }
 test_plugin_npm_no_token_fail_message() {
