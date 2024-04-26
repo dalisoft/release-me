@@ -69,7 +69,7 @@ release() {
 
   if ! $IS_DRY_RUN; then
     if [ ! -f package.json ] || [ -z "$(git diff --name-only package.json 2>/dev/null)" ]; then
-      return
+      return 0
     fi
 
     prepare
