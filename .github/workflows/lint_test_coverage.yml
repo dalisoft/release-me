@@ -48,12 +48,14 @@ jobs:
           GIT_EMAIL: ${{ vars.GIT_FAKE_EMAIL }}
           GPG_KEY_ID: ${{ vars.GPG_FAKE_KEY_ID }}
           GPG_KEY: ${{ vars.GPG_FAKE_KEY }}
+          GPG_KEY_ID_UNSAFE: ${{ vars.GPG_FAKE_KEY_ID_UNSAFE }}
+          GPG_KEY_UNSAFE: ${{ vars.GPG_FAKE_KEY_UNSAFE }}
           GPG_PASSPHRASE: ${{ vars.GPG_FAKE_PASSPHRASE }}
           GITHUB_TOKEN: "ACTUAL_YOUR_TOKEN"
         run: |
           curl -O https://raw.githubusercontent.com/pgrange/bash_unit/master/bash_unit
           chmod +x ./bash_unit
-          FORCE_COLOR=true ./bash_unit tests/**/*.test.sh
+          FORCE_COLOR=true bash -eu ./bash_unit tests/**/*.test.sh
   coverage:
     runs-on: ubuntu-22.04
     needs: test
@@ -75,6 +77,8 @@ jobs:
           GIT_EMAIL: ${{ vars.GIT_FAKE_EMAIL }}
           GPG_KEY_ID: ${{ vars.GPG_FAKE_KEY_ID }}
           GPG_KEY: ${{ vars.GPG_FAKE_KEY }}
+          GPG_KEY_ID_UNSAFE: ${{ vars.GPG_FAKE_KEY_ID_UNSAFE }}
+          GPG_KEY_UNSAFE: ${{ vars.GPG_FAKE_KEY_UNSAFE }}
           GPG_PASSPHRASE: ${{ vars.GPG_FAKE_PASSPHRASE }}
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
           GITHUB_TOKEN: "ACTUAL_YOUR_TOKEN"
