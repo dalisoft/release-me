@@ -38,11 +38,6 @@ teardown_suite() {
   unset GIT_AUTHOR_EMAIL
 }
 
-#####################################
-## This tests of specification at  ##
-## https://conventionalcommits.org ##
-#####################################
-
 test_plugin_template() {
   git commit --quiet -m "fix: initial commit" --allow-empty --no-gpg-sign
 

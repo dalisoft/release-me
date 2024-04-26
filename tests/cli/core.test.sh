@@ -55,3 +55,6 @@ test_core_cli_invalid_arg() {
   assert_matches "Unknown argument: invalid" "$(bash "$ROOT_DIR/release.sh" invalid)"
   assert_status_code 1 "$ROOT_DIR/release.sh invalid"
 }
+test_core_cli_git() {
+  assert_matches "You have not committed yet" "$(bash "$ROOT_DIR/release.sh")"
+}

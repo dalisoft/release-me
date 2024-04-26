@@ -97,7 +97,7 @@ test_commit_1_1_feat_breaking_major_message_skip() {
 test_commit_2_feat_mark_major_message() {
   git commit --quiet -m "feat!: send an email to the customer when a product is shipped" --allow-empty --no-gpg-sign
 
-  bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace --dry-run --quiet
+  bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace --quiet
   assert_matches "workspace1-v2.0.0" "$(git tag -l)"
 
   assert_matches "Your project has no new commits" "$(bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace --dry-run)"
@@ -150,21 +150,69 @@ test_commit_6_feat_scope_message() {
   bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace --quiet
   assert_matches "workspace1-v4.1.0" "$(git tag -l)"
 }
-test_commit_7_fix_multi_message() {
-  git commit --quiet -m "fix(workspace1): prevent racing of requests" -m "Introduce a request id and a reference to latest request. Dismiss incoming responses other than from latest request." -m "Remove timeouts which were used to mitigate the racing issue but are obsolete now" -m "Reviewed-by: Z" -m "Refs: #123" --allow-empty --no-gpg-sign
+test_commit_6_feat_scope_message_passwordless() {
+  unset GPG_KEY_ID
+  unset GPG_PASSPHRASE
+  unset GPG_KEY
+
+  export GPG_KEY_ID="${GPG_KEY_ID_UNSAFE}"
+  export GPG_KEY="${GPG_KEY_UNSAFE}"
+  export GPG_PASSPHRASE=
+
+  git commit --quiet -m "feat(workspace1): add Polish language" --allow-empty --no-gpg-sign
 
   bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace --dry-run --quiet
   assert_matches "workspace1-v4.1.0" "$(git tag -l)"
 
   bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace --quiet
-  assert_matches "workspace1-v4.1.1" "$(git tag -l)"
+  assert_matches "workspace1-v4.2.0" "$(git tag -l)"
+}
+test_commit_7_fix_multi_message() {
+  git commit --quiet -m "fix(workspace1): prevent racing of requests" -m "Introduce a request id and a reference to latest request. Dismiss incoming responses other than from latest request." -m "Remove timeouts which were used to mitigate the racing issue but are obsolete now" -m "Reviewed-by: Z" -m "Refs: #123" --allow-empty --no-gpg-sign
+
+  bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace --dry-run --quiet
+  assert_matches "workspace1-v4.2.0" "$(git tag -l)"
+
+  bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace --quiet
+  assert_matches "workspace1-v4.2.1" "$(git tag -l)"
 }
 test_commit_8_revert_message() {
   git commit --quiet -m "revert(workspace1): let us never again speak of the noodle incident" -m "Refs: 676104e, a215868" --allow-empty --no-gpg-sign
 
   bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace --dry-run --verbose
-  assert_matches "workspace1-v4.1.1" "$(git tag -l)"
+  assert_matches "workspace1-v4.2.1" "$(git tag -l)"
 
   bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace
-  assert_matches "workspace1-v4.1.2" "$(git tag -l)"
+  assert_matches "workspace1-v4.2.2" "$(git tag -l)"
+}
+
+test_commit_9_merge_message() {
+  git commit --quiet -m "Merge pull request #6 from dalisoft/release-me" -m "FIX tests" --allow-empty --no-gpg-sign
+
+  bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace
+  assert_matches "v4.2.2" "$(git tag -l)"
+}
+test_commit_a_10_invalid_message() {
+  git commit --quiet -m "FIX tests" --allow-empty --no-gpg-sign
+
+  bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace
+  assert_matches "v4.2.2" "$(git tag -l)"
+}
+test_commit_a_11_invalid_scope() {
+  git commit --quiet -m "hotkey(workspace1): it may work?" --allow-empty --no-gpg-sign
+
+  bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace
+  assert_matches "v4.2.2" "$(git tag -l)"
+}
+test_commit_a_12_invalid_scope_and_pkg() {
+  git commit --quiet -m "hotkey(workspace3): it may work?" --allow-empty --no-gpg-sign
+
+  bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace
+  assert_matches "v4.2.2" "$(git tag -l)"
+}
+test_commit_a_13_invalid_package_name() {
+  git commit --quiet -m "feat(workspace3): it may work?" --allow-empty --no-gpg-sign
+
+  bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace
+  assert_matches "v4.2.2" "$(git tag -l)"
 }

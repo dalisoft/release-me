@@ -49,7 +49,6 @@ setup_suite() {
     fi
   }
   export -f _npm
-  export GPG_NO_SIGN=1
 
   fake npm _npm
 }
@@ -67,21 +66,25 @@ teardown_suite() {
   unset GIT_AUTHOR_EMAIL
 }
 
-#####################################
-## This tests of specification at  ##
-## https://conventionalcommits.org ##
-#####################################
-
 test_plugin_npm_0_1_initial_message_dryrun() {
   git commit --quiet -m "fix: initial commit" --allow-empty --no-gpg-sign
 
-  NPM_TOKEN="FAKE_TOKEN" bash "$ROOT_DIR/release.sh" --plugins=npm --dry-run
+  NPM_TOKEN="FAKE_TOKEN" bash "$ROOT_DIR/release.sh" --plugins=npm,git --dry-run
   assert_matches "1.0.0" "$(cat package.json)"
 }
 test_plugin_npm_0_2_initial_message() {
-  assert_matches "v0.0.1" "$(NPM_TOKEN="FAKE_TOKEN" bash "$ROOT_DIR/release.sh" --plugins=npm)"
+  assert_matches "npm tag: v0.0.1 and version: v0.0.1" "$(NPM_TOKEN="FAKE_TOKEN" bash "$ROOT_DIR/release.sh" --plugins=npm,git --verbose)"
   assert_matches "0.0.1" "$(cat package.json)"
 }
+test_plugin_npm_no_pkg_fail_message() {
+  git commit --quiet -m "fix: update commit" --allow-empty --no-gpg-sign
+
+  rm -rf package.json
+  assert_matches "Project does not have package.json" "$(NPM_TOKEN="FAKE_TOKEN" bash "$ROOT_DIR/release.sh" --plugins=npm,git --verbose)"
+  assert_status_code 1 "$ROOT_DIR/release.sh --plugins=npm,git --quiet"
+}
 test_plugin_npm_no_token_fail_message() {
-  assert_status_code 1 "$ROOT_DIR/release.sh --plugins=npm --quiet"
+  git commit --quiet -m "fix: update commit" --allow-empty --no-gpg-sign
+
+  assert_status_code 1 "$ROOT_DIR/release.sh --plugins=npm,git --quiet"
 }

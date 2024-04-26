@@ -43,6 +43,17 @@ setup_suite() {
     git config user.email "$GIT_EMAIL"
     git config user.name "$GIT_USERNAME"
   fi
+
+  _npm() {
+    # shellcheck disable=SC2317
+    if [[ "${FAKE_PARAMS[0]}" == "publish" && "${NPM_TOKEN-}" == "FAKE_TOKEN" ]]; then
+      return 0
+    else
+      exit 1
+    fi
+  }
+
+  export NPM_TOKEN="FAKE_TOKEN"
 }
 
 teardown_suite() {
@@ -66,14 +77,14 @@ teardown_suite() {
 test_commit_initial_message() {
   git commit --quiet -m "fix(workspace1): initial commit" --allow-empty --no-gpg-sign
 
-  assert_status_code 1 "GPG_NO_SIGN=1 $ROOT_DIR/release.sh --plugins=git --preset=workspace --workspace"
+  assert_status_code 1 "GPG_NO_SIGN=1 $ROOT_DIR/release.sh --plugins=npm,npm-post,git --preset=workspace --workspace"
   assert_not_equals "workspace1-v0.0.1" "$(git tag -l | tail -1)"
 }
 test_commit_0_2_invalid_workspace() {
   git commit --quiet -m "fix(workspace3): initial commit" --allow-empty --no-gpg-sign
 
-  assert_matches "This release aims to being workspace release" "$(bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace --dry-run)"
+  assert_matches "This release aims to being workspace release" "$(bash "$ROOT_DIR/release.sh" --plugins=npm,npm-post,git --preset=workspace --workspace --dry-run)"
 }
 test_commit_initial_message_2_no_change() {
-  assert_status_code 1 "GPG_NO_SIGN=1 $ROOT_DIR/release.sh --plugins=git --preset=workspace --workspace"
+  assert_status_code 1 "GPG_NO_SIGN=1 $ROOT_DIR/release.sh --plugins=npm,npm-post,git --preset=workspace --workspace"
 }

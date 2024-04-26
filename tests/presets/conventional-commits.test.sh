@@ -137,3 +137,21 @@ test_commit_8_revert_message() {
   bash "$ROOT_DIR/release.sh" --plugins=git
   assert_matches "v5.1.2" "$(git tag -l)"
 }
+test_commit_9_merge_message() {
+  git commit --quiet -m "Merge pull request #6 from dalisoft/release-me" -m "FIX tests" --allow-empty --no-gpg-sign
+
+  bash "$ROOT_DIR/release.sh" --plugins=git
+  assert_matches "v5.1.2" "$(git tag -l)"
+}
+test_commit_a_10_invalid_message() {
+  git commit --quiet -m "FIX tests" --allow-empty --no-gpg-sign
+
+  bash "$ROOT_DIR/release.sh" --plugins=git
+  assert_matches "v5.1.2" "$(git tag -l)"
+}
+test_commit_a_11_invalid_scope() {
+  git commit --quiet -m "hotkey: it may work?" --allow-empty --no-gpg-sign
+
+  bash "$ROOT_DIR/release.sh" --plugins=git
+  assert_matches "v5.1.2" "$(git tag -l)"
+}
