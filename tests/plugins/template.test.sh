@@ -6,7 +6,7 @@ REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
   cd "$REPO_FOLDER"
-  git init --initial-branch=master
+  git init --quiet --initial-branch=master
 
   export GIT_DIR="$REPO_FOLDER/.git"
   export GIT_CONFIG="$REPO_FOLDER/.gitconfig"
@@ -44,7 +44,7 @@ teardown_suite() {
 #####################################
 
 test_plugin_template() {
-  git commit -m "fix: initial commit" --allow-empty --no-gpg-sign
+  git commit --quiet -m "fix: initial commit" --allow-empty --no-gpg-sign
 
   bash "$ROOT_DIR/release.sh" --plugins=git,PLUGIN_TEMPLATE --quiet
 }

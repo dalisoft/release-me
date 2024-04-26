@@ -7,7 +7,7 @@ ORIGINAL_GH_TOKEN="${GITHUB_TOKEN-}"
 
 setup_suite() {
   cd "$REPO_FOLDER"
-  git init --initial-branch=master
+  git init --quiet --initial-branch=master
 
   # unset it to make this test work
   unset GITHUB_TOKEN
@@ -59,7 +59,7 @@ teardown_suite() {
 #####################################
 
 test_plugin_gh_0_1_initial_message_dryrun() {
-  git commit -m "fix: initial commit" --allow-empty --no-gpg-sign
+  git commit --quiet -m "fix: initial commit" --allow-empty --no-gpg-sign
 
   GITHUB_TOKEN="FAKE_TOKEN" bash "$ROOT_DIR/release.sh" --plugins=git,github-release --dry-run --quiet --pre-release
   assert_not_matches "v0.0.1" "$(git tag -l)"
@@ -69,7 +69,7 @@ test_plugin_gh_0_2_initial_message() {
   assert_matches "v0.0.1" "$(git tag -l)"
 }
 test_plugin_gh_no_token_fail_message() {
-  git commit -m "fix: initial commit" --allow-empty --no-gpg-sign
+  git commit --quiet -m "fix: initial commit" --allow-empty --no-gpg-sign
 
   assert_matches "v0.0.1" "$(git tag -l)"
   assert_not_matches "v0.0.2" "$(git tag -l)"

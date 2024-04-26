@@ -6,7 +6,7 @@ REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
   cd "$REPO_FOLDER"
-  git init --initial-branch=master
+  git init --quiet --initial-branch=master
 
   export GIT_DIR="$REPO_FOLDER/.git"
   export GIT_CONFIG="$REPO_FOLDER/.gitconfig"
@@ -44,7 +44,7 @@ teardown_suite() {
 #####################################
 
 test_plugin_changelog_1() {
-  git commit -m "fix: initial commit" --allow-empty --no-gpg-sign
+  git commit --quiet -m "fix: initial commit" --allow-empty --no-gpg-sign
 
   bash "$ROOT_DIR/release.sh" --plugins=git,changelog --quiet
 
@@ -53,7 +53,7 @@ test_plugin_changelog_1() {
 }
 
 test_plugin_changelog_2_dryun() {
-  git commit -m "fix: bump version" --allow-empty --no-gpg-sign
+  git commit --quiet -m "fix: bump version" --allow-empty --no-gpg-sign
 
   bash "$ROOT_DIR/release.sh" --plugins=git,changelog --quiet --dry-run
 
@@ -62,7 +62,7 @@ test_plugin_changelog_2_dryun() {
 }
 
 test_plugin_changelog_3_update() {
-  git commit -m "feat: feat version" --allow-empty --no-gpg-sign
+  git commit --quiet -m "feat: feat version" --allow-empty --no-gpg-sign
 
   bash "$ROOT_DIR/release.sh" --plugins=git,changelog --quiet
 

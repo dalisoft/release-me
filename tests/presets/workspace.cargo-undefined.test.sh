@@ -6,7 +6,7 @@ REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
   cd "$REPO_FOLDER"
-  git init --initial-branch=master
+  git init --quiet --initial-branch=master
 
   echo '[package]
 name = ""
@@ -47,13 +47,13 @@ teardown_suite() {
 #####################################
 
 test_commit_initial_message() {
-  git commit -m "fix(workspace1): initial commit" --allow-empty --no-gpg-sign
+  git commit --quiet -m "fix(workspace1): initial commit" --allow-empty --no-gpg-sign
 
   assert_status_code 1 "GPG_NO_SIGN=1 $ROOT_DIR/release.sh --plugins=git --preset=workspace --workspace"
   assert_not_equals "workspace1-v0.0.1" "$(git tag -l | tail -1)"
 }
 test_commit_0_2_invalid_workspace() {
-  git commit -m "fix(workspace3): initial commit" --allow-empty --no-gpg-sign
+  git commit --quiet -m "fix(workspace3): initial commit" --allow-empty --no-gpg-sign
 
   assert_matches "This release aims to being workspace release" "$(bash "$ROOT_DIR/release.sh" --plugins=git --preset=workspace --workspace --dry-run)"
 }
