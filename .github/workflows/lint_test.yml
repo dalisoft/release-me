@@ -51,5 +51,5 @@ jobs:
           GPG_PASSPHRASE: ${{ vars.GPG_FAKE_PASSPHRASE }}
           GITHUB_TOKEN: "ACTUAL_YOUR_TOKEN"
         run: |
-          curl -s https://raw.githubusercontent.com/pgrange/bash_unit/master/install.sh | bash
+          curl https://raw.githubusercontent.com/pgrange/bash_unit/master/install.sh | bash
           FORCE_COLOR=true ./bash_unit tests/**/*.test.sh
