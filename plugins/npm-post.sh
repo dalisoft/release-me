@@ -68,7 +68,7 @@ release() {
   log_verbose "Git hash: $CHECKOUT_SHA!"
 
   if ! $IS_DRY_RUN; then
-    if [ -z "$(git diff --name-only package.json 2>dev/null)" ]; then
+    if [ ! -f package.json ] || [ -z "$(git diff --name-only package.json 2>/dev/null)" ]; then
       return
     fi
 
