@@ -276,7 +276,9 @@ get_git_commits() {
 
   # Fast early-catch empty repository
   if ! git rev-parse HEAD 1>/dev/null 2>&1; then
-    up_to_date "You have not committed yet"
+    log "You have not committed yet
+You have to commit your initial/first commit."
+    exit 1
   fi
 
   # Check if exists last tag and is not empty
