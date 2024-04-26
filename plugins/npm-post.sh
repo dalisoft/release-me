@@ -67,13 +67,12 @@ release() {
   log "Committing npm tag..."
   log_verbose "Git hash: $CHECKOUT_SHA!"
 
-  if ! $IS_DRY_RUN; then
-    if [ ! -f package.json ] || [ -z "$(git diff --name-only package.json 2>/dev/null)" ]; then
-      return 0
-    fi
-
+  # Don't load this plugin if
+  # - `--dry-run` used
+  # - `package.json` is missing
+  # - `package.json` is not changed on `Git` tracking
+  if ! $IS_DRY_RUN && [ -f package.json ] && [ -n "$(git diff --name-only package.json 2>/dev/null)" ]; then
     prepare
-
     git add package.json
 
     if $IS_WORKSPACE; then
@@ -98,6 +97,7 @@ release() {
     else
       log_verbose "No Git remote to push tag"
     fi
+    log "Committed npm [$NEXT_RELEASE_TAG] tag"
 
     cleanup
   else

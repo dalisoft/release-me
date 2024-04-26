@@ -7,7 +7,10 @@ release() {
     log "Publishing npm tag..."
     log_verbose "npm tag: $NEXT_RELEASE_TAG and version: $NEXT_RELEASE_VERSION!"
 
-    if ! $IS_DRY_RUN; then
+    # Don't load this plugin if
+    # - `--dry-run` used
+    # - `package.json` is missing
+    if ! $IS_DRY_RUN && [ -f package.json ]; then
       TEMP_FILE=$(mktemp)
       printf "%s\n" "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >>"$TEMP_FILE"
 
@@ -16,7 +19,7 @@ release() {
       rm -rf package.json.bak
 
       export NODE_AUTH_TOKEN="$NPM_TOKEN"
-      npm publish "$NEXT_RELEASE_VERSION" --userconfig "$TEMP_FILE"
+      npm publish --userconfig "$TEMP_FILE"
 
       log "Published [$NEXT_RELEASE_TAG]!"
       rm -rf "$TEMP_FILE"
@@ -24,7 +27,7 @@ release() {
       log "Skipped npm tag [$NEXT_RELEASE_TAG] in DRY-RUN mode."
     fi
   else
-    printf "%s\n" "
+    echo "
 npm Token is not found
 Please export npm Token so this plugin can be used
 "
