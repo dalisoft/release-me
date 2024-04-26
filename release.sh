@@ -273,6 +273,12 @@ GIT_LOGS=""
 get_git_commits() {
   local IFS=
   local GIT_LOGS_LENGTH=0
+
+  # Fast early-catch empty repository
+  if ! git rev-parse HEAD 1>/dev/null 2>&1; then
+    up_to_date "You have not committed yet"
+  fi
+
   # Check if exists last tag and is not empty
   if [ -n "$GIT_LAST_PROJECT_TAG" ]; then
     log_verbose "Last project tag [$GIT_LAST_PROJECT_TAG] found"
