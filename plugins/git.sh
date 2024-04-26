@@ -10,7 +10,7 @@ prepare() {
     log_verbose "Git username [$GIT_USERNAME] and Git e-mail [$GIT_EMAIL] set"
   fi
 
-  if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
+  if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
     git config --local commit.gpgsign true
     git config --local user.signingkey "$GPG_KEY_ID"
     git config --local tag.forceSignAnnotated true
@@ -24,7 +24,7 @@ prepare() {
       log_verbose "Git GPG key import skipped"
     fi
 
-    if [ -n "${GPG_PASSPHRASE}" ]; then
+    if [ -n "${GPG_PASSPHRASE-}" ]; then
       echo "$GPG_PASSPHRASE" | gpg --quiet --batch --yes --pinentry-mode loopback --sign --local-user "${GPG_KEY_ID-}" --passphrase-fd 0 >/dev/null
       log_verbose "Git GPG passphrase set"
     fi
@@ -38,7 +38,7 @@ cleanup() {
     log_verbose "Git username and Git e-mail unset"
   fi
 
-  if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
+  if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
     git config --local --unset commit.gpgsign
     git config --local --unset user.signingkey
     git config --local --unset tag.forceSignAnnotated
@@ -46,14 +46,12 @@ cleanup() {
     log_verbose "Git GPG sign and key ID [$GPG_KEY_ID] are unset"
 
     if gpg --list-keys | grep -q "${GPG_KEY_ID-}"; then
-      if [ -n "${GPG_PASSPHRASE}" ]; then
+      if [ -n "${GPG_PASSPHRASE-}" ]; then
         echo "$GPG_PASSPHRASE" | gpg --quiet --batch --yes --passphrase-fd 0 --delete-secret-and-public-key "$GPG_KEY_ID" >/dev/null
       else
         gpg --quiet --batch --yes --delete-secret-and-public-key "$GPG_KEY_ID"
       fi
       log_verbose "Git GPG key deleted"
-    else
-      log_verbose "Git GPG key delete skipped"
     fi
 
     log_verbose "Git GPG config cleanup"
@@ -70,7 +68,7 @@ release() {
   if ! $IS_DRY_RUN; then
     prepare
 
-    if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
+    if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
       git tag --sign "$NEXT_RELEASE_TAG" "$CHECKOUT_SHA" --message "Release, tag and sign $NEXT_RELEASE_TAG"
       log "Created signed Git tag [$NEXT_RELEASE_TAG]!"
     else
