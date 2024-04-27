@@ -91,15 +91,23 @@ parse_commit() {
 build_release() {
   local IFS=$'\n'
 
-  RELEASE_BODY+="\n## BREAKING CHANGES\n"
-  RELEASE_BODY+="${CHANGELOG_STORE_MAJOR[*]}"
+  if [ ${#CHANGELOG_STORE_MAJOR} -gt 1 ]; then
+    RELEASE_BODY+="\n## BREAKING CHANGES\n"
+    RELEASE_BODY+="${CHANGELOG_STORE_MAJOR[*]}"
+  fi
 
-  RELEASE_BODY+="\n\n## Features\n"
-  RELEASE_BODY+="${CHANGELOG_STORE_MINOR[*]}"
+  if [ ${#CHANGELOG_STORE_MINOR} -gt 1 ]; then
+    RELEASE_BODY+="\n## Features\n"
+    RELEASE_BODY+="${CHANGELOG_STORE_MINOR[*]}"
+  fi
 
-  RELEASE_BODY+="\n\n## Bug Fixes\n"
-  RELEASE_BODY+="${CHANGELOG_STORE_PATCH[*]}"
+  if [ ${#CHANGELOG_STORE_PATCH} -gt 1 ]; then
+    RELEASE_BODY+="\n## Bug Fixes\n"
+    RELEASE_BODY+="${CHANGELOG_STORE_PATCH[*]}"
+  fi
 
-  RELEASE_BODY+="\n\n## Other improvements\n"
-  RELEASE_BODY+="${CHANGELOG_STORE_UNCHANGED[*]}"
+  if [ ${#CHANGELOG_STORE_UNCHANGED} -gt 1 ]; then
+    RELEASE_BODY+="\n## Other improvements\n"
+    RELEASE_BODY+="${CHANGELOG_STORE_UNCHANGED[*]}"
+  fi
 }
