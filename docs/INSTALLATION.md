@@ -47,3 +47,19 @@ git submodule add -b master --name release-me --depth=1 -f https://github.com/da
 git add -A .release-me
 git commit -m "chore: integration of release-me to my project"
 ```
+
+### Docker
+
+```sh
+docker run --rm --volume $(pwd):/repository dalisoft/release-me:latest
+```
+
+### `npm`
+
+```sh
+npm install dalisoft/release-me --save-dev
+# or
+yarn add dalisoft/release-me --dev
+# or
+bun add dalisoft/release-me --dev
+```
