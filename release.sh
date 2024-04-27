@@ -347,6 +347,10 @@ handle_git_commits() {
   log_verbose "" "-q"
   log_verbose "Analyzed commits!"
 
+  log_verbose "Preparing changes diff..."
+  build_release
+  log_verbose "Prepared changes diff!"
+
   log_verbose "Analyzing updates..."
   if [[ "$IS_STABLE_VERSION" == true && "${NEXT_VERSION[0]}" -eq 0 ]]; then
     NEXT_VERSION=(1 0 0)
