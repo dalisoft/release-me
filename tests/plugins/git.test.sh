@@ -3,6 +3,7 @@ set -eu
 
 ROOT_DIR="$(realpath ../../)"
 REPO_FOLDER=$(mktemp -d)
+ORIGINAL_GH_TOKEN="${GITHUB_TOKEN-}"
 
 setup_suite() {
   cd "$REPO_FOLDER"
@@ -39,6 +40,8 @@ setup_suite() {
 }
 
 teardown_suite() {
+  export GITHUB_TOKEN="$ORIGINAL_GH_TOKEN"
+
   rm -rf "$GIT_WORK_TREE"
   unset REPO_FOLDER
   unset GIT_DIR
