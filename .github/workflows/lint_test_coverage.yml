@@ -54,9 +54,9 @@ jobs:
           GPG_PASSPHRASE: ${{ vars.GPG_FAKE_PASSPHRASE }}
           GITHUB_TOKEN: "ACTUAL_YOUR_TOKEN"
         run: |
-          wget https://raw.githubusercontent.com/pgrange/bash_unit/master/bash_unit --continue --debug
-          chmod -v 755 ./bash_unit
-          FORCE_COLOR=true bash --verbose -eu ./bash_unit tests/**/*.test.sh
+          wget https://raw.githubusercontent.com/pgrange/bash_unit/master/bash_unit --continue
+          chmod 755 ./bash_unit
+          FORCE_COLOR=true ./bash_unit tests/**/*.test.sh
   coverage:
     runs-on: ubuntu-22.04
     needs: test
