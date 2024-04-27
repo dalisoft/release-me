@@ -48,7 +48,7 @@ PLUGINS=("git")
 PRESET="conventional-commits"
 
 # set `verbose` on `CI`
-if [ "${CI:-}" == true ]; then
+if [ -n "${CI:-}" ]; then
   IS_VERBOSE=true
 fi
 
