@@ -1,0 +1,22 @@
+{
+  "name": "release-me",
+  "version": "0.8.2",
+  "author": "Davlatjon Shavkatov <opensource@dalisoft.uz>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dalisoft/release-me.git"
+  },
+  "bin": "release-me.sh",
+  "bugs": {
+    "url": "https://github.com/dalisoft/release-me/issues"
+  },
+  "description": "Blazing fast minimal release workflow script written in Bash with plugins and presets support",
+  "engines": {
+    "node": ">=18.19.1"
+  },
+  "files": ["presets", "plugins", "release-me.sh"],
+  "homepage": "https://github.com/dalisoft/release-me#readme",
+  "keywords": ["bash", "workspace", "semantic-release", "publish", "conventional-commits"],
+  "license": "GPL-3.0",
+  "type": "module"
+}
