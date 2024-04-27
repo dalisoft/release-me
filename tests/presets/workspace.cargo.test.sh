@@ -150,8 +150,8 @@ test_commit_6_feat_scope_message_passwordless() {
   unset GPG_PASSPHRASE
   unset GPG_KEY
 
-  export GPG_KEY_ID="${GPG_KEY_ID_UNSAFE}"
-  export GPG_KEY="${GPG_KEY_UNSAFE}"
+  export GPG_KEY_ID="${GPG_KEY_ID_UNSAFE-}"
+  export GPG_KEY="${GPG_KEY_UNSAFE-}"
   export GPG_PASSPHRASE=
 
   git commit --quiet -m "feat(workspace1): add Polish language" --allow-empty --no-gpg-sign

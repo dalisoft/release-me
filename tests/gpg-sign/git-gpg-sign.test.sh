@@ -57,8 +57,8 @@ test_gpg_sign_2_1_passwordless() {
   unset GPG_PASSPHRASE
   unset GPG_KEY
 
-  export GPG_KEY_ID="${GPG_KEY_ID_UNSAFE}"
-  export GPG_KEY="${GPG_KEY_UNSAFE}"
+  export GPG_KEY_ID="${GPG_KEY_ID_UNSAFE-}"
+  export GPG_KEY="${GPG_KEY_UNSAFE-}"
   export GPG_PASSPHRASE=
 
   git commit --quiet -m "fix: update commit" --allow-empty --no-gpg-sign
@@ -69,8 +69,8 @@ test_gpg_sign_2_2_passwordless_pre_installed() {
   unset GPG_PASSPHRASE
   unset GPG_KEY
 
-  export GPG_KEY_ID="${GPG_KEY_ID_UNSAFE}"
-  export GPG_KEY="${GPG_KEY_UNSAFE}"
+  export GPG_KEY_ID="${GPG_KEY_ID_UNSAFE-}"
+  export GPG_KEY="${GPG_KEY_UNSAFE-}"
   export GPG_PASSPHRASE=
 
   echo "$GPG_KEY" | base64 --decode | gpg --quiet --batch --import
@@ -83,7 +83,7 @@ test_gpg_sign_2_3_passwordless_pre_removed() {
   unset GPG_PASSPHRASE
   unset GPG_KEY
 
-  export GPG_KEY_ID="${GPG_KEY_ID_UNSAFE}"
+  export GPG_KEY_ID="${GPG_KEY_ID_UNSAFE-}"
   export GPG_KEY=
   export GPG_PASSPHRASE=
 

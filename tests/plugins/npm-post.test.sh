@@ -105,8 +105,8 @@ test_plugin_npm_post_0_6_custom_gpg_npm_message() {
   unset GPG_PASSPHRASE
   unset GPG_KEY
 
-  export GPG_KEY_ID="${GPG_KEY_ID_UNSAFE}"
-  export GPG_KEY="${GPG_KEY_UNSAFE}"
+  export GPG_KEY_ID="${GPG_KEY_ID_UNSAFE-}"
+  export GPG_KEY="${GPG_KEY_UNSAFE-}"
   export GPG_PASSPHRASE=
 
   git commit --quiet -m "fix: gpg bump npm" --allow-empty --no-gpg-sign
@@ -119,8 +119,8 @@ test_plugin_npm_post_0_7_custom_gpg_npm_message_preinstalled() {
   unset GPG_PASSPHRASE
   unset GPG_KEY
 
-  export GPG_KEY_ID="${GPG_KEY_ID_UNSAFE}"
-  export GPG_KEY="${GPG_KEY_UNSAFE}"
+  export GPG_KEY_ID="${GPG_KEY_ID_UNSAFE-}"
+  export GPG_KEY="${GPG_KEY_UNSAFE-}"
   export GPG_PASSPHRASE=
 
   echo "$GPG_KEY" | base64 --decode | gpg --quiet --batch --import
