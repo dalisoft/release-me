@@ -28,7 +28,7 @@ jobs:
       matrix:
         os:
           - ubuntu-22.04
-          # - macos-14
+          - macos-14
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -39,7 +39,7 @@ jobs:
 
       - name: Install current Bash on macOS
         if: runner.os == 'macOS'
-        run: brew install bash curl wget
+        run: brew install bash curl
 
       - name: Test
         shell: bash
@@ -67,7 +67,7 @@ jobs:
 
       - name: Install current Bash on macOS
         if: runner.os == 'macOS'
-        run: brew install bash curl wget
+        run: brew install bash curl
 
       - name: Coverage
         shell: bash
