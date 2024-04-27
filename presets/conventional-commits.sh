@@ -15,10 +15,10 @@ RELEASE_MAJOR_TYPES=("BREAKING CHANGE")
 UNAFFECTED_TYPES=("test" "docs")
 INCLUDE_SCOPE=("refactor" "perf" "revert")
 
-CHANGELOG_STORE_UNCHANGED=("")
-CHANGELOG_STORE_PATCH=("")
-CHANGELOG_STORE_MINOR=("")
-CHANGELOG_STORE_MAJOR=("")
+CHANGELOG_STORE_UNCHANGED=()
+CHANGELOG_STORE_PATCH=()
+CHANGELOG_STORE_MINOR=()
+CHANGELOG_STORE_MAJOR=()
 
 # This function parses a single commit message
 parse_commit() {
@@ -91,22 +91,22 @@ parse_commit() {
 build_release() {
   local IFS=$'\n'
 
-  if [ ${#CHANGELOG_STORE_MAJOR} -gt 1 ]; then
+  if [ ${#CHANGELOG_STORE_MAJOR[@]} -gt 0 ]; then
     RELEASE_BODY+="\n## BREAKING CHANGES\n"
     RELEASE_BODY+="${CHANGELOG_STORE_MAJOR[*]}"
   fi
 
-  if [ ${#CHANGELOG_STORE_MINOR} -gt 1 ]; then
+  if [ ${#CHANGELOG_STORE_MINOR[@]} -gt 0 ]; then
     RELEASE_BODY+="\n## Features\n"
     RELEASE_BODY+="${CHANGELOG_STORE_MINOR[*]}"
   fi
 
-  if [ ${#CHANGELOG_STORE_PATCH} -gt 1 ]; then
+  if [ ${#CHANGELOG_STORE_PATCH[@]} -gt 0 ]; then
     RELEASE_BODY+="\n## Bug Fixes\n"
     RELEASE_BODY+="${CHANGELOG_STORE_PATCH[*]}"
   fi
 
-  if [ ${#CHANGELOG_STORE_UNCHANGED} -gt 1 ]; then
+  if [ ${#CHANGELOG_STORE_UNCHANGED[@]} -gt 0 ]; then
     RELEASE_BODY+="\n## Other improvements\n"
     RELEASE_BODY+="${CHANGELOG_STORE_UNCHANGED[*]}"
   fi
