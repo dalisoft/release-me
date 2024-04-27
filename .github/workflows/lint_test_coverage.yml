@@ -5,8 +5,8 @@ on:
     branches: [master]
   pull_request_target:
     branches: [master]
-  # Allows you to run this workflow manually from the Actions tab
   workflow_call:
+  workflow_dispatch:
 
 env:
   CI: true
