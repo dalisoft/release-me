@@ -92,8 +92,13 @@ release() {
         fi
       fi
 
-      CHECKOUT_SHA=$(git rev-parse HEAD)
-      log "Committed npm [$NEXT_RELEASE_TAG] tag"
+      if [ -n "$GIT_REMOTE_ORIGIN" ]; then
+        git push
+        CHECKOUT_SHA=$(git rev-parse HEAD)
+        log "Committed npm [$NEXT_RELEASE_TAG] tag"
+      else
+        log "Committing npm [$NEXT_RELEASE_TAG] tag failed"
+      fi
 
       cleanup
     else
