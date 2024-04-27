@@ -24,4 +24,6 @@ List of contents:
 | `git`            | Creates **Git** tag and push to origin           | Yes      |
 | `github-release` | Release a tag with proper `CHANGELOG` and commit | No       |
 | `npm`            | Updates version field and Publishes **npm** tag  | No       |
+| `npm-post`       | Updates version field                            | No       |
 | `changelog`      | Generates `CHANGELOG` within your project        | No       |
+| `docker`         | Publishes `docker` image to **Docker Hub**       | No       |
