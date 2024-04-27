@@ -7,16 +7,18 @@ regexp_commit_major="^([a-z]+)(\(([^\)]+)\))?!?:\ (.+)$"
 string_commit_major="^BREAKING CHANGE(: )?(.+)"
 
 # Release types
-# shellcheck disable=2034
-RELEASE_SKIP_TYPES=("build" "chore" "docs" "test" "style" "ci" "skip ci")
-# shellcheck disable=2034
+RELEASE_SKIP_TYPES=("build" "chore" "style" "ci" "skip ci")
 RELEASE_PATCH_TYPES=("fix" "close" "closes" "perf" "revert")
-# shellcheck disable=2034
 RELEASE_MINOR_TYPES=("refactor" "feat")
-# shellcheck disable=2034
 RELEASE_MAJOR_TYPES=("BREAKING CHANGE")
 
+UNAFFECTED_TYPES=("test" "docs")
 INCLUDE_SCOPE=("refactor" "perf" "revert")
+
+CHANGELOG_STORE_UNCHANGED=("")
+CHANGELOG_STORE_PATCH=("")
+CHANGELOG_STORE_MINOR=("")
+CHANGELOG_STORE_MAJOR=("")
 
 # This function parses a single commit message
 parse_commit() {
@@ -51,36 +53,53 @@ parse_commit() {
     description="$subject"
   fi
 
+  local line=""
+  line+="- "
+  if is_valid_commit_type "$type" "${INCLUDE_SCOPE[@]}"; then
+    line+="**\`[$type]\`** "
+  fi
+
+  if [ -n "${scope-}" ]; then
+    line+="**$scope**: "
+  fi
+  line+="$description "
+  line+="([\`$hash\`](https://github.com/$GIT_REPO_NAME/commit/$sha256))"
+
   # Handle other type of commits
   if is_valid_commit_type "$type" "${RELEASE_SKIP_TYPES[@]}"; then
     return 0
   elif is_valid_commit_type "$type" "${RELEASE_PATCH_TYPES[@]}"; then
     if ! $PATCH_UPGRADED; then
       PATCH_UPGRADED=true
-      RELEASE_BODY+="\n## Bug Fixes\n\n"
     fi
+    CHANGELOG_STORE_PATCH+=("$line")
   elif is_valid_commit_type "$type" "${RELEASE_MINOR_TYPES[@]}"; then
     if ! $MINOR_UPGRADED; then
       MINOR_UPGRADED=true
-      RELEASE_BODY+="\n## Features\n\n"
     fi
+    CHANGELOG_STORE_MINOR+=("$line")
   elif is_valid_commit_type "$type" "${RELEASE_MAJOR_TYPES[@]}"; then
     if ! $MAJOR_UPGRADED; then
       MAJOR_UPGRADED=true
-      RELEASE_BODY+="\n## BREAKING CHANGES\n\n"
     fi
-  else
-    return 0
+    CHANGELOG_STORE_MAJOR+=("$line")
+  elif is_valid_commit_type "$type" "${UNAFFECTED_TYPES[@]}"; then
+    CHANGELOG_STORE_UNCHANGED+=("$line")
   fi
+}
 
-  RELEASE_BODY+="- "
-  if is_valid_commit_type "$type" "${INCLUDE_SCOPE[@]}"; then
-    RELEASE_BODY+="**\`[$type]\`** "
-  fi
+build_release() {
+  local IFS=$'\n'
 
-  if [ -n "${scope-}" ]; then
-    RELEASE_BODY+="**$scope**: "
-  fi
-  RELEASE_BODY+="$description "
-  RELEASE_BODY+="([\`$hash\`](https://github.com/$GIT_REPO_NAME/commit/$sha256))\n"
+  RELEASE_BODY+="\n## BREAKING CHANGES\n"
+  RELEASE_BODY+="${CHANGELOG_STORE_MAJOR[*]}"
+
+  RELEASE_BODY+="\n\n## Features\n"
+  RELEASE_BODY+="${CHANGELOG_STORE_MINOR[*]}"
+
+  RELEASE_BODY+="\n\n## Bug Fixes\n"
+  RELEASE_BODY+="${CHANGELOG_STORE_PATCH[*]}"
+
+  RELEASE_BODY+="\n\n## Other improvements\n"
+  RELEASE_BODY+="${CHANGELOG_STORE_UNCHANGED[*]}"
 }
