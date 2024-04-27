@@ -39,6 +39,7 @@ jobs:
 
       - name: Install current Bash on macOS
         if: runner.os == 'macOS'
+        shell: bash
         run: brew install bash wget
 
       - name: Test
@@ -54,8 +55,8 @@ jobs:
           GITHUB_TOKEN: "ACTUAL_YOUR_TOKEN"
         run: |
           wget https://raw.githubusercontent.com/pgrange/bash_unit/master/bash_unit --continue --debug
-          chmod 755 ./bash_unit
-          FORCE_COLOR=true bash -eu ./bash_unit tests/**/*.test.sh
+          chmod -v 755 ./bash_unit
+          FORCE_COLOR=true bash --verbose -eu ./bash_unit tests/**/*.test.sh
   coverage:
     runs-on: ubuntu-22.04
     needs: test
