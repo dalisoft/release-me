@@ -1,5 +1,3 @@
-# Set update schedule for GitHub Actions
-
 version: 2
 updates:
   - package-ecosystem: "github-actions"
@@ -11,3 +9,7 @@ updates:
       include: scope
     schedule:
       interval: daily
+  - package-ecosystem: "devcontainers"
+    directory: "/"
+    schedule:
+      interval: weekly
