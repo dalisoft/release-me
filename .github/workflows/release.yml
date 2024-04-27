@@ -32,6 +32,7 @@ jobs:
           GPG_KEY: ${{ secrets.GPG_KEY }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          DOCKER_HUB_PAT: ${{ secrets.DOCKER_HUB_PAT }}
         shell: bash
         run: |
           bash ./release.sh --plugins=npm,npm-post,git,github-release,docker --pre-release
