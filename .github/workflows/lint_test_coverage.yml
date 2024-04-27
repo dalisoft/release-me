@@ -5,8 +5,8 @@ on:
     branches: [master]
   pull_request_target:
     branches: [master]
-  # Allows you to run this workflow manually from the Actions tab
   workflow_call:
+  workflow_dispatch:
 
 env:
   CI: true
@@ -86,6 +86,8 @@ jobs:
 
       - name: Coveralls
         uses: coverallsapp/github-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           github-token: ${{ secrets.GH_TOKEN }}
           format: simplecov
