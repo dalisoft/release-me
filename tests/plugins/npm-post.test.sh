@@ -50,19 +50,8 @@ setup_suite() {
       exit 1
     fi
   }
-  git() {
-    # shellcheck disable=SC2317
-    if [ "$1" == "push" ]; then
-      return 0
-    elif [ "$1" == "remote" ]; then
-      printf "%s" "https://github.com/dalisoft/release-me"
-    else
-      command git "$@"
-    fi
-  }
 
   export -f _npm
-  export -f git
 
   fake npm _npm
 }
@@ -127,6 +116,19 @@ test_plugin_npm_post_0_6_custom_gpg_npm_message() {
   assert_matches "0.0.5" "$(cat package.json)"
 }
 test_plugin_npm_post_0_7_custom_gpg_npm_message_preinstalled() {
+  git() {
+    # shellcheck disable=SC2317
+    if [ "$1" == "push" ]; then
+      return 0
+    elif [ "$1" == "remote" ]; then
+      printf "%s" "https://github.com/dalisoft/release-me"
+    else
+      command git "$@"
+    fi
+  }
+
+  export -f git
+
   unset GPG_KEY_ID
   unset GPG_PASSPHRASE
   unset GPG_KEY
