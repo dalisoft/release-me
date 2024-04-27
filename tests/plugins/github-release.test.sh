@@ -26,16 +26,16 @@ setup_suite() {
     git config user.name "$GIT_USERNAME"
   fi
 
-  fake_curl() {
+  fake_gh() {
     # shellcheck disable=SC2317
     printf "%s\n" "${GITHUB_TOKEN-}"
     # shellcheck disable=SC2317
     printf "%s\n" "${FAKE_PARAMS[@]}"
   }
-  export -f fake_curl
+  export -f fake_gh
   export GPG_NO_SIGN=1
 
-  fake curl fake_curl
+  fake gh fake_gh
 }
 
 teardown_suite() {
