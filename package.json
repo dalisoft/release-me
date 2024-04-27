@@ -1,6 +1,6 @@
 {
-  "name": "release-me",
-  "version": "0.8.2",
+  "name": "release-me-sh",
+  "version": "0.7.0",
   "author": "Davlatjon Shavkatov <opensource@dalisoft.uz>",
   "repository": {
     "type": "git",
