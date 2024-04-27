@@ -39,7 +39,11 @@ jobs:
 
       - name: Install current Bash on macOS
         if: runner.os == 'macOS'
-        run: brew install bash curl
+        run: |
+          brew install bash curl
+          curl --version
+          which curl
+          rm ~/.curlrc || true
 
       - name: Test
         shell: bash
@@ -65,10 +69,6 @@ jobs:
         with:
           ruby-version: "3.3" # Not needed with a .ruby-version file
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-
-      - name: Install current Bash on macOS
-        if: runner.os == 'macOS'
-        run: brew install bash curl
 
       - name: Coverage
         shell: bash
