@@ -83,3 +83,9 @@ jobs:
           wget https://raw.githubusercontent.com/pgrange/bash_unit/master/bash_unit --continue --debug
           chmod 755 ./bash_unit
           bundle exec bashcov ./bash_unit tests/**/*.test.sh
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GH_TOKEN }}
+          format: simplecov
