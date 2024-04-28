@@ -38,10 +38,15 @@ jobs:
         shell: bash
         run: |
           bash ./release.sh --plugins=npm,npm-post,git,github-release --pre-release
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: dalisoft/release-me
       - name: Build and push Docker
         uses: docker/build-push-action@v5
         with:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: dalisoft/release-me:latest
+          tags: ${{ steps.meta.outputs.tags }}
