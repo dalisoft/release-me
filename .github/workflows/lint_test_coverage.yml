@@ -1,12 +1,8 @@
 name: Lint and Test with Coverage
 
 on:
-  push:
-    branches: [master]
   pull_request_target:
     branches: [master]
-  workflow_call:
-  workflow_dispatch:
 
 env:
   CI: true
