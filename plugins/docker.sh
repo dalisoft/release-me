@@ -42,11 +42,9 @@ release() {
 
       prepare
 
-      docker buildx use "${DOCKER_BUILDX_NAME-}"
-      docker buildx inspect --bootstrap
-      docker buildx build --platform=linux/amd64,linux/arm64 -t "$GIT_REPO_NAME:$NEXT_BUILD_VERSION" .
+      docker build -t "$GIT_REPO_NAME:$NEXT_BUILD_VERSION" . --push
       docker tag "$GIT_REPO_NAME:$NEXT_BUILD_VERSION" "$GIT_REPO_NAME:latest"
-      docker push "$GIT_REPO_NAME"
+      docker push "$GIT_REPO_NAME:latest"
 
       log "Docker image published [$NEXT_RELEASE_TAG]!"
 
