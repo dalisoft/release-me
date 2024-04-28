@@ -88,6 +88,8 @@ test_plugin_docker_no_dockerfile_fail_message() {
   assert_status_code 1 "DOCKER_HUB_PAT=\"FAKE_TOKEN\" $ROOT_DIR/release.sh --plugins=docker --verbose"
 }
 test_plugin_docker_no_token_fail_message() {
+  unset DOCKER_HUB_PAT
+
   git commit --quiet -m "fix: update commit" --allow-empty --no-gpg-sign
 
   assert_status_code 1 "$ROOT_DIR/release.sh --plugins=docker --verbose"
