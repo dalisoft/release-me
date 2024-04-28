@@ -17,14 +17,13 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
 
       - name: Set up QEMU
+        id: docker-qemu
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
+        id: docker-buildx
         uses: docker/setup-buildx-action@v3
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
         with:
-          username: ${{ vars.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_PAT }}
+          platforms: linux/amd64,linux/arm64
       - name: Release
         env:
           GIT_USERNAME: ${{ vars.GIT_USERNAME }}
@@ -34,21 +33,9 @@ jobs:
           GPG_KEY: ${{ secrets.GPG_KEY }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          DOCKER_HUB_USERNAME: ${{ vars.DOCKER_HUB_USERNAME }}
           DOCKER_HUB_PAT: ${{ secrets.DOCKER_HUB_PAT }}
+          DOCKER_BUILDX_NAME: ${{ steps.docker-buildx.outputs.name }}
         shell: bash
         run: |
-          bash ./release.sh --plugins=npm,npm-post,git,github-release --pre-release
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: dalisoft/release-me
-          tags: |
-            type=ref,event=tag
-      - name: Build and push Docker
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          bash ./release.sh --plugins=npm,npm-post,git,github-release,docker --pre-release
