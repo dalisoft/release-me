@@ -4,12 +4,11 @@ set -eu
 # Docker buildx script was copied from
 # https://docs.docker.com/build/cloud/ci
 # and modified by @dalisoft for AMD64/ARM64 platforms
-BUILDX_URL=
 ARCH=$(uname -m | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
+OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 
 prepare() {
-  BUILDX_URL=$(curl -s https://raw.githubusercontent.com/docker/actions-toolkit/main/.github/buildx-lab-releases.json | jq -r ".latest.assets[] | select(endswith(\"linux-${ARCH}\"))")
-
+  BUILDX_URL=$(curl -s https://raw.githubusercontent.com/docker/actions-toolkit/main/.github/buildx-lab-releases.json | grep "${OS}-${ARCH}\",$" | head -1 | xargs | tr -d ',' | xargs)
   # Download docker buildx with Hyrdobuild support
   mkdir -vp ~/.docker/cli-plugins/
   curl --silent -L --output ~/.docker/cli-plugins/docker-buildx "${BUILDX_URL}"
