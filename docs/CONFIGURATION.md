@@ -23,7 +23,7 @@ List of contents:
 
 | Name        | Description                         | Type    | Depended plugin           |
 | ----------- | ----------------------------------- | ------- | ------------------------- |
-| `GH_TOKEN`  | Used to publish **Github** releases | Secrets | **GitHub Release** plugin |
+| `GITHUB_TOKEN`  | Used to publish **Github** releases | Secrets | **GitHub Release** plugin |
 | `NPM_TOKEN` | Used to publish to **npm** registry | Secrets | **npm** plugin            |
 
 ### Git variables
@@ -48,7 +48,7 @@ List of contents:
 
 ### GH Actions Configurations
 
-See this project [workflow](../.github/workflows/lint_test_release.yml) or see below
+See this project [workflow](../.github/workflows/lint_test_coverage.yml) or see below
 
 > On **homepage** below content may show not properly, so, please check **workflow** file linked above
 
@@ -70,12 +70,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # <-- This line is REQUIRED
-          token: ${{ secrets.GH_TOKEN }} # <-- This line is REQUIRED too
+          token: ${{ secrets.GITHUB_TOKEN }} # <-- This line is REQUIRED too
       - name: Release
         env:
           GIT_USERNAME: ${{ vars.GIT_USERNAME }}
           GIT_EMAIL: ${{ vars.GIT_EMAIL }}
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} # <-- This line is REQUIRED too
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # <-- This line is REQUIRED too
           GPG_KEY_ID: ${{ vars.GPG_KEY_ID }}
           GPG_KEY: ${{ secrets.GPG_KEY }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
