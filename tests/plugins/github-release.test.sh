@@ -70,3 +70,9 @@ test_plugin_gh_no_token_fail_message() {
   assert_not_matches "v0.0.2" "$(git tag -l)"
   assert_status_code 1 "$ROOT_DIR/release.sh --plugins=github-release --quiet"
 }
+test_plugin_z_check_gh() {
+  unset gh
+  unset fake_gh
+
+  assert_status_code 1 "$ROOT_DIR/release.sh --plugins=github-release --quiet"
+}
