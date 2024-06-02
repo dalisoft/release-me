@@ -1,14 +1,8 @@
-GIT
-  remote: https://github.com/dalisoft/bashcov
-  revision: 63b21eeec7c82d258409a137e2e73c18ad550ba6
-  branch: simplecov-upgrade
-  specs:
-    bashcov (3.1.2)
-      simplecov (~> 0.22.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
+    bashcov (3.1.2)
+      simplecov (~> 0.22.0)
     bigdecimal (3.1.8)
     coveralls_reborn (0.28.0)
       simplecov (~> 0.22.0)
@@ -35,7 +29,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bashcov (= 3.1.2)!
+  bashcov
   coveralls_reborn
 
 BUNDLED WITH
