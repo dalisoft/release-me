@@ -63,16 +63,23 @@ test_plugin_gh_0_2_initial_message() {
   assert_matches "v0.0.1" "$(GITHUB_TOKEN="FAKE_TOKEN" bash "$ROOT_DIR/release.sh" --plugins=git,github-release --quiet)"
   assert_matches "v0.0.1" "$(git tag -l)"
 }
-test_plugin_gh_no_token_fail_message() {
+test_plugin_gh_0_3_pre_release() {
   git commit --quiet -m "fix: initial commit" --allow-empty --no-gpg-sign
 
-  assert_matches "v0.0.1" "$(git tag -l)"
-  assert_not_matches "v0.0.2" "$(git tag -l)"
-  assert_status_code 1 "$ROOT_DIR/release.sh --plugins=github-release --quiet"
+  GITHUB_TOKEN="FAKE_TOKEN" assert_status_code 0 "$ROOT_DIR/release.sh --plugins=git,github-release --quiet --pre-release"
+  assert_matches "v0.0.2" "$(git tag -l)"
+  assert_not_matches "v0.0.3" "$(git tag -l)"
 }
 test_plugin_z_check_gh() {
   unset gh
   unset fake_gh
 
   assert_status_code 1 "$ROOT_DIR/release.sh --plugins=github-release --quiet"
+}
+test_plugin_gh_no_token_fail_message() {
+  git commit --quiet -m "fix: initial commit" --allow-empty --no-gpg-sign
+
+  assert_status_code 1 "$ROOT_DIR/release.sh --plugins=github-release --quiet"
+  assert_matches "v0.0.2" "$(git tag -l)"
+  assert_not_matches "v0.0.3" "$(git tag -l)"
 }

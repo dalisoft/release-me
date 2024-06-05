@@ -4,7 +4,10 @@ set -eu
 # Docker buildx script was copied from
 # https://docs.docker.com/build/cloud/ci
 # and modified by @dalisoft for AMD64/ARM64 platforms
-ARCH=$(uname -m | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
+
+# TODO: This `node` trick for bypassing coverage bug in Bashcov
+# See https://github.com/infertux/bashcov/issues/86
+ARCH=$(node -p "process.arch.replace('aarch64', 'arm64').replace(/x86_64|x64/, 'amd64')")
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 
 prepare() {
