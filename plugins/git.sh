@@ -28,6 +28,12 @@ prepare() {
       echo "$GPG_PASSPHRASE" | gpg --quiet --batch --yes --pinentry-mode loopback --sign --local-user "${GPG_KEY_ID-}" --passphrase-fd 0 >/dev/null
       log_verbose "Git GPG passphrase set"
     fi
+  elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUB_KEY-}" ]; then
+    git config --local commit.gpgsign true
+    git config --local user.signingkey "$SSH_PUB_KEY"
+    git config --local tag.forceSignAnnotated true
+    git config --local gpg.format ssh
+    log_verbose "Git SSH sign is set"
   fi
 }
 
@@ -55,6 +61,12 @@ cleanup() {
     fi
 
     log_verbose "Git GPG config cleanup"
+  elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUB_KEY-}" ]; then
+    git config --local --unset commit.gpgsign true
+    git config --local --unset user.signingkey "$SSH_PUB_KEY"
+    git config --local --unset tag.forceSignAnnotated true
+    git config --local --unset gpg.format ssh
+    log_verbose "Git SSH sign is unset"
   fi
 
   log_verbose "Git config cleanup"
@@ -70,7 +82,10 @@ release() {
 
     if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
       git tag --sign "$NEXT_RELEASE_TAG" "$CHECKOUT_SHA" --message "Release, tag and sign $NEXT_RELEASE_TAG"
-      log "Created signed Git tag [$NEXT_RELEASE_TAG]!"
+      log "Created GPG signed Git tag [$NEXT_RELEASE_TAG]!"
+    elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUB_KEY-}" ]; then
+      git tag --sign "$NEXT_RELEASE_TAG" "$CHECKOUT_SHA" --message "Release, tag and sign $NEXT_RELEASE_TAG"
+      log "Created SSH signed Git tag [$NEXT_RELEASE_TAG]!"
     else
       git tag "$NEXT_RELEASE_TAG" "$CHECKOUT_SHA"
       log "Created Git tag [$NEXT_RELEASE_TAG]!"
