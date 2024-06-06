@@ -7,9 +7,11 @@
 const { themes: prismThemes } = require('prism-react-renderer');
 const pkg = require('./package.json');
 
+const title = pkg.name.slice(4);
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: pkg.name,
+  title,
   tagline: pkg.description,
   favicon: 'img/favicon-128.png',
 
@@ -22,7 +24,7 @@ const config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'dalisoft', // Usually your GitHub org/user name.
-  projectName: pkg.name, // Usually your repo name.
+  projectName: title, // Usually your repo name.
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -80,7 +82,7 @@ const config = {
         },
         {
           name: 'og:site_name',
-          content: pkg.name
+          content: title
         },
         {
           name: 'og:description',
@@ -94,7 +96,7 @@ const config = {
       // Replace with your project's social card
       image: 'img/release-me.png',
       navbar: {
-        title: pkg.name,
+        title,
         logo: {
           alt: 'release-me. Logo by https://uxwing.com',
           src: 'img/logo.svg'
