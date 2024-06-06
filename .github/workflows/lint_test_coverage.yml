@@ -49,6 +49,8 @@ jobs:
           GPG_KEY_UNSAFE: ${{ vars.GPG_FAKE_KEY_UNSAFE }}
           GPG_PASSPHRASE: ${{ vars.GPG_FAKE_PASSPHRASE }}
           GITHUB_TOKEN: "ACTUAL_YOUR_TOKEN"
+          DOCKER_HUB_USERNAME: "ACTUAL_DOCKER_USERNAME"
+          DOCKER_HUB_PAT: "ACTUAL_DOCKER_PASSWORD"
         run: |
           wget https://raw.githubusercontent.com/pgrange/bash_unit/master/bash_unit --continue
           chmod 755 ./bash_unit
@@ -75,6 +77,8 @@ jobs:
           GPG_PASSPHRASE: ${{ vars.GPG_FAKE_PASSPHRASE }}
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_HUB_USERNAME: "ACTUAL_DOCKER_USERNAME"
+          DOCKER_HUB_PAT: "ACTUAL_DOCKER_PASSWORD"
         run: |
           wget https://raw.githubusercontent.com/pgrange/bash_unit/master/bash_unit --continue
           chmod 755 ./bash_unit
