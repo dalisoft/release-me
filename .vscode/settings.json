@@ -1,7 +1,11 @@
 {
   "prettier.requireConfig": false,
+  "biome.enabled": true,
   "[markdown]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "dprint.dprint"
+  },
+  "[javascript][javascriptreact][typescript][typescriptreact][json]": {
+    "editor.defaultFormatter": "biomejs.biome"
   },
   "[shellscript]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"

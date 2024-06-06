@@ -1,27 +1,12 @@
-# release-me \[0.x\]
+---
+sidebar_position: 3
+---
 
-> Except bugs, errors and/or strange behavior
-
-[![Coverage Status](https://coveralls.io/repos/github/dalisoft/release-me/badge.svg?branch=master)](https://coveralls.io/github/dalisoft/release-me?branch=master)
-
-Blazing fast minimal release workflow script written in **Bash** with plugins and presets support
-
-List of contents:
-
-- [Github repository](https://github.com/dalisoft/release-me)
-- [Getting Started](./GET_STARTED.md)
-- [Installation](./INSTALLATION.md)
-- **Usage**
-- [Configuration](./CONFIGURATION.md)
-- [Presets](./PRESETS.md)
-- [Plugins](./PLUGINS.md)
-- [Benchmark](./BENCHMARK.md)
-
-## Usage
+# Usage
 
 This project can be used as you wish, local, remote, on CI and/or at VPS. Everywhere it works on same logic as you provide same credentials
 
-### Requirements
+## Requirements
 
 > See [Getting Started](./GET_STARTED.md) page if you didn't read
 > See [Environment variables](./CONFIGURATION.md#environment-variables)
@@ -30,13 +15,13 @@ This project can be used as you wish, local, remote, on CI and/or at VPS. Everyw
 - Make sure you have **write** access
 - Make sure you have **ACCESS TOKEN** with **write access**
 
-### Preparation
+## Preparation
 
 - Add `.release-me` to `.gitignore`
 - Add your `.gitignore` to commit
 - Push into remote
 
-### Commands
+## Commands
 
 ```bash
 git clone https://github.com/dalisoft/release-me.git --depth 1 .release-me

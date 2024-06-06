@@ -1,27 +1,12 @@
-# release-me \[0.x\]
+---
+sidebar_position: 1
+---
 
-> Except bugs, errors and/or strange behavior
-
-[![Coverage Status](https://coveralls.io/repos/github/dalisoft/release-me/badge.svg?branch=master)](https://coveralls.io/github/dalisoft/release-me?branch=master)
-
-Blazing fast minimal release workflow script written in **Bash** with plugins and presets support
-
-List of contents:
-
-- [Github repository](https://github.com/dalisoft/release-me)
-- **Getting Started**
-- [Installation](./INSTALLATION.md)
-- [Usage](./USAGE.md)
-- [Configuration](./CONFIGURATION.md)
-- [Presets](./PRESETS.md)
-- [Plugins](./PLUGINS.md)
-- [Benchmark](./BENCHMARK.md)
-
-## Getting Started
+# Getting Started
 
 Welcome to release-me! This tool is designed to streamline your software release process, making it easier to manage versions, changelogs, and deployment. Whether you're working on a small project or a large enterprise application, release-me is here to simplify your workflow.
 
-### Prerequisites
+## Prerequisites
 
 Before you start using release-me, make sure you have the following installed on your system:
 
@@ -29,7 +14,7 @@ Before you start using release-me, make sure you have the following installed on
 - `bash` (version 5.x or later) with `curl`, `sed` dependencies
 - `npm` (version 9.x or later), required for `npm` package
 
-### Features
+## Features
 
 - Available on all **Unix** environments
 - Zero third-party dependencies
@@ -41,13 +26,13 @@ Before you start using release-me, make sure you have the following installed on
 - Plugins available/compatible
 - Presets available/compatible
 
-### Limitations
+## Limitations
 
 - Currently supports only **Node.js**, **Rust** and **Python** projects (library only)
 - Rebased commits tracking are lost so duplicate releases possible
 - Available only in **Unix** environments (no Windows support yet)
 
-### Versioning priority
+## Versioning priority
 
 If one of files described below will be found, script parse first matched file and priority will ran as these
 

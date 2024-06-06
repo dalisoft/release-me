@@ -1,22 +1,48 @@
 {
   "name": "release-me-sh",
   "version": "0.9.0",
-  "author": "Davlatjon Shavkatov <opensource@dalisoft.uz>",
+  "description": "Blazing fast minimal release workflow script written in Bash with plugins and presets support",
+  "keywords": [
+    "bash",
+    "workspace",
+    "semantic-release",
+    "publish",
+    "conventional-commits"
+  ],
+  "homepage": "https://github.com/dalisoft/release-me#readme",
+  "bugs": {
+    "url": "https://github.com/dalisoft/release-me/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dalisoft/release-me.git"
   },
+  "license": "GPL-3.0",
+  "author": "Davlatjon Shavkatov <opensource@dalisoft.uz>",
   "bin": "release-me.sh",
-  "bugs": {
-    "url": "https://github.com/dalisoft/release-me/issues"
+  "files": ["presets", "plugins", "release-me.sh"],
+  "browserslist": {
+    "production": [">0.5%", "not dead", "not op_mini all"],
+    "development": [
+      "last 3 chrome version",
+      "last 3 firefox version",
+      "last 5 safari version"
+    ]
   },
-  "description": "Blazing fast minimal release workflow script written in Bash with plugins and presets support",
+  "scripts": {
+    "docs:dev": "docusaurus start",
+    "docs:build": "docusaurus build"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.8.0",
+    "@docusaurus/core": "3.4.0",
+    "@docusaurus/module-type-aliases": "^3.4.0",
+    "@docusaurus/preset-classic": "3.4.0",
+    "@docusaurus/types": "^3.4.0",
+    "dprint": "^0.46.1",
+    "prism-react-renderer": "^2.3.1"
+  },
   "engines": {
     "node": ">=18.19.1"
-  },
-  "files": ["presets", "plugins", "release-me.sh"],
-  "homepage": "https://github.com/dalisoft/release-me#readme",
-  "keywords": ["bash", "workspace", "semantic-release", "publish", "conventional-commits"],
-  "license": "GPL-3.0",
-  "type": "module"
+  }
 }

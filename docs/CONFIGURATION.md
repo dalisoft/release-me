@@ -1,32 +1,17 @@
-# release-me \[0.x\]
+---
+sidebar_position: 5
+---
 
-> Except bugs, errors and/or strange behavior
+# Configuration
 
-[![Coverage Status](https://coveralls.io/repos/github/dalisoft/release-me/badge.svg?branch=master)](https://coveralls.io/github/dalisoft/release-me?branch=master)
+## Environment variables
 
-Blazing fast minimal release workflow script written in **Bash** with plugins and presets support
+| Name           | Description                         | Type    | Depended plugin           |
+| -------------- | ----------------------------------- | ------- | ------------------------- |
+| `GITHUB_TOKEN` | Used to publish **Github** releases | Secrets | **GitHub Release** plugin |
+| `NPM_TOKEN`    | Used to publish to **npm** registry | Secrets | **npm** plugin            |
 
-List of contents:
-
-- [Github repository](https://github.com/dalisoft/release-me)
-- [Getting Started](./GET_STARTED.md)
-- [Installation](./INSTALLATION.md)
-- [Usage](./USAGE.md)
-- **Configuration**
-- [Presets](./PRESETS.md)
-- [Plugins](./PLUGINS.md)
-- [Benchmark](./BENCHMARK.md)
-
-## Configuration
-
-### Environment variables
-
-| Name        | Description                         | Type    | Depended plugin           |
-| ----------- | ----------------------------------- | ------- | ------------------------- |
-| `GITHUB_TOKEN`  | Used to publish **Github** releases | Secrets | **GitHub Release** plugin |
-| `NPM_TOKEN` | Used to publish to **npm** registry | Secrets | **npm** plugin            |
-
-### Git variables
+## Git variables
 
 > These variable names used for creating tag(s)
 
@@ -35,7 +20,7 @@ List of contents:
 | `GIT_USERNAME` | Specify tag author name   | Variables | **git** plugin  |
 | `GIT_EMAIL`    | Specify tag author e-mail | Variables | **git** plugin  |
 
-### GPG (Git) variables
+## GPG (Git) variables
 
 > These variable names used for signing tag(s)
 
@@ -46,7 +31,7 @@ List of contents:
 | `GPG_KEY`        | Private GPG key        | Secrets   | **git** plugin  |
 | `GPG_PASSPHRASE` | Private GPG passphrase | Secrets   | **git** plugin  |
 
-### GH Actions Configurations
+## GH Actions Configurations
 
 See this project [workflow](../.github/workflows/lint_test_coverage.yml) or see below
 

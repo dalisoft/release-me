@@ -25,3 +25,7 @@ coverage
 .secrets*
 !.env.example
 !.secrets.example
+
+# Docs
+.docusaurus
+build

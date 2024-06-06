@@ -1,27 +1,12 @@
-# release-me \[0.x\]
+---
+sidebar_position: 8
+---
 
-> Except bugs, errors and/or strange behavior
-
-[![Coverage Status](https://coveralls.io/repos/github/dalisoft/release-me/badge.svg?branch=master)](https://coveralls.io/github/dalisoft/release-me?branch=master)
-
-Blazing fast minimal release workflow script written in **Bash** with plugins and presets support
-
-List of contents:
-
-- [Github repository](https://github.com/dalisoft/release-me)
-- [Getting Started](./GET_STARTED.md)
-- [Installation](./INSTALLATION.md)
-- [Usage](./USAGE.md)
-- [Configuration](./CONFIGURATION.md)
-- [Presets](./PRESETS.md)
-- [Plugins](./PLUGINS.md)
-- **Benchmark**
-
-## Benchmark
+# Benchmark
 
 > Please test yourself on your machine. These results on my machine **MacBook Pro 13" M1 16/512**
 
-### Average library project
+## Average library project
 
 > Spoiler: ~8-times faster
 
@@ -31,7 +16,7 @@ List of contents:
 | go-semantic-release | `1s`    | `./semantic-release --hooks goreleaser`                        |
 | release-me          | `1s`    | `bash ./release.sh --plugins=git,github-release,npm --dry-run` |
 
-### Workspace project
+## Workspace project
 
 > Spoiler: ~75-times faster
 

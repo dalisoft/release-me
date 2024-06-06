@@ -1,0 +1,8 @@
+tips:
+  label: Tips & Tricks
+  permalink: /tips
+  description: TIps & Tricks for your project
+performance:
+  label: Performance
+  permalink: /performance
+  description: Performance optimization & guides
