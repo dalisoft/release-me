@@ -1,0 +1,44 @@
+.DS_Store
+
+# Dependencies
+node_modules
+
+# Lockfiles
+yarn.lock
+package-lock.json
+bun.lockb
+
+# Generated files
+CHANGELOG.md
+
+# release-me
+.release-me
+
+# Tests
+tests
+
+# Testing library
+bash_unit
+
+# Testing coverage
+coverage
+
+# Secrets
+.env*
+.secrets*
+!.env.example
+!.secrets.example
+
+# Docs
+.docusaurus
+build
+static
+src
+blog
+
+# IDE / Editors
+.vscode
+.ide
+
+# Chore files
+.github
