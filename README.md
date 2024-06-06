@@ -20,7 +20,7 @@ Blazing fast minimal release workflow script written in **Bash** with plugins an
 
 ## Documentation
 
-Go-to [web-page](https://dalisoft.github.io/release-me) or see [**Getting Started**](./docs/GET_STARTED.md)
+See [here](https://dalisoft.github.io/release-me)
 
 ## Similar projects
 
