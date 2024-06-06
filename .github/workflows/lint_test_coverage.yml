@@ -3,6 +3,7 @@ name: Lint and Test with Coverage
 on:
   pull_request_target:
     branches: [master]
+  workflow_dispatch:
 
 env:
   CI: true
