@@ -7,7 +7,7 @@
 const { themes: prismThemes } = require('prism-react-renderer');
 const pkg = require('./package.json');
 
-const title = pkg.name.slice(-4);
+const title = pkg.name.slice(0, -3);
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
