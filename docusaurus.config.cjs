@@ -9,9 +9,8 @@ const pkg = require('./package.json');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'release-me',
-  tagline:
-    'Blazing fast minimal release workflow script written in Bash with plugins and presets support',
+  title: pkg.name,
+  tagline: pkg.description,
   favicon: 'img/favicon-128.png',
 
   // Set the production url of your site here
@@ -23,7 +22,7 @@ const config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'dalisoft', // Usually your GitHub org/user name.
-  projectName: 'release-me', // Usually your repo name.
+  projectName: pkg.name, // Usually your repo name.
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -67,7 +66,6 @@ const config = {
       })
     ]
   ],
-
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
@@ -79,12 +77,24 @@ const config = {
         {
           name: 'description',
           content: pkg.description
+        },
+        {
+          name: 'og:site_name',
+          content: pkg.name
+        },
+        {
+          name: 'og:description',
+          content: pkg.description
+        },
+        {
+          name: 'og:url',
+          content: pkg.homepage
         }
       ],
       // Replace with your project's social card
-      image: 'img/release-me.jpg',
+      image: 'img/release-me.png',
       navbar: {
-        title: 'release-me',
+        title: pkg.name,
         logo: {
           alt: 'release-me. Logo by https://uxwing.com',
           src: 'img/logo.svg'
