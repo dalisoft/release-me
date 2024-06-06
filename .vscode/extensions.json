@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "dprint.dprint",
+    "biomejs.biome",
+    "tekumara.typos-vscode",
+    "github.vscode-github-actions",
+    "mads-hartmann.bash-ide-vscode"
+  ]
+}

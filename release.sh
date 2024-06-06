@@ -421,7 +421,7 @@ handle_pushes() {
 }
 
 ##############################
-######## Initializate ########
+######### Initialize #########
 ##############################
 parse_packages
 get_git_variables
