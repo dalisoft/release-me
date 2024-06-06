@@ -11,12 +11,35 @@ const title = pkg.name.slice(0, -3);
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
+  webpack: {
+    jsLoader: (isServer) => ({
+      loader: require.resolve('swc-loader'),
+      options: {
+        jsc: {
+          parser: {
+            syntax: 'ecmascript',
+            jsx: true
+          },
+          target: 'es2020',
+          transform: {
+            react: {
+              runtime: 'automatic'
+            }
+          }
+        },
+        module: {
+          type: isServer ? 'commonjs' : 'es6'
+        }
+      }
+    })
+  },
+
   title,
   tagline: pkg.description,
   favicon: 'img/favicon-128.png',
 
   // Set the production url of your site here
-  url: 'https://dalisoft.github.io',
+  url: pkg.homepage.slice(0, -(title.length + 1)),
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/release-me',
@@ -111,7 +134,7 @@ const config = {
           { to: '/blog', label: 'Blog', position: 'left' },
           { to: '/roadmap', label: 'Roadmap', position: 'left' },
           {
-            href: 'https://github.com/dalisoft/release-me',
+            href: pkg.repository.url.split('+')[1],
             label: 'GitHub',
             position: 'right'
           }

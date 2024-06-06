@@ -48,10 +48,12 @@
     "@docusaurus/types": "^3.4.0",
     "dprint": "^0.46.1",
     "prism-react-renderer": "^2.3.1",
-    "prismjs": "^1.29.0"
+    "prismjs": "^1.29.0",
+    "@swc/core": "^1.5.25",
+    "swc-loader": "^0.2.6"
   },
   "engines": {
     "node": ">=18.19.1"
   },
-  "trustedDependencies": ["@biomejs/biome", "core-js", "core-js-pure", "dprint"]
+  "trustedDependencies": ["@biomejs/biome", "@swc/core", "core-js", "core-js-pure", "dprint"]
 }
