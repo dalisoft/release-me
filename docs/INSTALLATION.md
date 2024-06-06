@@ -10,7 +10,7 @@ This project can be installed many ways but here we'll provide some ways
 
 Cloning on project folder is the easiest and safest way to use project
 
-```sh
+```bash title="Bash (Terminal)"
 # this line is important
 git clone https://github.com/dalisoft/release-me.git --depth 1 .release-me
 
@@ -24,7 +24,7 @@ git commit -m "chore: integration of release-me to my project"
 
 Using this project as **Git submodule** can be but it's not recommended
 
-```sh
+```bash title="Bash (Terminal)"
 # this line is important
 git submodule add -b master --name release-me --depth=1 -f https://github.com/dalisoft/release-me.git .release-me
 
@@ -35,13 +35,13 @@ git commit -m "chore: integration of release-me to my project"
 
 ## Docker
 
-```sh
+```bash title="Bash (Terminal)"
 docker run --rm --volume $(pwd):/repository dalisoft/release-me:latest
 ```
 
 ### `npm`
 
-```sh
+```bash title="Bash (Terminal)"
 npm install dalisoft/release-me --save-dev
 # or
 yarn add dalisoft/release-me --dev

@@ -23,7 +23,7 @@ This project can be used as you wish, local, remote, on CI and/or at VPS. Everyw
 
 ## Commands
 
-```bash
+```bash title="Bash (Terminal)"
 git clone https://github.com/dalisoft/release-me.git --depth 1 .release-me
 bash .release-me/release.sh --plugins=git,github-release --preset=conventional-commits
 ```

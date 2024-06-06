@@ -37,7 +37,7 @@ See this project [workflow](../.github/workflows/lint_test_coverage.yml) or see 
 
 > On **homepage** below content may show not properly, so, please check **workflow** file linked above
 
-```yaml
+```yaml title=".github/workflows/release.yml"
 name: Release
 on:
   push:
