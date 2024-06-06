@@ -97,6 +97,7 @@ const config = {
             label: 'Documentation'
           },
           { to: '/blog', label: 'Blog', position: 'left' },
+          { to: '/roadmap', label: 'Roadmap', position: 'left' },
           {
             href: 'https://github.com/dalisoft/release-me',
             label: 'GitHub',
@@ -113,6 +114,10 @@ const config = {
               {
                 label: 'Documentation',
                 to: '/docs/GET_STARTED'
+              },
+              {
+                label: 'Roadmap',
+                to: '/roadmap'
               }
             ]
           },
