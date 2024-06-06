@@ -48,17 +48,10 @@
     "@docusaurus/types": "^3.4.0",
     "dprint": "^0.46.1",
     "prism-react-renderer": "^2.3.1",
-    "prismjs": "^1.29.0",
-    "typos-rs-npm": "dalisoft/typos-rs-npm#v1.22.1"
+    "prismjs": "^1.29.0"
   },
   "engines": {
     "node": ">=18.19.1"
   },
-  "trustedDependencies": [
-    "@biomejs/biome",
-    "core-js",
-    "core-js-pure",
-    "dprint",
-    "typos-rs-npm"
-  ]
+  "trustedDependencies": ["@biomejs/biome", "core-js", "core-js-pure", "dprint"]
 }
