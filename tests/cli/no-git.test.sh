@@ -5,11 +5,11 @@ ROOT_DIR="$(realpath ../../)"
 REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
-  cd "$REPO_FOLDER"
+  cd "${REPO_FOLDER}"
 }
 
 teardown_suite() {
-  rm -rf "$REPO_FOLDER"
+  rm -rf "${REPO_FOLDER}"
 }
 
 #####################################
@@ -18,5 +18,5 @@ teardown_suite() {
 #####################################
 
 test_nogit_1() {
-  assert_matches "Current directory is not a Git repository!" "$(bash "$ROOT_DIR/release.sh" --plugin=PLUGIN_TEMPLATE)"
+  assert_matches "Current directory is not a Git repository!" "$(bash "${ROOT_DIR}/release.sh" --plugin=PLUGIN_TEMPLATE)"
 }

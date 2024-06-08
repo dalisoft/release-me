@@ -4,36 +4,41 @@ set -eu
 # Docker buildx script was copied from
 # https://docs.docker.com/build/cloud/ci
 # and modified by @dalisoft for AMD64/ARM64 platforms
-ARCH=$(uname -m | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
-OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+arch=$(uname -m | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
+os=$(uname -s | tr '[:upper:]' '[:lower:]')
 
 prepare() {
-  BUILDX_URL=$(curl -s https://raw.githubusercontent.com/docker/actions-toolkit/main/.github/buildx-lab-releases.json | grep "${OS}-${ARCH}\",$" | head -1 | xargs | tr -d ',' | xargs)
+  BUILDX_URL=$(curl -s https://raw.githubusercontent.com/docker/actions-toolkit/main/.github/buildx-lab-releases.json | grep "${os}-${arch}\",$" | head -1 | xargs | tr -d ',' | xargs)
   # Download docker buildx with Hyrdobuild support
-  mkdir -vp ~/.docker/cli-plugins/
-  curl --silent -L --output ~/.docker/cli-plugins/docker-buildx "${BUILDX_URL}"
-  chmod a+x ~/.docker/cli-plugins/docker-buildx
+  mkdir -vp "${HOME}/.docker/cli-plugins"
+  curl --silent -L --output "${HOME}/.docker/cli-plugins/docker-buildx" "${BUILDX_URL}"
+  chmod a+x "${HOME}/.docker/cli-plugins/docker-buildx"
 
-  echo "${DOCKER_HUB_PAT-}" | docker login --username "${DOCKER_HUB_USERNAME-}" --password-stdin
+  printf "%s" "${DOCKER_HUB_PAT-}" | docker login --username "${DOCKER_HUB_USERNAME-}" --password-stdin
 }
 
 cleanup() {
-  rm -rf ~/.docker/cli-plugins/
+  rm -rf "${HOME}/.docker/cli-plugins"
 
   docker logout
 }
 
 release() {
+  if [ -z "${IS_DRY_RUN}" ] || [ -z "${NEXT_RELEASE_TAG}" ] || [ -z "${NEXT_RELEASE_VERSION}" ] || [ -z "${NEXT_BUILD_VERSION}" ]; then
+    log_verbose "[docker] Plugin requires a valid release-me pre-processing"
+    return 1
+  fi
+
   # Build and publish a `Docker` tag
   if [ -n "${DOCKER_HUB_USERNAME-}" ] && [ -n "${DOCKER_HUB_PAT-}" ]; then
 
     log "Building and publishing Docker image..."
-    log_verbose "Docker tag: $NEXT_RELEASE_TAG and version: $NEXT_RELEASE_VERSION!"
+    log_verbose "Docker tag: ${NEXT_RELEASE_TAG} and version: ${NEXT_RELEASE_VERSION}!"
 
     # Don't load this plugin if
     # - `--dry-run` used
     # - `Dockerfile` is missing
-    if ! $IS_DRY_RUN; then
+    if ! ${IS_DRY_RUN}; then
       if [ ! -f Dockerfile ]; then
         log "Project does not have Dockerfile"
         return 1
@@ -41,19 +46,19 @@ release() {
 
       prepare
 
-      docker build -t "$GIT_REPO_NAME:$NEXT_BUILD_VERSION" . --push
-      docker tag "$GIT_REPO_NAME:$NEXT_BUILD_VERSION" "$GIT_REPO_NAME:latest"
-      docker push "$GIT_REPO_NAME:latest"
+      docker build -t "${GIT_REPO_NAME-}:${NEXT_BUILD_VERSION}" . --push
+      docker tag "${GIT_REPO_NAME}:${NEXT_BUILD_VERSION}" "${GIT_REPO_NAME}:latest"
+      docker push "${GIT_REPO_NAME}:latest"
 
-      log "Docker image published [$NEXT_RELEASE_TAG]!"
+      log "Docker image published [${NEXT_RELEASE_TAG}]!"
 
       cleanup
     else
-      log "Skipped Docker image [$NEXT_RELEASE_TAG] in DRY-RUN mode."
+      log "Skipped Docker image [${NEXT_RELEASE_TAG}] in DRY-RUN mode."
     fi
 
   else
-    echo "
+    printf "%b" "
 Docker Personal Access Token is not found
 Please export Docker Personal Access Token so this plugin can be used
 "

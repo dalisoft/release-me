@@ -5,26 +5,26 @@ ROOT_DIR="$(realpath ../../)"
 REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
-  cd "$REPO_FOLDER"
+  cd "${REPO_FOLDER}"
   git init --quiet --initial-branch=master
 
-  export GIT_DIR="$REPO_FOLDER/.git"
-  export GIT_CONFIG="$REPO_FOLDER/.gitconfig"
-  export GIT_WORK_TREE="$REPO_FOLDER"
+  export GIT_DIR="${REPO_FOLDER}/.git"
+  export GIT_CONFIG="${REPO_FOLDER}/.gitconfig"
+  export GIT_WORK_TREE="${REPO_FOLDER}"
 
   if [[ -n "${GIT_USERNAME-}" && -n "${GIT_EMAIL-}" ]]; then
-    export GIT_COMMITTER_NAME="$GIT_USERNAME"
-    export GIT_COMMITTER_EMAIL="$GIT_EMAIL"
-    export GIT_AUTHOR_NAME="$GIT_USERNAME"
-    export GIT_AUTHOR_EMAIL="$GIT_EMAIL"
+    export GIT_COMMITTER_NAME="${GIT_USERNAME}"
+    export GIT_COMMITTER_EMAIL="${GIT_EMAIL}"
+    export GIT_AUTHOR_NAME="${GIT_USERNAME}"
+    export GIT_AUTHOR_EMAIL="${GIT_EMAIL}"
 
-    git config user.email "$GIT_EMAIL"
-    git config user.name "$GIT_USERNAME"
+    git config user.email "${GIT_EMAIL}"
+    git config user.name "${GIT_USERNAME}"
   fi
 }
 
 teardown_suite() {
-  rm -rf "$GIT_WORK_TREE"
+  rm -rf "${GIT_WORK_TREE}"
   unset REPO_FOLDER
   unset GIT_DIR
   unset GIT_CONFIG
@@ -42,19 +42,19 @@ teardown_suite() {
 #####################################
 
 test_core_cli_help() {
-  assert_matches "release-me" "$(bash "$ROOT_DIR/release.sh" --help)"
+  assert_matches "release-me" "$(bash "${ROOT_DIR}/release.sh" --help)"
 }
 test_core_cli_version() {
-  assert_matches "last version available at GitHub" "$(bash "$ROOT_DIR/release.sh" --version)"
+  assert_matches "last version available at GitHub" "$(bash "${ROOT_DIR}/release.sh" --version)"
 }
 test_core_cli_invalid_option() {
-  assert_matches "Unknown option: --invalid" "$(bash "$ROOT_DIR/release.sh" --invalid)"
-  assert_status_code 1 "$ROOT_DIR/release.sh --invalid"
+  assert_matches "Unknown option: --invalid" "$(bash "${ROOT_DIR}/release.sh" --invalid)"
+  assert_status_code 1 "${ROOT_DIR}/release.sh --invalid"
 }
 test_core_cli_invalid_arg() {
-  assert_matches "Unknown argument: invalid" "$(bash "$ROOT_DIR/release.sh" invalid)"
-  assert_status_code 1 "$ROOT_DIR/release.sh invalid"
+  assert_matches "Unknown argument: invalid" "$(bash "${ROOT_DIR}/release.sh" invalid)"
+  assert_status_code 1 "${ROOT_DIR}/release.sh invalid"
 }
 test_core_cli_git() {
-  assert_matches "You have not committed yet" "$(bash "$ROOT_DIR/release.sh")"
+  assert_matches "You have not committed yet" "$(bash "${ROOT_DIR}/release.sh")"
 }

@@ -15,7 +15,7 @@ Cloning on project folder is the easiest and safest way to use project
 git clone https://github.com/dalisoft/release-me.git --depth 1 .release-me
 
 # other lines are optional
-echo '.release-me' >> .gitignore'
+printf "%s" '.release-me' >> .gitignore'
 git add -A .gitignore
 git commit -m "chore: integration of release-me to my project"
 ```

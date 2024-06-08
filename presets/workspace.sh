@@ -34,12 +34,12 @@ parse_commit() {
   local description
 
   # Extracting the type, scope, and description using Bash regex
-  if [[ "$subject" =~ $regexp_commit_primary ]]; then
+  if [[ "${subject}" =~ ${regexp_commit_primary} ]]; then
     type="${BASH_REMATCH[1]}"
     scope="${BASH_REMATCH[3]}"
     description="${BASH_REMATCH[4]}"
 
-  elif [[ "$subject" =~ $regexp_commit_major ]]; then
+  elif [[ "${subject}" =~ ${regexp_commit_major} ]]; then
     type="BREAKING CHANGE"
     scope="${BASH_REMATCH[3]}"
     description="${BASH_REMATCH[4]}"
@@ -48,66 +48,66 @@ parse_commit() {
   fi
 
   # Early catching non-workspace commits
-  if [ "${scope-}" != "$PKG_NAME" ]; then
+  if [[ "${scope-}" != "${PKG_NAME-}" ]]; then
     return 0
   fi
 
   # Extract body
-  if [[ -n "$body" && "$body" =~ $string_commit_major ]]; then
+  if [[ -n "${body}" && "${body}" =~ ${string_commit_major} ]]; then
     type="BREAKING CHANGE"
-    description="$subject"
+    description="${subject}"
   fi
 
   local line=""
-  if is_valid_commit_type "$type" "${INCLUDE_SCOPE[@]}"; then
-    line+="- **$PKG_NAME**: **\`[$type]\`** $description "
+  if is_valid_commit_type "${type}" "${INCLUDE_SCOPE[@]}"; then
+    line+="- **${PKG_NAME}**: **\`[${type}]\`** ${description} "
   else
-    line+="- **$PKG_NAME**: $description "
+    line+="- **${PKG_NAME}**: ${description} "
   fi
-  line+="([\`$hash\`](https://github.com/$GIT_REPO_NAME/commit/$sha256))"
+  line+="([\`${hash}\`](https://github.com/${GIT_REPO_NAME-}/commit/${sha256}))"
 
   # Handle other type of commits
-  if is_valid_commit_type "$type" "${RELEASE_SKIP_TYPES[@]}"; then
+  if is_valid_commit_type "${type}" "${RELEASE_SKIP_TYPES[@]}"; then
     return 0
-  elif is_valid_commit_type "$type" "${RELEASE_PATCH_TYPES[@]}"; then
-    if ! $PATCH_UPGRADED; then
+  elif is_valid_commit_type "${type}" "${RELEASE_PATCH_TYPES[@]}"; then
+    if ! ${PATCH_UPGRADED}; then
       PATCH_UPGRADED=true
     fi
-    CHANGELOG_STORE_PATCH+=("$line")
-  elif is_valid_commit_type "$type" "${RELEASE_MINOR_TYPES[@]}"; then
-    if ! $MINOR_UPGRADED; then
+    CHANGELOG_STORE_PATCH+=("${line}")
+  elif is_valid_commit_type "${type}" "${RELEASE_MINOR_TYPES[@]}"; then
+    if ! ${MINOR_UPGRADED}; then
       MINOR_UPGRADED=true
     fi
-    CHANGELOG_STORE_MINOR+=("$line")
-  elif is_valid_commit_type "$type" "${RELEASE_MAJOR_TYPES[@]}"; then
-    if ! $MAJOR_UPGRADED; then
+    CHANGELOG_STORE_MINOR+=("${line}")
+  elif is_valid_commit_type "${type}" "${RELEASE_MAJOR_TYPES[@]}"; then
+    if ! ${MAJOR_UPGRADED}; then
       MAJOR_UPGRADED=true
     fi
-    CHANGELOG_STORE_MAJOR+=("$line")
-  elif is_valid_commit_type "$type" "${UNAFFECTED_TYPES[@]}"; then
-    CHANGELOG_STORE_UNCHANGED+=("$line")
+    CHANGELOG_STORE_MAJOR+=("${line}")
+  elif is_valid_commit_type "${type}" "${UNAFFECTED_TYPES[@]}"; then
+    CHANGELOG_STORE_UNCHANGED+=("${line}")
   fi
 }
 
 build_release() {
   local IFS=$'\n'
 
-  if [ ${#CHANGELOG_STORE_MAJOR[@]} -gt 0 ]; then
+  if [[ ${#CHANGELOG_STORE_MAJOR[@]} -gt 0 ]]; then
     RELEASE_BODY+="\n## BREAKING CHANGES\n"
     RELEASE_BODY+="${CHANGELOG_STORE_MAJOR[*]}"
   fi
 
-  if [ ${#CHANGELOG_STORE_MINOR[@]} -gt 0 ]; then
+  if [[ ${#CHANGELOG_STORE_MINOR[@]} -gt 0 ]]; then
     RELEASE_BODY+="\n## Features\n"
     RELEASE_BODY+="${CHANGELOG_STORE_MINOR[*]}"
   fi
 
-  if [ ${#CHANGELOG_STORE_PATCH[@]} -gt 0 ]; then
+  if [[ ${#CHANGELOG_STORE_PATCH[@]} -gt 0 ]]; then
     RELEASE_BODY+="\n## Bug Fixes\n"
     RELEASE_BODY+="${CHANGELOG_STORE_PATCH[*]}"
   fi
 
-  if [ ${#CHANGELOG_STORE_UNCHANGED[@]} -gt 0 ]; then
+  if [[ ${#CHANGELOG_STORE_UNCHANGED[@]} -gt 0 ]]; then
     RELEASE_BODY+="\n## Other improvements\n"
     RELEASE_BODY+="${CHANGELOG_STORE_UNCHANGED[*]}"
   fi

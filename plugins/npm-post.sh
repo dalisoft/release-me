@@ -5,32 +5,32 @@ prepare() {
   unset GIT_CONFIG
 
   if [ -n "${GIT_USERNAME-}" ] && [ -n "${GIT_EMAIL-}" ]; then
-    git config --local user.email "$GIT_EMAIL"
-    git config --local user.name "$GIT_USERNAME"
-    log_verbose "Git username [$GIT_USERNAME] and Git e-mail [$GIT_EMAIL] set"
+    git config --local user.email "${GIT_EMAIL}"
+    git config --local user.name "${GIT_USERNAME}"
+    log_verbose "Git username [${GIT_USERNAME}] and Git e-mail [${GIT_EMAIL}] set"
   fi
 
   if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
     git config --local commit.gpgsign true
-    git config --local user.signingkey "$GPG_KEY_ID"
+    git config --local user.signingkey "${GPG_KEY_ID}"
     git config --local tag.forceSignAnnotated true
     git config --local gpg.program gpg
-    log_verbose "Git GPG sign and key ID [$GPG_KEY_ID] are set"
+    log_verbose "Git GPG sign and key ID [${GPG_KEY_ID}] are set"
 
     if ! gpg --list-keys | grep -q "${GPG_KEY_ID-}"; then
-      echo "$GPG_KEY" | base64 --decode | gpg --quiet --batch --import
+      printf "%s" "${GPG_KEY}" | base64 --decode | gpg --quiet --batch --import
       log_verbose "Git GPG key import loaded"
     else
       log_verbose "Git GPG key import skipped"
     fi
 
     if [ -n "${GPG_PASSPHRASE-}" ]; then
-      echo "$GPG_PASSPHRASE" | gpg --quiet --batch --yes --pinentry-mode loopback --sign --local-user "${GPG_KEY_ID-}" --passphrase-fd 0 >/dev/null
+      printf "%s" "${GPG_PASSPHRASE}" | gpg --quiet --batch --yes --pinentry-mode loopback --sign --local-user "${GPG_KEY_ID-}" --passphrase-fd 0 >/dev/null
       log_verbose "Git GPG passphrase set"
     fi
   elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUB_KEY-}" ]; then
     git config --local commit.gpgsign true
-    git config --local user.signingkey "$SSH_PUB_KEY"
+    git config --local user.signingkey "${SSH_PUB_KEY}"
     git config --local tag.forceSignAnnotated true
     git config --local gpg.format ssh
     log_verbose "Git SSH sign is set"
@@ -49,13 +49,13 @@ cleanup() {
     git config --local --unset user.signingkey
     git config --local --unset tag.forceSignAnnotated
     git config --local --unset gpg.program
-    log_verbose "Git GPG sign and key ID [$GPG_KEY_ID] are unset"
+    log_verbose "Git GPG sign and key ID [${GPG_KEY_ID}] are unset"
 
     if gpg --list-keys | grep -q "${GPG_KEY_ID-}"; then
       if [ -n "${GPG_PASSPHRASE-}" ]; then
-        echo "$GPG_PASSPHRASE" | gpg --quiet --batch --yes --passphrase-fd 0 --delete-secret-and-public-key "$GPG_KEY_ID" >/dev/null
+        printf "%s" "${GPG_PASSPHRASE}" | gpg --quiet --batch --yes --passphrase-fd 0 --delete-secret-and-public-key "${GPG_KEY_ID}" >/dev/null
       else
-        gpg --quiet --batch --yes --delete-secret-and-public-key "$GPG_KEY_ID"
+        gpg --quiet --batch --yes --delete-secret-and-public-key "${GPG_KEY_ID}"
       fi
       log_verbose "Git GPG key deleted"
     fi
@@ -63,7 +63,7 @@ cleanup() {
     log_verbose "Git GPG config cleanup"
   elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUB_KEY-}" ]; then
     git config --local --unset commit.gpgsign true
-    git config --local --unset user.signingkey "$SSH_PUB_KEY"
+    git config --local --unset user.signingkey "${SSH_PUB_KEY}"
     git config --local --unset tag.forceSignAnnotated true
     git config --local --unset gpg.format ssh
     log_verbose "Git SSH sign is unset"
@@ -73,16 +73,25 @@ cleanup() {
 }
 
 release() {
+  if [ -z "${IS_DRY_RUN}" ] || [ -z "${NEXT_RELEASE_TAG}" ] || [ -z "${NEXT_RELEASE_VERSION}" ] || [ -z "${NEXT_BUILD_VERSION}" ] || [ -z "${CHECKOUT_SHA}" ]; then
+    log_verbose "[npm-post] Plugin requires a valid release-me pre-processing"
+    return 1
+  fi
+  if [ -z "${IS_WORKSPACE}" ]; then
+    log_verbose "[npm-post] Plugin requires a valid release-me release processing"
+    return 1
+  fi
+
   # Committing a `npm` tag
   log "Committing npm tag..."
-  log_verbose "Git hash: $CHECKOUT_SHA!"
+  log_verbose "Git hash: ${CHECKOUT_SHA}!"
   if [ -n "${NPM_TOKEN-}" ]; then
 
     # Don't load this plugin if
     # - `--dry-run` used
     # - `package.json` is missing
     # - `package.json` is not changed on `Git` tracking
-    if ! $IS_DRY_RUN; then
+    if ! ${IS_DRY_RUN}; then
       if [ ! -f package.json ] || [ -z "$(git diff --name-only package.json 2>/dev/null)" ]; then
         log "Project does not have package.json or package.json not changed"
         return 1
@@ -90,7 +99,12 @@ release() {
       prepare
       git add package.json
 
-      if $IS_WORKSPACE; then
+      if ${IS_WORKSPACE}; then
+        if [ -z "${PKG_NAME}" ]; then
+          log_verbose "[npm-post] Workspace defined but no package name defined"
+          return 1
+        fi
+
         if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
           git commit --sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION}"
         elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUB_KEY-}" ]; then
@@ -108,20 +122,20 @@ release() {
         fi
       fi
 
-      if [ -n "$GIT_REMOTE_ORIGIN" ]; then
+      if [ -n "${GIT_REMOTE_ORIGIN}" ]; then
         git push
         CHECKOUT_SHA=$(git rev-parse HEAD)
-        log "Committed npm [$NEXT_RELEASE_TAG] tag"
+        log "Committed npm [${NEXT_RELEASE_TAG}] tag"
       else
-        log "Committing npm [$NEXT_RELEASE_TAG] tag failed"
+        log "Committing npm [${NEXT_RELEASE_TAG}] tag failed"
       fi
 
       cleanup
     else
-      log "Skipped committing npm [$NEXT_RELEASE_TAG] tag in DRY-RUN mode."
+      log "Skipped committing npm [${NEXT_RELEASE_TAG}] tag in DRY-RUN mode."
     fi
   else
-    echo "
+    printf "%b" "
 npm Token is not found
 Please export npm Token so this plugin can be used
 "

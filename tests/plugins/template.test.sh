@@ -5,28 +5,28 @@ ROOT_DIR="$(realpath ../../)"
 REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
-  cd "$REPO_FOLDER"
+  cd "${REPO_FOLDER}"
   git init --quiet --initial-branch=master
 
-  export GIT_DIR="$REPO_FOLDER/.git"
-  export GIT_CONFIG="$REPO_FOLDER/.gitconfig"
-  export GIT_WORK_TREE="$REPO_FOLDER"
+  export GIT_DIR="${REPO_FOLDER}/.git"
+  export GIT_CONFIG="${REPO_FOLDER}/.gitconfig"
+  export GIT_WORK_TREE="${REPO_FOLDER}"
 
   if [[ -n "${GIT_USERNAME-}" && -n "${GIT_EMAIL-}" ]]; then
-    export GIT_COMMITTER_NAME="$GIT_USERNAME"
-    export GIT_COMMITTER_EMAIL="$GIT_EMAIL"
-    export GIT_AUTHOR_NAME="$GIT_USERNAME"
-    export GIT_AUTHOR_EMAIL="$GIT_EMAIL"
+    export GIT_COMMITTER_NAME="${GIT_USERNAME}"
+    export GIT_COMMITTER_EMAIL="${GIT_EMAIL}"
+    export GIT_AUTHOR_NAME="${GIT_USERNAME}"
+    export GIT_AUTHOR_EMAIL="${GIT_EMAIL}"
 
-    git config user.email "$GIT_EMAIL"
-    git config user.name "$GIT_USERNAME"
+    git config user.email "${GIT_EMAIL}"
+    git config user.name "${GIT_USERNAME}"
   fi
 
   export GPG_NO_SIGN=1
 }
 
 teardown_suite() {
-  rm -rf "$GIT_WORK_TREE"
+  rm -rf "${GIT_WORK_TREE}"
   unset REPO_FOLDER
   unset GIT_DIR
   unset GIT_CONFIG
@@ -41,5 +41,5 @@ teardown_suite() {
 test_plugin_template() {
   git commit --quiet -m "fix: initial commit" --allow-empty --no-gpg-sign
 
-  bash "$ROOT_DIR/release.sh" --plugins=git,PLUGIN_TEMPLATE --quiet
+  bash "${ROOT_DIR}/release.sh" --plugins=git,PLUGIN_TEMPLATE --quiet
 }

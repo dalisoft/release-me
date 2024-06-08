@@ -5,7 +5,7 @@ ROOT_DIR="$(realpath ../../)"
 REPO_FOLDER=$(mktemp -d)
 
 setup_suite() {
-  cd "$REPO_FOLDER"
+  cd "${REPO_FOLDER}"
   git init --quiet --initial-branch=master
 
   echo '{
@@ -28,24 +28,24 @@ setup_suite() {
   "author": "",
   "license": "ISC"
 }
-' >>"$REPO_FOLDER/package.json"
+' >>"${REPO_FOLDER}/package.json"
 
-  export GIT_DIR="$REPO_FOLDER/.git"
-  export GIT_CONFIG="$REPO_FOLDER/.gitconfig"
-  export GIT_WORK_TREE="$REPO_FOLDER"
+  export GIT_DIR="${REPO_FOLDER}/.git"
+  export GIT_CONFIG="${REPO_FOLDER}/.gitconfig"
+  export GIT_WORK_TREE="${REPO_FOLDER}"
 
   if [[ -n "${GIT_USERNAME-}" && -n "${GIT_EMAIL-}" ]]; then
-    export GIT_COMMITTER_NAME="$GIT_USERNAME"
-    export GIT_COMMITTER_EMAIL="$GIT_EMAIL"
-    export GIT_AUTHOR_NAME="$GIT_USERNAME"
-    export GIT_AUTHOR_EMAIL="$GIT_EMAIL"
+    export GIT_COMMITTER_NAME="${GIT_USERNAME}"
+    export GIT_COMMITTER_EMAIL="${GIT_EMAIL}"
+    export GIT_AUTHOR_NAME="${GIT_USERNAME}"
+    export GIT_AUTHOR_EMAIL="${GIT_EMAIL}"
 
-    git config user.email "$GIT_EMAIL"
-    git config user.name "$GIT_USERNAME"
+    git config user.email "${GIT_EMAIL}"
+    git config user.name "${GIT_USERNAME}"
   fi
 
   _npm() {
-    # shellcheck disable=SC2317
+    # shellcheck disable=SC2317,SC2154
     if [[ "${FAKE_PARAMS[0]}" == "publish" && "${NPM_TOKEN-}" == "FAKE_TOKEN" ]]; then
       return 0
     else
@@ -57,7 +57,7 @@ setup_suite() {
 }
 
 teardown_suite() {
-  rm -rf "$GIT_WORK_TREE"
+  rm -rf "${GIT_WORK_TREE}"
   unset REPO_FOLDER
   unset GIT_DIR
   unset GIT_CONFIG
@@ -77,14 +77,14 @@ teardown_suite() {
 test_commit_initial_message() {
   git commit --quiet -m "fix(workspace1): initial commit" --allow-empty --no-gpg-sign
 
-  assert_status_code 1 "GPG_NO_SIGN=1 $ROOT_DIR/release.sh --plugins=npm,npm-post,git --preset=workspace --workspace"
+  assert_status_code 1 "GPG_NO_SIGN=1 ${ROOT_DIR}/release.sh --plugins=npm,npm-post,git --preset=workspace --workspace"
   assert_not_equals "workspace1-v0.0.1" "$(git tag -l | tail -1)"
 }
 test_commit_0_2_invalid_workspace() {
   git commit --quiet -m "fix(workspace3): initial commit" --allow-empty --no-gpg-sign
 
-  assert_matches "This release aims to being workspace release" "$(bash "$ROOT_DIR/release.sh" --plugins=npm,npm-post,git --preset=workspace --workspace --dry-run)"
+  assert_matches "This release aims to being workspace release" "$(bash "${ROOT_DIR}/release.sh" --plugins=npm,npm-post,git --preset=workspace --workspace --dry-run)"
 }
 test_commit_initial_message_2_no_change() {
-  assert_status_code 1 "GPG_NO_SIGN=1 $ROOT_DIR/release.sh --plugins=npm,npm-post,git --preset=workspace --workspace"
+  assert_status_code 1 "GPG_NO_SIGN=1 ${ROOT_DIR}/release.sh --plugins=npm,npm-post,git --preset=workspace --workspace"
 }
