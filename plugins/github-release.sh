@@ -18,9 +18,9 @@ release() {
       fi
 
       if ${PRE_RELEASE_VERSION-}; then
-        echo "${RELEASE_BODY-}" | gh release create "${NEXT_RELEASE_TAG-}" --title "${NEXT_RELEASE_TAG-}" --prerelease --notes-file -
+        printf "%b" "${RELEASE_BODY-}" | gh release create "${NEXT_RELEASE_TAG-}" --title "${NEXT_RELEASE_TAG-}" --prerelease --notes-file -
       else
-        echo "${RELEASE_BODY-}" | gh release create "${NEXT_RELEASE_TAG-}" --title "${NEXT_RELEASE_TAG-}" --latest --notes-file -
+        printf "%b" "${RELEASE_BODY-}" | gh release create "${NEXT_RELEASE_TAG-}" --title "${NEXT_RELEASE_TAG-}" --latest --notes-file -
       fi
     else
       log "Skipped GitHub release [${NEXT_RELEASE_TAG}] in DRY-RUN mode."
