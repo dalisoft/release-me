@@ -19,7 +19,7 @@ const sidebars = {
     {
       label: 'Roadmap',
       type: 'link',
-      href: '/roadmap'
+      href: '/ROADMAP'
     }
   ]
 

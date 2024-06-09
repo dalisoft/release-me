@@ -132,7 +132,7 @@ const config = {
             label: 'Documentation'
           },
           { to: '/blog', label: 'Blog', position: 'left' },
-          { to: '/roadmap', label: 'Roadmap', position: 'left' },
+          { to: '/ROADMAP', label: 'Roadmap', position: 'left' },
           {
             href: pkg.repository.url.split('+')[1],
             label: 'GitHub',
@@ -152,7 +152,7 @@ const config = {
               },
               {
                 label: 'Roadmap',
-                to: '/roadmap'
+                to: '/ROADMAP'
               }
             ]
           },

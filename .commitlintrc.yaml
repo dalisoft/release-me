@@ -29,6 +29,7 @@ rules:
       - ci
       - prettiers
       - configurations
+      - website
   scope-empty:
     level: error
   subject-empty:
