@@ -18,5 +18,5 @@ teardown_suite() {
 #####################################
 
 test_nogit_1() {
-  assert_matches "Current directory is not a Git repository!" "$(bash "${ROOT_DIR}/release.sh" --plugins=PLUGIN_TEMPLATE)"
+  assert_matches "Current directory is not a Git repository!" "$(bash "${ROOT_DIR}/release.sh" --plugins=plugin-template)"
 }

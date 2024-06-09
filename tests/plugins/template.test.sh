@@ -41,5 +41,5 @@ teardown_suite() {
 test_plugin_template() {
   git commit --quiet -m "fix: initial commit" --allow-empty --no-gpg-sign
 
-  bash "${ROOT_DIR}/release.sh" --plugins=git,PLUGIN_TEMPLATE --quiet
+  bash "${ROOT_DIR}/release.sh" --plugins=git,plugin-template --quiet
 }
