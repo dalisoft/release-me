@@ -19,6 +19,8 @@ jobs:
       - uses: oven-sh/setup-bun@v1
 
       - name: Install dependencies
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: bun install
       - name: Build website
         run: bun run docs:build
