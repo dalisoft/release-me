@@ -1,0 +1,49 @@
+rules:
+  body-empty:
+    level: warning
+  body-max-length:
+    level: error
+    length: 128
+  description-empty:
+    level: error
+  # description-format:
+  #  level: error
+  #  format: ^[a-z]*$
+  description-max-length:
+    level: error
+    length: 64
+  scope:
+    level: error
+    options:
+      - core
+      - presets/conventional-commits
+      - presets/workspace
+      - plugins/changelog
+      - plugins/git
+      - plugins/github-release
+      - plugins/npm
+      - plugins/npm-post
+      - plugin/docker
+      - plugin/template
+      - tests
+      - ci
+      - prettiers
+      - configurations
+  scope-empty:
+    level: error
+  subject-empty:
+    level: error
+  type:
+    level: error
+    options:
+      - build
+      - chore
+      - docs
+      - feat
+      - fix
+      - perf
+      - refactor
+      - revert
+      - style
+  type-empty:
+    level: error

@@ -46,20 +46,27 @@
     "@docusaurus/module-type-aliases": "^3.4.0",
     "@docusaurus/preset-classic": "3.4.0",
     "@docusaurus/types": "^3.4.0",
-    "dprint": "^0.46.1",
+    "@evilmartians/lefthook": "^1.6.15",
+    "@ls-lint/ls-lint": "^2.2.3",
+    "@swc/core": "^1.5.25",
+    "commitlint-rs-npm": "dalisoft/commitlint-rs-npm",
+    "dprint": "^0.46.2",
     "prism-react-renderer": "^2.3.1",
     "prismjs": "^1.29.0",
-    "@swc/core": "^1.5.25",
-    "swc-loader": "^0.2.6"
+    "swc-loader": "^0.2.6",
+    "typos-rs-npm": "dalisoft/typos-rs-npm#v1.22.3"
   },
   "engines": {
     "node": ">=18.19.1"
   },
   "trustedDependencies": [
     "@biomejs/biome",
+    "@evilmartians/lefthook",
     "@swc/core",
+    "commitlint-rs-npm",
     "core-js",
     "core-js-pure",
-    "dprint"
+    "dprint",
+    "typos-rs-npm"
   ]
 }

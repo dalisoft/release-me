@@ -33,7 +33,7 @@ sidebar_position: 5
 
 ## GH Actions Configurations
 
-See this project [workflow](../.github/workflows/lint_test_coverage.yml) or see below
+See this project [workflow](../.github/workflows/lint_test.yml) or see below
 
 > On **homepage** below content may show not properly, so, please check **workflow** file linked above
 
