@@ -30,6 +30,8 @@ rules:
       - prettiers
       - configurations
       - website
+      - deps
+      - deps-dev
   scope-empty:
     level: error
   subject-empty:
