@@ -2,5 +2,5 @@
 set -eu
 
 release() {
-  printf "%s" "Template for plug-in"
+  echo "Template for plug-in"
 }

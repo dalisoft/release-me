@@ -2,20 +2,15 @@
 set -eu
 
 release() {
-  if [ -z "${IS_DRY_RUN}" ] || [ -z "${NEXT_RELEASE_TAG}" ] || [ -z "${NEXT_RELEASE_VERSION}" ] || [ -z "${NEXT_BUILD_VERSION}" ]; then
-    log_verbose "[npm] Plugin requires a valid release-me pre-processing"
-    return 1
-  fi
-
   # Publish a `npm` tag
   if [ -n "${NPM_TOKEN-}" ]; then
     log "Publishing npm tag..."
-    log_verbose "npm tag: ${NEXT_RELEASE_TAG} and version: ${NEXT_RELEASE_VERSION}!"
+    log_verbose "npm tag: ${NEXT_RELEASE_TAG-} and version: ${NEXT_RELEASE_VERSION-}!"
 
     # Don't load this plugin if
     # - `--dry-run` used
     # - `package.json` is missing
-    if ! ${IS_DRY_RUN}; then
+    if ! ${IS_DRY_RUN-}; then
       if [ ! -f package.json ]; then
         log "Project does not have package.json"
         return 1
@@ -25,7 +20,7 @@ release() {
       printf "%s\n" "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >>"${TEMP_FILE}"
 
       # Bump `package.json` `version` for properly publishing
-      sed -i.bak "s/\"version\": \"[^\"]*\",/\"version\": \"${NEXT_BUILD_VERSION}\",/" "package.json"
+      sed -i.bak "s/\"version\": \"[^\"]*\",/\"version\": \"${NEXT_BUILD_VERSION-}\",/" "package.json"
       rm -rf package.json.bak
 
       export NODE_AUTH_TOKEN="${NPM_TOKEN}"
@@ -37,7 +32,7 @@ release() {
       log "Skipped npm tag [${NEXT_RELEASE_TAG}] in DRY-RUN mode."
     fi
   else
-    printf "%b" "
+    echo "
 npm Token is not found
 Please export npm Token so this plugin can be used
 "

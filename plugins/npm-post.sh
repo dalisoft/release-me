@@ -73,10 +73,6 @@ cleanup() {
 }
 
 release() {
-  if [ -z "${IS_DRY_RUN}" ] || [ -z "${NEXT_RELEASE_TAG}" ] || [ -z "${NEXT_RELEASE_VERSION}" ] || [ -z "${NEXT_BUILD_VERSION}" ] || [ -z "${CHECKOUT_SHA}" ]; then
-    log_verbose "[npm-post] Plugin requires a valid release-me pre-processing"
-    return 1
-  fi
   if [ -z "${IS_WORKSPACE}" ]; then
     log_verbose "[npm-post] Plugin requires a valid release-me release processing"
     return 1
@@ -91,7 +87,7 @@ release() {
     # - `--dry-run` used
     # - `package.json` is missing
     # - `package.json` is not changed on `Git` tracking
-    if ! ${IS_DRY_RUN}; then
+    if ! ${IS_DRY_RUN-}; then
       if [ ! -f package.json ] || [ -z "$(git diff --name-only package.json 2>/dev/null)" ]; then
         log "Project does not have package.json or package.json not changed"
         return 1
@@ -106,7 +102,7 @@ release() {
         fi
 
         if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
-          git commit --sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION}"
+          git commit --sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION-}"
         elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUB_KEY-}" ]; then
           git commit --sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION}"
         else
@@ -125,7 +121,7 @@ release() {
       if [ -n "${GIT_REMOTE_ORIGIN}" ]; then
         git push
         CHECKOUT_SHA=$(git rev-parse HEAD)
-        log "Committed npm [${NEXT_RELEASE_TAG}] tag"
+        log "Committed npm [${NEXT_RELEASE_TAG-}] tag"
       else
         log "Committing npm [${NEXT_RELEASE_TAG}] tag failed"
       fi
@@ -135,7 +131,7 @@ release() {
       log "Skipped committing npm [${NEXT_RELEASE_TAG}] tag in DRY-RUN mode."
     fi
   else
-    printf "%b" "
+    echo "
 npm Token is not found
 Please export npm Token so this plugin can be used
 "

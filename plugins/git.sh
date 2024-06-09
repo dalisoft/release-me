@@ -73,20 +73,15 @@ cleanup() {
 }
 
 release() {
-  if [ -z "${IS_DRY_RUN}" ] || [ -z "${NEXT_RELEASE_TAG}" ] || [ -z "${NEXT_RELEASE_VERSION}" ] || [ -z "${NEXT_BUILD_VERSION}" ] || [ -z "${CHECKOUT_SHA}" ]; then
-    log_verbose "[git] Plugin requires a valid release-me pre-processing"
-    return 1
-  fi
-
   # Create a `git` tag
   log "Creating Git tag..."
-  log_verbose "Git hash: ${CHECKOUT_SHA}!"
+  log_verbose "Git hash: ${CHECKOUT_SHA-}!"
 
-  if ! ${IS_DRY_RUN}; then
+  if ! ${IS_DRY_RUN-}; then
     prepare
 
     if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
-      git tag --sign "${NEXT_RELEASE_TAG}" "${CHECKOUT_SHA}" --message "Release, tag and sign ${NEXT_RELEASE_TAG}"
+      git tag --sign "${NEXT_RELEASE_TAG-}" "${CHECKOUT_SHA}" --message "Release, tag and sign ${NEXT_RELEASE_TAG}"
       log "Created GPG signed Git tag [${NEXT_RELEASE_TAG}]!"
     elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUB_KEY-}" ]; then
       git tag --sign "${NEXT_RELEASE_TAG}" "${CHECKOUT_SHA}" --message "Release, tag and sign ${NEXT_RELEASE_TAG}"

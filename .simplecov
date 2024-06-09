@@ -11,6 +11,7 @@ SimpleCov.start do
 
   minimum_coverage 15
   add_filter "tests/"
+  add_filter "spec/"
   add_filter "/.git/"
   add_filter "/node_modules/"
   add_filter "bash_unit"
