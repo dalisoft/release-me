@@ -73,11 +73,6 @@ cleanup() {
 }
 
 release() {
-  if [ -z "${IS_WORKSPACE}" ]; then
-    log_verbose "[npm-post] Plugin requires a valid release-me release processing"
-    return 1
-  fi
-
   # Committing a `npm` tag
   log "Committing npm tag..."
   log_verbose "Git hash: ${CHECKOUT_SHA}!"
@@ -95,7 +90,7 @@ release() {
       prepare
       git add package.json
 
-      if ${IS_WORKSPACE}; then
+      if ${IS_WORKSPACE-}; then
         if [ -z "${PKG_NAME}" ]; then
           log_verbose "[npm-post] Workspace defined but no package name defined"
           return 1
