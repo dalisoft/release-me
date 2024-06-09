@@ -44,6 +44,10 @@ teardown_suite() {
 test_ssh_sign_2_1_passwordless() {
   unset SSH_PUB_KEY
 
+  # Fix permissions
+  chmod 600 "${CURRENT_DIR}/sign"
+  chmod 600 "${CURRENT_DIR}/sign.pub"
+
   ssh-add "${CURRENT_DIR}/sign"
   export SSH_PUB_KEY="${CURRENT_DIR}/sign.pub"
 
