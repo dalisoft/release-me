@@ -2,7 +2,7 @@ rules:
   body-empty:
     level: warning
   body-max-length:
-    level: error
+    level: warning
     length: 128
   description-empty:
     level: error

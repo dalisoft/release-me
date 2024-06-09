@@ -1,6 +1,6 @@
 ls:
   .sh: lowercase
-  .md: regex:[A-Z0-9]+
+  .md: regex:[A-Z0-9-_]+
 
 ignore:
   - "node_modules"
