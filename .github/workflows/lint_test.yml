@@ -1,7 +1,9 @@
-name: Lint and Test with Coverage
+name: Lint and Test
 
 on:
-  pull_request_target:
+  push:
+    branches: [master]
+  pull_request:
     branches: [master]
   workflow_dispatch:
 
@@ -56,31 +58,3 @@ jobs:
           wget https://raw.githubusercontent.com/pgrange/bash_unit/master/bash_unit --continue
           chmod 755 ./bash_unit
           FORCE_COLOR=true ./bash_unit tests/**/*.test.sh
-  coverage:
-    runs-on: ubuntu-22.04
-    needs: test
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.3" # Not needed with a .ruby-version file
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-
-      - name: Coverage
-        shell: bash
-        env:
-          GIT_USERNAME: ${{ vars.GIT_FAKE_USERNAME }}
-          GIT_EMAIL: ${{ vars.GIT_FAKE_EMAIL }}
-          GPG_KEY_ID: ${{ vars.GPG_FAKE_KEY_ID }}
-          GPG_KEY: ${{ vars.GPG_FAKE_KEY }}
-          GPG_KEY_ID_UNSAFE: ${{ vars.GPG_FAKE_KEY_ID_UNSAFE }}
-          GPG_KEY_UNSAFE: ${{ vars.GPG_FAKE_KEY_UNSAFE }}
-          GPG_PASSPHRASE: ${{ vars.GPG_FAKE_PASSPHRASE }}
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DOCKER_HUB_USERNAME: "ACTUAL_DOCKER_USERNAME"
-          DOCKER_HUB_PAT: "ACTUAL_DOCKER_PASSWORD"
-        run: |
-          wget https://raw.githubusercontent.com/pgrange/bash_unit/master/bash_unit --continue
-          chmod 755 ./bash_unit
-          bundle exec bashcov ./bash_unit tests/**/*.test.sh
