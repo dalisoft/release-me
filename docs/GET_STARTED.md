@@ -71,10 +71,31 @@ If one of files described below will be found, script parse first matched file a
 
 ## Credits to
 
+> for making project safer with testing, coverage and linting entire project
+
 - [Bash](https://www.gnu.org/software/bash)
 - [ShellCheck](https://github.com/koalaman/shellcheck)
 - [Bashcov](https://github.com/infertux/bashcov)
 - [bash_unit](https://github.com/pgrange/bash_unit)
+
+as well as
+
+> for keeping project safe, catching early bugs and more useful tasks on local development
+
+- [typos](https://github.com/crate-ci/typos)
+- [lefthook](https://github.com/evilmartians/lefthook)
+- [biome](https://github.com/biomejs/biome)
+- [dprint](https://github.com/dprint/dprint)
+- [commitlint-rs](https://github.com/KeisukeYamashita/commitlint-rs)
+- [ls-lint](https://github.com/loeffel-io/ls-lint)
+
+also to
+
+> for amazing documentation tool
+
+- [docusaurus](https://github.com/facebook/docusaurus)
+
+and more
 
 ## License
 
