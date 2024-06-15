@@ -13,3 +13,12 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
+  - package-ecosystem: npm
+    open-pull-requests-limit: 10
+    directory: /
+    commit-message:
+      prefix: build
+      prefix-development: chore
+      include: scope
+    schedule:
+      interval: daily
