@@ -30,13 +30,14 @@ bash .release-me/release.sh --plugins=git,github-release --preset=conventional-c
 
 ## Options
 
-| Name          | Description                                                | Default                | Required |
-| ------------- | ---------------------------------------------------------- | ---------------------- | -------- |
-| `dry-run`     | Show only actions on logs                                  | `false`                | No       |
-| `verbose`     | Verbose logs                                               | `true` on CI           | No       |
-| `quiet`       | Quiet logs                                                 | `false`                | No       |
-| `workspace`   | Releases every projects on workspace                       | `false`                | No       |
-| `stable`      | If project current version is `0.x`, it will bump to `1.x` | `false`                | No       |
-| `pre-release` | Publish this project as non-production ready               | `false`                | No       |
-| `preset`      | Presets compatibility, see [Presets](./PRESETS.md)         | `conventional-commits` | No       |
-| `plugins`     | Plugins compatibility, see [Plugins](./PLUGINS.md)         | `git`                  | No       |
+| Name          | Description                                                                | Default                | Required |
+| ------------- | -------------------------------------------------------------------------- | ---------------------- | -------- |
+| `dry-run`     | Show only actions on logs                                                  | `false`                | No       |
+| `verbose`     | Verbose logs                                                               | `true` on CI           | No       |
+| `quiet`       | Quiet logs                                                                 | `false`                | No       |
+| `workspace`   | Releases every projects on workspace                                       | `false`                | No       |
+| `use-version` | Use project version from manifest. Requires workspace and a valid manifest | `false`                | No       |
+| `stable`      | If project current version is `0.x`, it will bump to `1.x`                 | `false`                | No       |
+| `pre-release` | Publish this project as non-production ready                               | `false`                | No       |
+| `preset`      | Presets compatibility, see [Presets](./PRESETS.md)                         | `conventional-commits` | No       |
+| `plugins`     | Plugins compatibility, see [Plugins](./PLUGINS.md)                         | `git`                  | No       |

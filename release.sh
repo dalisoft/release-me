@@ -10,6 +10,7 @@ ${DESCRIPTION}
 Options:
   -d, --dry-run   Dry run. Skip tag creation, only show logs (if exists).
   -w, --workspace Use in workspace environment for publishing workspaces separately.
+  --use-version   Use project version from manifest. Requires workspace and a valid manifest.
   --verbose       Verbose mode, shows more detailed logs.
   --quiet         Quiet mode, shows less logs than default behavior.
   --plugins=*     Plugins option for loading plugins.
@@ -41,6 +42,7 @@ elif [[ "${GIT_REMOTE_ORIGIN}" == "https"* ]]; then
 fi
 
 IS_WORKSPACE=false
+IS_USE_PKG_VERSION=false
 IS_DRY_RUN=false
 IS_QUIET=false
 IS_VERBOSE=false
@@ -104,6 +106,9 @@ parse_options() {
       # shellcheck disable=2034
       PRE_RELEASE_VERSION=true
       IS_STABLE_VERSION=false
+      ;;
+    --use-version)
+      IS_USE_PKG_VERSION=true
       ;;
     -d | --dry-run)
       # shellcheck disable=2034
@@ -207,13 +212,19 @@ parse_packages() {
 
   if [[ -f "./package.json" ]]; then
     PKG_NAME=$(awk -F': ' '/"name":/ {gsub(/[",]/, "", $2); print $2}' "./package.json")
-    # PKG_VERSION=$(awk -F': ' '/"version":/ {gsub(/[",]/, "", $2); print $2}' "./package.json")
+    if ${IS_USE_PKG_VERSION}; then
+      PKG_VERSION=$(awk -F': ' '/"version":/ {gsub(/[",]/, "", $2); print $2}' "./package.json")
+    fi
   elif [[ -f "./Cargo.toml" ]]; then
     PKG_NAME=$(sed -n 's/^name = "\(.*\)"/\1/p' "./Cargo.toml")
-    # PKG_VERSION=$(sed -n 's/^version = "\(.*\)"/\1/p' "./Cargo.toml")
+    if ${IS_USE_PKG_VERSION}; then
+      PKG_VERSION=$(sed -n 's/^version = "\(.*\)"/\1/p' "./Cargo.toml")
+    fi
   elif [[ -f "./setup.py" ]]; then
     PKG_NAME=$(sed -n "s/.*name=['\"]\([^'\"]*\)['\"].*/\1/p" "./setup.py")
-    # PKG_VERSION=$(cat "./setup.py" | sed -n 's/^ *version\s*=\s*["'\'']\([^"'\'']*\)["'\''].*/\1/p')
+    if ${IS_USE_PKG_VERSION}; then
+      PKG_VERSION=$(cat "./setup.py" | sed -n 's/^ *version\s*=\s*["'\'']\([^"'\'']*\)["'\''].*/\1/p')
+    fi
   else
     cat <<EOF
 This project currently supports only Node.js, Rust and Python projects.
@@ -230,9 +241,11 @@ EOF
     exit 1
   fi
 
-  # local IFS='.'
-  # read -ra NEXT_VERSION <<<"${PKG_VERSION}"
-  # CURRENT_VERSION=("${NEXT_VERSION[@]}")
+  if ${IS_USE_PKG_VERSION}; then
+    local IFS='.'
+    read -ra NEXT_VERSION <<<"${PKG_VERSION}"
+    CURRENT_VERSION=("${NEXT_VERSION[@]}")
+  fi
 
   log_verbose "Workspace mode is enabled"
   log_verbose "Workspace project name: ${PKG_NAME}"
@@ -259,8 +272,10 @@ get_git_variables() {
   fi
 
   if [[ -n "${GIT_LAST_PROJECT_TAG_VER}" ]]; then
-    mapfile -d '.' -t NEXT_VERSION < <(printf '%s' "${GIT_LAST_PROJECT_TAG_VER}")
-    CURRENT_VERSION=("${NEXT_VERSION[@]}")
+    if ! ${IS_USE_PKG_VERSION}; then
+      mapfile -d '.' -t NEXT_VERSION < <(printf '%s' "${GIT_LAST_PROJECT_TAG_VER}")
+      CURRENT_VERSION=("${NEXT_VERSION[@]}")
+    fi
 
     if [[ "${IS_STABLE_VERSION}" == false && ${PRE_RELEASE_VERSION} == false && "${NEXT_VERSION[0]}" -gt 0 ]]; then
       IS_STABLE_VERSION=true
