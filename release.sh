@@ -223,7 +223,7 @@ parse_packages() {
   elif [[ -f "./setup.py" ]]; then
     PKG_NAME=$(sed -n "s/.*name=['\"]\([^'\"]*\)['\"].*/\1/p" "./setup.py")
     if ${IS_USE_PKG_VERSION}; then
-      PKG_VERSION=$(cat "./setup.py" | sed -n 's/^ *version\s*=\s*["'\'']\([^"'\'']*\)["'\''].*/\1/p')
+      PKG_VERSION=$(sed -n 's/^ *version\s*=\s*["'\'']\([^"'\'']*\)["'\''].*/\1/p' "./setup.py")
     fi
   else
     cat <<EOF
