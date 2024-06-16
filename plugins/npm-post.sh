@@ -97,24 +97,24 @@ release() {
         fi
 
         if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
-          git commit --sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION-}"
+          git commit --sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION-}" --no-verify
         elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUB_KEY-}" ]; then
-          git commit --sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION}"
+          git commit --sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION}" --no-verify
         else
-          git commit --no-gpg-sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION}"
+          git commit --no-gpg-sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION}" --no-verify
         fi
       else
         if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
-          git commit --sign -m "chore: update \`package.json\` version to ${NEXT_RELEASE_VERSION}"
+          git commit --sign -m "chore: update \`package.json\` version to ${NEXT_RELEASE_VERSION}" --no-verify
         elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUB_KEY-}" ]; then
-          git commit --sign -m "chore: update \`package.json\` version to ${NEXT_RELEASE_VERSION}"
+          git commit --sign -m "chore: update \`package.json\` version to ${NEXT_RELEASE_VERSION}" --no-verify
         else
-          git commit --no-gpg-sign -m "chore: update \`package.json\` version to ${NEXT_RELEASE_VERSION}"
+          git commit --no-gpg-sign -m "chore: update \`package.json\` version to ${NEXT_RELEASE_VERSION}" --no-verify
         fi
       fi
 
       if [ -n "${GIT_REMOTE_ORIGIN}" ]; then
-        git push
+        git push --no-verify
         CHECKOUT_SHA=$(git rev-parse HEAD)
         log "Committed npm [${NEXT_RELEASE_TAG-}] tag"
       else
