@@ -92,7 +92,7 @@ release() {
     fi
 
     if [ -n "${GIT_REMOTE_ORIGIN}" ]; then
-      git push origin "refs/tags/${NEXT_RELEASE_TAG}"
+      git push origin "refs/tags/${NEXT_RELEASE_TAG}" --no-verify
       log_verbose "Pushed Git tag to remote"
     else
       log_verbose "No Git remote to push tag"
