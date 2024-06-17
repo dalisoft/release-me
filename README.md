@@ -38,4 +38,4 @@ See [here](https://dalisoft.github.io/release-me)
 
 ## License
 
-GPL-3
+Apache-2.0

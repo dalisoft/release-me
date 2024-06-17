@@ -25,6 +25,7 @@ Before you start using release-me, make sure you have the following installed on
 - [Fast](./BENCHMARK.md) (<5 sec with all plugins execution)
 - [Plugins](./PLUGINS.md) available/compatible
 - [Presets](./PRESETS.md) available/compatible
+- Free and permissive license
 
 ## Limitations
 
@@ -99,4 +100,4 @@ and more
 
 ## License
 
-GPL-3
+Apache-2.0
