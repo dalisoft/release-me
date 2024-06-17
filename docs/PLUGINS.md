@@ -11,4 +11,4 @@ sidebar_position: 7
 | `npm`            | Updates version field and Publishes **npm** tag  | No       |
 | `npm-post`       | Commits updated `package.json` version field     | No       |
 | `changelog`      | Generates `CHANGELOG` within your project        | No       |
-| `docker`         | Publishes `docker` image to **Docker Hub**       | No       |
+| `docker` \[WIP\] | Publishes `docker` image to **Docker Hub**       | No       |

@@ -20,11 +20,11 @@ Before you start using release-me, make sure you have the following installed on
 - Zero third-party dependencies
 - No pre-install, just use
 - Blazing fast, no wait
-- Workspace support out-of-box
+- [Workspace](./features/WORKSPACE.md) support out-of-box
 - Programming language agnostic
-- Fast (<5 sec with all plugins execution)
-- Plugins available/compatible
-- Presets available/compatible
+- [Fast](./BENCHMARK.md) (<5 sec with all plugins execution)
+- [Plugins](./PLUGINS.md) available/compatible
+- [Presets](./PRESETS.md) available/compatible
 
 ## Limitations
 
