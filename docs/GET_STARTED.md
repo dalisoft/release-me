@@ -6,6 +6,19 @@ sidebar_position: 1
 
 Welcome to release-me! This tool is designed to streamline your software release process, making it easier to manage versions, changelogs, and deployment. Whether you're working on a small project or a large enterprise application, release-me is here to simplify your workflow.
 
+## Quick Start
+
+:::info
+
+You do not need compile, install dependencies or other actions
+
+:::
+
+It is easy to get-started in two steps if we do basic steps:
+
+1. Clone repo with within folder into your project, see [Installation](./INSTALLATION.md) for other methods
+2. Run `.release-me/release.sh` to run with default options, see [Usage](./USAGE.md) for more info about options
+
 ## Prerequisites
 
 Before you start using release-me, make sure you have the following installed on your system:
