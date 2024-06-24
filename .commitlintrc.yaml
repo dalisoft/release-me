@@ -23,8 +23,8 @@ rules:
       - plugins/github-release
       - plugins/npm
       - plugins/npm-post
-      - plugin/docker
-      - plugin/template
+      - plugins/docker
+      - plugins/template
       - tests
       - ci
       - prettiers

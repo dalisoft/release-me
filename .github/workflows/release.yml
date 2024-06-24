@@ -30,6 +30,7 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
+        id: docker-buildx
         uses: docker/setup-buildx-action@v3
         with:
           platforms: linux/amd64,linux/arm64
@@ -49,6 +50,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           DOCKER_HUB_USERNAME: ${{ vars.DOCKER_HUB_USERNAME }}
           DOCKER_HUB_PAT: ${{ secrets.DOCKER_HUB_PAT }}
+          DOCKER_BUILDX_NAME: ${{ steps.docker-buildx.outputs.name }}
         shell: bash
         run: |
           bash ./release.sh --plugins=npm,npm-post,git,github-release --pre-release
