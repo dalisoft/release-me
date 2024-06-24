@@ -86,9 +86,9 @@ cleanup() {
     fi
 
     log_verbose "Git GPG config cleanup"
-  elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUB_KEY-}" ]; then
+  elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUBLIC_KEY-}" ]; then
     git config --local --unset commit.gpgsign true
-    git config --local --unset user.signingkey "${SSH_PUB_KEY}"
+    git config --local --unset user.signingkey "${SSH_PUBLIC_KEY}"
     git config --local --unset tag.forceSignAnnotated true
     git config --local --unset gpg.format ssh
 
@@ -125,7 +125,7 @@ release() {
 
         if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
           git commit --sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION-}" --no-verify
-        elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUB_KEY-}" ]; then
+        elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUBLIC_KEY-}" ]; then
           git commit --sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION}" --no-verify
         else
           git commit --no-gpg-sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION}" --no-verify
@@ -133,7 +133,7 @@ release() {
       else
         if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
           git commit --sign -m "chore(ci): update \`package.json\` version to ${NEXT_RELEASE_VERSION}" --no-verify
-        elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUB_KEY-}" ]; then
+        elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUBLIC_KEY-}" ]; then
           git commit --sign -m "chore(ci): update \`package.json\` version to ${NEXT_RELEASE_VERSION}" --no-verify
         else
           git commit --no-gpg-sign -m "chore(ci): update \`package.json\` version to ${NEXT_RELEASE_VERSION}" --no-verify
