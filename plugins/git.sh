@@ -28,12 +28,37 @@ prepare() {
       printf "%s" "${GPG_PASSPHRASE}" | gpg --quiet --batch --yes --pinentry-mode loopback --sign --local-user "${GPG_KEY_ID-}" --passphrase-fd 0 >/dev/null
       log_verbose "Git GPG passphrase set"
     fi
-  elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUB_KEY-}" ]; then
+  elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PRIVATE_KEY-}" ] && [ -n "${SSH_PUBLIC_KEY-}" ]; then
+    SSH_PUBLIC_KEY_FILE=$(mtemp)
+    print "%s" "${SSH_PUBLIC_KEY}" >>"${SSH_PUBLIC_KEY_FILE}"
+
     git config --local commit.gpgsign true
-    git config --local user.signingkey "${SSH_PUB_KEY}"
+    git config --local user.signingkey "${SSH_PUBLIC_KEY_FILE}"
     git config --local tag.forceSignAnnotated true
     git config --local gpg.format ssh
-    log_verbose "Git SSH sign is set"
+    log_verbose "Git SSH sign key is set"
+
+    if [ -n "${SSH_KEY_PASSPHRASE-}" ]; then
+      SSH_ASKPASS_FILE=$(mktemp)
+      chmod 0755 "${SSH_ASKPASS_FILE}"
+      print "%s" "echo -n \"${SSH_KEY_PASSPHRASE}\"" >>"${SSH_ASKPASS_FILE}"
+
+      export SSH_ASKPASS="${SSH_ASKPASS_FILE}"
+      export SSH_ASKPASS_REQUIRE="force"
+      log_verbose "Git SSH passphrase set"
+    fi
+
+    if ! ssh-add -L | grep -q "${SSH_PUBLIC_KEY-}"; then
+      printf "%s" "${SSH_PRIVATE_KEY}" | base64 --decode | ssh-add -
+      log_verbose "Git SSH key import loaded"
+    else
+      log_verbose "Git SSH key import skipped"
+    fi
+
+    rm -rf "${SSH_ASKPASS}"
+    unset SSH_ASKPASS
+    unset SSH_ASKPASS_REQUIRE
+    log_verbose "Git SSH key security cleanup"
   fi
 }
 
@@ -66,6 +91,8 @@ cleanup() {
     git config --local --unset user.signingkey "${SSH_PUB_KEY}"
     git config --local --unset tag.forceSignAnnotated true
     git config --local --unset gpg.format ssh
+
+    ssh-add -L | grep -F "${SSH_PUBLIC_KEY-}" | ssh-add -d -
     log_verbose "Git SSH sign is unset"
   fi
 
