@@ -3,7 +3,7 @@ sidebar_position: 2
 title: SSH Sign
 ---
 
-# SSH Sign \[EXPERIMENTAL\]
+# SSH Sign
 
 This project allows you use SSH Sign for your Git tags without headaches and with keeping same performance
 

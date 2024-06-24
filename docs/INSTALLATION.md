@@ -33,7 +33,7 @@ git add -A .release-me
 git commit -m "chore: integration of release-me to my project"
 ```
 
-## Docker \[WIP\]
+## Docker
 
 ```bash title="Bash (Terminal)"
 docker run --rm --volume $(pwd):/repository dalisoft/release-me:latest
