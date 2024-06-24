@@ -29,6 +29,8 @@ prepare() {
       log_verbose "Git GPG passphrase set"
     fi
   elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PRIVATE_KEY-}" ] && [ -n "${SSH_PUBLIC_KEY-}" ]; then
+    eval "$(ssh-agent -s)"
+
     SSH_PUBLIC_KEY_FILE=$(mktemp)
     printf "%s" "${SSH_PUBLIC_KEY}" >>"${SSH_PUBLIC_KEY_FILE}"
 
