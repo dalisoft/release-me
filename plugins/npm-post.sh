@@ -55,10 +55,12 @@ prepare() {
       log_verbose "Git SSH key import skipped"
     fi
 
-    rm -rf "${SSH_ASKPASS}"
-    unset SSH_ASKPASS
-    unset SSH_ASKPASS_REQUIRE
-    log_verbose "Git SSH key security cleanup"
+    if [ -n "${SSH_KEY_PASSPHRASE-}" ]; then
+      rm -rf "${SSH_ASKPASS}"
+      unset SSH_ASKPASS
+      unset SSH_ASKPASS_REQUIRE
+      log_verbose "Git SSH key security cleanup"
+    fi
   fi
 }
 
