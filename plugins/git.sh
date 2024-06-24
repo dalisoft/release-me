@@ -89,7 +89,7 @@ cleanup() {
     log_verbose "Git GPG config cleanup"
   elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PRIVATE_KEY-}" ] && [ -n "${SSH_PUBLIC_KEY-}" ]; then
     git config --local --unset commit.gpgsign true
-    git config --local --unset user.signingkey "${SSH_PUBLIC_KEY}"
+    git config --local --unset user.signingkey "${SSH_PUBLIC_KEY_FILE}"
     git config --local --unset tag.forceSignAnnotated true
     git config --local --unset gpg.format ssh
 
