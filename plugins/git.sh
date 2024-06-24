@@ -33,6 +33,7 @@ prepare() {
 
     SSH_PUBLIC_KEY_FILE=$(mktemp)
     printf "%s" "${SSH_PUBLIC_KEY}" >>"${SSH_PUBLIC_KEY_FILE}"
+    export SSH_PUBLIC_KEY_FILE
 
     if [ -n "${SSH_KEY_PASSPHRASE-}" ]; then
       SSH_ASKPASS_FILE=$(mktemp)
@@ -86,13 +87,19 @@ cleanup() {
     fi
 
     log_verbose "Git GPG config cleanup"
-  elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUBLIC_KEY-}" ]; then
+  elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PRIVATE_KEY-}" ] && [ -n "${SSH_PUBLIC_KEY-}" ]; then
     git config --local --unset commit.gpgsign true
     git config --local --unset user.signingkey "${SSH_PUBLIC_KEY}"
     git config --local --unset tag.forceSignAnnotated true
     git config --local --unset gpg.format ssh
 
-    ssh-add -L | grep -F "${SSH_PUBLIC_KEY-}" | ssh-add -d -
+    ssh-add -L | grep -F "${SSH_PRIVATE_KEY-}" | ssh-add -d -
+    rm -rf "${SSH_PUBLIC_KEY_FILE}"
+
+    unset SSH_PUBLIC_KEY_FILE
+    unset SSH_PRIVATE_KEY
+    unset SSH_PUBLIC_KEY
+
     log_verbose "Git SSH sign is unset"
   fi
 
