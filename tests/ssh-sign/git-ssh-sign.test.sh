@@ -50,7 +50,7 @@ test_ssh_sign_2_1_passwordless() {
   chmod 600 "${CURRENT_DIR}/sign"
   chmod 600 "${CURRENT_DIR}/sign.pub"
 
-  SSH_PRIVATE_KEY=$(cat "${CURRENT_DIR}/sign" | base64)
+  SSH_PRIVATE_KEY=$(base64 -i "${CURRENT_DIR}/sign" -o -)
   SSH_PUBLIC_KEY=$(cat "${CURRENT_DIR}/sign.pub")
 
   export SSH_PRIVATE_KEY
