@@ -29,7 +29,7 @@ prepare() {
       log_verbose "Git GPG passphrase set"
     fi
   elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PRIVATE_KEY-}" ] && [ -n "${SSH_PUBLIC_KEY-}" ]; then
-    SSH_PUBLIC_KEY_FILE=$(mtemp)
+    SSH_PUBLIC_KEY_FILE=$(mktemp)
     print "%s" "${SSH_PUBLIC_KEY}" >>"${SSH_PUBLIC_KEY_FILE}"
 
     git config --local commit.gpgsign true
