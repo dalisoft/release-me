@@ -44,12 +44,8 @@ prepare() {
       log_verbose "Git SSH passphrase set"
     fi
 
-    if ! ssh-add -L | grep -q "${SSH_PUBLIC_KEY-}"; then
-      printf "%s" "${SSH_PRIVATE_KEY}" | base64 --decode | ssh-add -
-      log_verbose "Git SSH key import loaded"
-    else
-      log_verbose "Git SSH key import skipped"
-    fi
+    printf "%s" "${SSH_PRIVATE_KEY}" | base64 --decode | ssh-add -
+    log_verbose "Git SSH key import loaded"
 
     git config --local commit.gpgsign true
     git config --local user.signingkey "${SSH_PUBLIC_KEY_FILE}"
