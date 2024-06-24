@@ -127,19 +127,19 @@ release() {
         fi
 
         if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
-          git commit --sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION-}" --no-verify
+          git commit --sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION-} [skip ci]" --no-verify
         elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUBLIC_KEY-}" ]; then
-          git commit --sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION}" --no-verify
+          git commit --sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION} [skip ci]" --no-verify
         else
-          git commit --no-gpg-sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION}" --no-verify
+          git commit --no-gpg-sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION} [skip ci]" --no-verify
         fi
       else
         if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
-          git commit --sign -m "chore(ci): update \`package.json\` version to ${NEXT_RELEASE_VERSION}" --no-verify
+          git commit --sign -m "chore(ci): update \`package.json\` version to ${NEXT_RELEASE_VERSION} [skip ci]" --no-verify
         elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUBLIC_KEY-}" ]; then
-          git commit --sign -m "chore(ci): update \`package.json\` version to ${NEXT_RELEASE_VERSION}" --no-verify
+          git commit --sign -m "chore(ci): update \`package.json\` version to ${NEXT_RELEASE_VERSION} [skip ci]" --no-verify
         else
-          git commit --no-gpg-sign -m "chore(ci): update \`package.json\` version to ${NEXT_RELEASE_VERSION}" --no-verify
+          git commit --no-gpg-sign -m "chore(ci): update \`package.json\` version to ${NEXT_RELEASE_VERSION} [skip ci]" --no-verify
         fi
       fi
 
