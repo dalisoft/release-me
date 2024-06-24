@@ -1,6 +1,15 @@
 #!/bin/sh
 set -eu
 
+prepare() {
+
+  printf "%s" "${DOCKER_HUB_PAT-}" | docker login --username "${DOCKER_HUB_USERNAME-}" --password-stdin
+}
+
+cleanup() {
+  docker logout
+}
+
 release() {
   # Build and publish a `Docker` tag
   if [ -n "${DOCKER_HUB_USERNAME-}" ] && [ -n "${DOCKER_HUB_PAT-}" ]; then
@@ -17,11 +26,15 @@ release() {
         return 1
       fi
 
+      prepare
+
       docker build -t "${GIT_REPO_NAME-}:${NEXT_BUILD_VERSION-}" . --push
       docker tag "${GIT_REPO_NAME}:${NEXT_BUILD_VERSION}" "${GIT_REPO_NAME}:latest"
       docker push "${GIT_REPO_NAME}:latest"
 
       log "Docker image published [${NEXT_RELEASE_TAG}]!"
+
+      cleanup
     else
       log "Skipped Docker image [${NEXT_RELEASE_TAG}] in DRY-RUN mode."
     fi
