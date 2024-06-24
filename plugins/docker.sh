@@ -28,9 +28,9 @@ release() {
 
       prepare
 
-      docker build -t "${GIT_REPO_NAME-}:${NEXT_BUILD_VERSION-}" . --push
+      docker build -t "${GIT_REPO_NAME-}:${NEXT_BUILD_VERSION-}" .
       docker tag "${GIT_REPO_NAME}:${NEXT_BUILD_VERSION}" "${GIT_REPO_NAME}:latest"
-      docker push "${GIT_REPO_NAME}:latest"
+      docker push "${GIT_REPO_NAME}"
 
       log "Docker image published [${NEXT_RELEASE_TAG}]!"
 
