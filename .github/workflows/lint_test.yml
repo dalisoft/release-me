@@ -39,7 +39,7 @@ jobs:
       - name: Install current Bash on macOS
         if: runner.os == 'macOS'
         shell: bash
-        run: brew install bash wget
+        run: brew install bash
 
       - name: Test
         shell: bash
