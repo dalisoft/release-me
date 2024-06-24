@@ -30,7 +30,7 @@ prepare() {
     fi
   elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PRIVATE_KEY-}" ] && [ -n "${SSH_PUBLIC_KEY-}" ]; then
     SSH_PUBLIC_KEY_FILE=$(mtemp)
-    print "%s" "${SSH_PUBLIC_KEY}" >>"${SSH_PUBLIC_KEY_FILE}"
+    printf "%s" "${SSH_PUBLIC_KEY}" >>"${SSH_PUBLIC_KEY_FILE}"
 
     git config --local commit.gpgsign true
     git config --local user.signingkey "${SSH_PUBLIC_KEY_FILE}"
@@ -41,7 +41,7 @@ prepare() {
     if [ -n "${SSH_KEY_PASSPHRASE-}" ]; then
       SSH_ASKPASS_FILE=$(mktemp)
       chmod 0755 "${SSH_ASKPASS_FILE}"
-      print "%s" "echo -n \"${SSH_KEY_PASSPHRASE}\"" >>"${SSH_ASKPASS_FILE}"
+      printf "%s" "echo -n \"${SSH_KEY_PASSPHRASE}\"" >>"${SSH_ASKPASS_FILE}"
 
       export SSH_ASKPASS="${SSH_ASKPASS_FILE}"
       export SSH_ASKPASS_REQUIRE="force"
