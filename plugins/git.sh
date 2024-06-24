@@ -93,7 +93,7 @@ cleanup() {
     git config --local --unset tag.forceSignAnnotated true
     git config --local --unset gpg.format ssh
 
-    ssh-add -L | grep -F "${SSH_PRIVATE_KEY-}" | ssh-add -d -
+    ssh-add -L | grep -F "${SSH_PUBLIC_KEY-}" | ssh-add -d -
     rm -rf "${SSH_PUBLIC_KEY_FILE}"
 
     unset SSH_PUBLIC_KEY_FILE
