@@ -53,4 +53,4 @@ jobs:
           DOCKER_BUILDX_NAME: ${{ steps.docker-buildx.outputs.name }}
         shell: bash
         run: |
-          bash ./release.sh --plugins=npm,npm-post,git,github-release --pre-release
+          bash ./release.sh --plugins=npm,npm-post,git,github-release,docker --pre-release
