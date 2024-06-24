@@ -31,7 +31,7 @@ prepare() {
   elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PRIVATE_KEY-}" ] && [ -n "${SSH_PUBLIC_KEY-}" ]; then
     eval "$(ssh-agent -s)"
 
-    SSH_PUBLIC_KEY_FILE=$(mtemp)
+    SSH_PUBLIC_KEY_FILE=$(mktemp)
     printf "%s" "${SSH_PUBLIC_KEY}" >>"${SSH_PUBLIC_KEY_FILE}"
 
     git config --local commit.gpgsign true
