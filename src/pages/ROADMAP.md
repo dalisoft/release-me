@@ -8,8 +8,8 @@ See project to-dos and future plans
 | ----------------- | ------------------- | ------------------------- | --------------------- |
 | 2023-2024 Dec-Feb | **Initial Release** | **Presets support**       | **Plugins** support   |
 | 2024 March-May    | **TDD development** | **Coverage** initialize   | **Docker** plugin     |
-| 2024 June-Aug     | **Documentations**  | Coverage 94%+             | More tests            |
-| 2024 Sep-Nov      | SSH Signing **WIP** | `.devcontainer` local-dev | DinD support          |
+| 2024 June-Aug     | **Documentations**  | **SSH Signing**           | More tests            |
+| 2024 Sep-Nov      | Coverage 94%+       | `.devcontainer` local-dev | DinD support          |
 | 2024-2025 Dec-Feb | S/MIME Signing      | Smart variable detection  | Github Actions action |
 | 2025 March-May    | Homebrew publish    | `apt` publish             | More tests            |
 | 2025 June-Aug     | Coverage 96%+       | Coverage 98%+             | Stabilize (`v1`)      |
