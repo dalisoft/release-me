@@ -1,6 +1,6 @@
 {
   "name": "release-me-sh",
-  "version": "0.11.3",
+  "version": "0.11.4",
   "description": "Blazing fast minimal release workflow script written in Bash with plugins and presets support",
   "keywords": [
     "bash",
