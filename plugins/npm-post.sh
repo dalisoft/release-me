@@ -95,11 +95,7 @@ cleanup() {
 
     ssh-add -L | grep -F "${SSH_PUBLIC_KEY-}" | ssh-add -d -
     rm -rf "${SSH_PUBLIC_KEY_FILE}"
-
     unset SSH_PUBLIC_KEY_FILE
-    unset SSH_PRIVATE_KEY
-    unset SSH_PUBLIC_KEY
-
     log_verbose "Git SSH sign is unset"
   fi
 
