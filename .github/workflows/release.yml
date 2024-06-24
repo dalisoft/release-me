@@ -44,9 +44,9 @@ jobs:
           GIT_USERNAME: ${{ vars.GIT_USERNAME }}
           GIT_EMAIL: ${{ vars.GIT_EMAIL }}
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          GPG_KEY_ID: ${{ vars.GPG_KEY_ID }}
-          GPG_KEY: ${{ secrets.GPG_KEY }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KEY_PASSPHRASE: ${{ secrets.SSH_KEY_PASSPHRASE }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           DOCKER_HUB_USERNAME: ${{ vars.DOCKER_HUB_USERNAME }}
           DOCKER_HUB_PAT: ${{ secrets.DOCKER_HUB_PAT }}
