@@ -24,7 +24,7 @@ release() {
       rm -rf package.json.bak
 
       export NODE_AUTH_TOKEN="${NPM_TOKEN}"
-      npm publish --userconfig "${TEMP_FILE}"
+      npm publish --provenance --userconfig "${TEMP_FILE}"
 
       log "Published [${NEXT_RELEASE_TAG}]!"
       rm -rf "${TEMP_FILE}"
