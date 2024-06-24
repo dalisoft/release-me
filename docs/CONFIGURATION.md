@@ -15,21 +15,32 @@ sidebar_position: 5
 
 > These variable names used for creating tag(s)
 
-| Name           | Description               | Type      | Depended plugin |
-| -------------- | ------------------------- | --------- | --------------- |
-| `GIT_USERNAME` | Specify tag author name   | Variables | **git** plugin  |
-| `GIT_EMAIL`    | Specify tag author e-mail | Variables | **git** plugin  |
+| Name           | Description               | Type      | Depended plugin         |
+| -------------- | ------------------------- | --------- | ----------------------- |
+| `GIT_USERNAME` | Specify tag author name   | Variables | **git,npm-post** plugin |
+| `GIT_EMAIL`    | Specify tag author e-mail | Variables | **git,npm-post** plugin |
 
 ## GPG (Git) variables
 
 > These variable names used for signing tag(s)
 
-| Name             | Description            | Type      | Depended plugin |
-| ---------------- | ---------------------- | --------- | --------------- |
-| `GPG_NO_SIGN`    | Skips Git Signing      | Variables | **git** plugin  |
-| `GPG_KEY_ID`     | Public GPG key/ring ID | Variables | **git** plugin  |
-| `GPG_KEY`        | Private GPG key        | Secrets   | **git** plugin  |
-| `GPG_PASSPHRASE` | Private GPG passphrase | Secrets   | **git** plugin  |
+| Name             | Description            | Type      | Depended plugin         |
+| ---------------- | ---------------------- | --------- | ----------------------- |
+| `GPG_NO_SIGN`    | Skips Git Signing      | Variables | **git,npm-post** plugin |
+| `GPG_KEY_ID`     | Public GPG key/ring ID | Variables | **git,npm-post** plugin |
+| `GPG_KEY`        | Private GPG key        | Secrets   | **git,npm-post** plugin |
+| `GPG_PASSPHRASE` | Private GPG passphrase | Secrets   | **git,npm-post** plugin |
+
+## SSH (Git) variables
+
+> These variable names used for signing tag(s)
+
+| Name                 | Description             | Type      | Depended plugin         |
+| -------------------- | ----------------------- | --------- | ----------------------- |
+| `SSH_NO_SIGN`        | Skips Git Signing       | Variables | **git,npm-post** plugin |
+| `SSH_PUBLIC_KEY`     | Public SSH key content  | Secrets   | **git,npm-post** plugin |
+| `SSH_PRIVATE_KEY`    | Private SSH key content | Secrets   | **git,npm-post** plugin |
+| `SSH_KEY_PASSPHRASE` | Private SSH passphrase  | Secrets   | **git,npm-post** plugin |
 
 ## GH Actions Configurations
 

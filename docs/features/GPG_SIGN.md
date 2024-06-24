@@ -65,7 +65,7 @@ See [`GPG Environment variables`](../CONFIGURATION.md#gpg-git-variables)
 
 :::
 
-Save your GPG key as `GPG_KEY` variable as **SECRET** not **VARIABLE**
+Save your [GPG key](#export-your-gpg-key) as `GPG_KEY` variable as **SECRET** not **VARIABLE**
 
 ### Save your GPG key ID
 
@@ -75,13 +75,13 @@ See [`GPG Environment variables`](../CONFIGURATION.md#gpg-git-variables)
 
 :::
 
-Save your GPG key ID (example `ABA8161A192052B2C8C2D68A82406676A919222E`) as `GPG_KEY_ID` variable as **SECRET** or **VARIABLE** depending on how much your GPG Key ID are should be secure
+Save your [GPG key ID](#get-your-gpg-key-id) (example `ABA8161A192052B2C8C2D68A82406676A919222E`) as `GPG_KEY_ID` variable as **SECRET** or **VARIABLE** depending on how much your GPG Key ID are should be secure
 
 ### Set your GPG Passphrase
 
 :::tip
 
-If your GPG key is encrypted by passphrase, you should set passphrase too
+If your [GPG key](#export-your-gpg-key) is encrypted by passphrase, you should set passphrase too
 
 :::
 
