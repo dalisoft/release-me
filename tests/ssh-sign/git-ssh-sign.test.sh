@@ -38,18 +38,23 @@ teardown_suite() {
   unset GIT_AUTHOR_EMAIL
 
   unset GPG_NO_SIGN
-  unset SSH_PUB_KEY
+  unset SSH_PRIVATE_KEY
+  unset SSH_PUBLIC_KEY
 }
 
 test_ssh_sign_2_1_passwordless() {
-  unset SSH_PUB_KEY
+  unset SSH_PRIVATE_KEY
+  unset SSH_PUBLIC_KEY
 
   # Fix permissions
   chmod 600 "${CURRENT_DIR}/sign"
   chmod 600 "${CURRENT_DIR}/sign.pub"
 
-  ssh-add "${CURRENT_DIR}/sign"
-  export SSH_PUB_KEY="${CURRENT_DIR}/sign.pub"
+  SSH_PRIVATE_KEY=$(cat "${CURRENT_DIR}/sign" | base64)
+  SSH_PUBLIC_KEY=$(cat "${CURRENT_DIR}/sign.pub")
+
+  export SSH_PRIVATE_KEY
+  export SSH_PUBLIC_KEY
 
   git commit --quiet -m "fix: update commit" --allow-empty --no-gpg-sign
   assert_matches "v0.0.1" "$(bash "${ROOT_DIR}/release.sh" --plugins=git --verbose)"
