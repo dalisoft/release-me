@@ -1,6 +1,6 @@
 {
   "name": "release-me-sh",
-  "version": "0.11.7",
+  "version": "0.11.8",
   "description": "Blazing fast minimal release workflow script written in Bash with plugins and presets support",
   "keywords": [
     "bash",
@@ -54,7 +54,7 @@
     "prism-react-renderer": "^2.3.1",
     "prismjs": "^1.29.0",
     "swc-loader": "^0.2.6",
-    "typos-rs-npm": "dalisoft/typos-rs-npm#v1.22.7"
+    "typos-rs-npm": "dalisoft/typos-rs-npm#v1.22.9"
   },
   "engines": {
     "node": ">=18.19.1"
