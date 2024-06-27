@@ -95,7 +95,8 @@ const config = {
       algolia: {
         appId: 'KDYM8XYR4G',
         apiKey: '8fe8c4955faf1d30c2aeecb2febf9022',
-        indexName: 'release_me'
+        indexName: 'release_me',
+        contextualSearch: true,
       },
       metadata: [
         {
