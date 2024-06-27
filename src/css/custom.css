@@ -28,3 +28,62 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+.footer {
+  --ifm-footer-background-color: #fff;
+  --ifm-footer-color: #000;
+}
+[data-theme='dark'] .footer {
+  --ifm-footer-background-color: #000;
+  --ifm-footer-color: #fff;
+}
+
+.image-link {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.image-link::before {
+  content: '';
+  display: flex;
+}
+
+/* assumes icons are black by default and inverts them for dark mode so they're white */
+html[data-theme='dark'] .image-link::before {
+  filter: invert(100%);
+}
+
+.bug-report-link::before {
+  background: url('/img/bug-report.svg') no-repeat;
+}
+
+
+.github-link::before {
+  background: url('/img/github.svg') no-repeat;
+}
+
+.www-link::before {
+  background: url('/img/www.svg') no-repeat;
+}
+
+.stack-overflow-link::before {
+  background: url('/img/stack-overflow.svg') no-repeat;
+}
+
+
+.header-image-link:hover {
+  opacity: 0.6;
+}
+
+.header-image-link::before {
+  height: 24px;
+  width: 24px;
+}
+
+.social-link-icon::before {
+  height: 20px;
+  margin-right: 4px;
+  width: 20px;
+}

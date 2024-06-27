@@ -92,6 +92,11 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      algolia: {
+        appId: 'KDYM8XYR4G',
+        apiKey: '8fe8c4955faf1d30c2aeecb2febf9022',
+        indexName: 'release_me'
+      },
       metadata: [
         {
           name: 'keywords',
@@ -132,14 +137,19 @@ const config = {
           { to: '/blog', label: 'Blog', position: 'left' },
           { to: '/ROADMAP', label: 'Roadmap', position: 'left' },
           {
+            position: 'right',
+            href: `https://github.com/dalisoft/release-me/releases/tag/v${pkg.version}`,
+            label: `v${pkg.version}`
+          },
+          {
             href: pkg.repository.url.split('+')[1],
-            label: 'GitHub',
-            position: 'right'
+            position: 'right',
+            className: 'github-link image-link header-image-link',
+            'aria-label': 'GitHub repository'
           }
         ]
       },
       footer: {
-        style: 'dark',
         links: [
           {
             title: 'Docs',
@@ -159,7 +169,8 @@ const config = {
             items: [
               {
                 label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/release-me'
+                href: 'https://stackoverflow.com/questions/tagged/release-me',
+                className: 'image-link stack-overflow-link social-link-icon'
               }
             ]
           },
@@ -172,7 +183,13 @@ const config = {
               },
               {
                 label: 'GitHub',
-                href: 'https://github.com/dalisoft/release-me'
+                href: 'https://github.com/dalisoft/release-me',
+                className: 'image-link github-link social-link-icon'
+              },
+              {
+                label: 'Report issue',
+                href: 'https://github.com/dalisoft/release-me/issues',
+                className: 'image-link bug-report-link social-link-icon'
               }
             ]
           }
