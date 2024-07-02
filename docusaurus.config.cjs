@@ -96,7 +96,7 @@ const config = {
         appId: 'C187DF596C',
         apiKey: '5374d9481460cef25794eff70de04ca4',
         indexName: 'release_me',
-        contextualSearch: true,
+        contextualSearch: false,
         insights: true
       },
       metadata: [
