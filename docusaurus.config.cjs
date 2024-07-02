@@ -93,10 +93,11 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       algolia: {
-        appId: 'KDYM8XYR4G',
-        apiKey: '8fe8c4955faf1d30c2aeecb2febf9022',
+        appId: 'C187DF596C',
+        apiKey: '5374d9481460cef25794eff70de04ca4',
         indexName: 'release_me',
         contextualSearch: true,
+        insights: false
       },
       metadata: [
         {
