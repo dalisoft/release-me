@@ -97,7 +97,7 @@ const config = {
         apiKey: '5374d9481460cef25794eff70de04ca4',
         indexName: 'release_me',
         contextualSearch: true,
-        insights: false
+        insights: true
       },
       metadata: [
         {
