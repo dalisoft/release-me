@@ -95,7 +95,7 @@ const config = {
       algolia: {
         appId: 'C187DF596C',
         apiKey: '5374d9481460cef25794eff70de04ca4',
-        indexName: 'release_me',
+        indexName: 'dalisoftio_release_me',
         contextualSearch: false,
         insights: true
       },
