@@ -144,6 +144,8 @@ release() {
       fi
 
       if [ -n "${GIT_REMOTE_ORIGIN}" ]; then
+        # GitHub workflow re-trigger hack to make it work properly
+        git pull
         git push --no-verify
         CHECKOUT_SHA=$(git rev-parse HEAD)
         log "Committed npm [${NEXT_RELEASE_TAG-}] tag"
