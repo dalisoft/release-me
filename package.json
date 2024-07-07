@@ -41,20 +41,20 @@
     "docs:write-heading-ids": "docusaurus write-heading-ids"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.8.1",
+    "@biomejs/biome": "^1.8.3",
     "@docusaurus/core": "3.4.0",
     "@docusaurus/module-type-aliases": "^3.4.0",
     "@docusaurus/preset-classic": "3.4.0",
     "@docusaurus/types": "^3.4.0",
-    "@evilmartians/lefthook": "^1.6.16",
+    "@evilmartians/lefthook": "^1.6.18",
     "@ls-lint/ls-lint": "^2.2.3",
-    "@swc/core": "^1.6.1",
+    "@swc/core": "^1.6.13",
     "commitlint-rs-npm": "dalisoft/commitlint-rs-npm#v0.1.11",
-    "dprint": "^0.46.2",
+    "dprint": "^0.47.1",
     "prism-react-renderer": "^2.3.1",
     "prismjs": "^1.29.0",
     "swc-loader": "^0.2.6",
-    "typos-rs-npm": "dalisoft/typos-rs-npm#v1.22.9"
+    "typos-rs-npm": "dalisoft/typos-rs-npm#v1.23.1"
   },
   "engines": {
     "node": ">=18.19.1"
