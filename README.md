@@ -4,14 +4,14 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/dalisoft/release-me/badge.svg?branch=master)](https://coveralls.io/github/dalisoft/release-me?branch=master)
 
-Blazing fast minimal release workflow script written in **Bash** with plugins and presets support
+Fast minimal release workflow script written in **Bash** with plugins and presets support
 
 ## Features
 
 - Available on all **Unix** environments
 - Zero third-party dependencies
 - No pre-install, just use
-- Blazing fast, no wait
+- Fast and no wait
 - Workspace support out-of-box
 - Programming language agnostic
 - Fast (<5 sec with all plugins execution)

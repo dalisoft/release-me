@@ -9,7 +9,8 @@ This project can be used as you wish, local, remote, on CI and/or at VPS. Everyw
 ## Requirements
 
 > See [Getting Started](./GET_STARTED.md) page if you didn't read
-> See [Environment variables](./CONFIGURATION.md#environment-variables)
+> See [Configuration](./CONFIGURATION.md)
+> See [Plugins](./category/plugins)
 
 - **bash** version **v5+** for best reliability
 - Make sure you have **write** access
@@ -42,7 +43,7 @@ bash .release-me/release.sh --plugins=git,github-release --preset=conventional-c
 | `stable`      | If project current version is `0.x`, it will bump to `1.x`                 | `false`                | No       |
 | `pre-release` | Publish this project as non-production ready                               | `false`                | No       |
 | `preset`      | Presets compatibility, see [Presets](./PRESETS.md)                         | `conventional-commits` | No       |
-| `plugins`     | Plugins compatibility, see [Plugins](./PLUGINS.md)                         | `git`                  | No       |
+| `plugins`     | Plugins compatibility, see [Plugins](./category/plugins)                   | `git`                  | No       |
 
 ### `dry-run`
 
@@ -176,6 +177,6 @@ This option helps you keep your project as alpha release easier than ever or all
 - Default: `git`
 - Type: `string`
 - Requires: `Yes`
-- Values: String of Array of [Plugins](/docs/PLUGINS.md)
+- Values: String of Array of [Plugins](/docs/plugins/docker.md)
 - Example: `release-me --plugins=npm-post,npm,git,github-release`
 - Used by: **Core** features

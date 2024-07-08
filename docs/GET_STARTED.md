@@ -32,11 +32,11 @@ Before you start using release-me, make sure you have the following installed on
 - Available on all **Unix** environments
 - Zero third-party dependencies
 - No pre-install, just use
-- Blazing fast, no wait
+- Fast and no wait
 - [Workspace](./features/WORKSPACE.md) support out-of-box
 - Programming language agnostic
 - [Fast](./BENCHMARK.md) (<5 sec with all plugins execution)
-- [Plugins](./PLUGINS.md) available/compatible
+- [Plugins](./category/plugins) available/compatible
 - [Presets](./PRESETS.md) available/compatible
 - Free and permissive license
 

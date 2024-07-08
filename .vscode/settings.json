@@ -9,5 +9,6 @@
   },
   "[shellscript]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
-  }
+  },
+  "markdown.validate.ignoredLinks": ["./category/plugins"]
 }

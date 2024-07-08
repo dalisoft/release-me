@@ -4,43 +4,7 @@ sidebar_position: 5
 
 # Configuration
 
-## Environment variables
-
-| Name           | Description                         | Type    | Depended plugin           |
-| -------------- | ----------------------------------- | ------- | ------------------------- |
-| `GITHUB_TOKEN` | Used to publish **Github** releases | Secrets | **GitHub Release** plugin |
-| `NPM_TOKEN`    | Used to publish to **npm** registry | Secrets | **npm** plugin            |
-
-## Git variables
-
-> These variable names used for creating tag(s)
-
-| Name           | Description               | Type      | Depended plugin         |
-| -------------- | ------------------------- | --------- | ----------------------- |
-| `GIT_USERNAME` | Specify tag author name   | Variables | **git,npm-post** plugin |
-| `GIT_EMAIL`    | Specify tag author e-mail | Variables | **git,npm-post** plugin |
-
-## GPG (Git) variables
-
-> These variable names used for signing tag(s)
-
-| Name             | Description            | Type      | Depended plugin         |
-| ---------------- | ---------------------- | --------- | ----------------------- |
-| `GPG_NO_SIGN`    | Skips Git Signing      | Variables | **git,npm-post** plugin |
-| `GPG_KEY_ID`     | Public GPG key/ring ID | Variables | **git,npm-post** plugin |
-| `GPG_KEY`        | Private GPG key        | Secrets   | **git,npm-post** plugin |
-| `GPG_PASSPHRASE` | Private GPG passphrase | Secrets   | **git,npm-post** plugin |
-
-## SSH (Git) variables
-
-> These variable names used for signing tag(s)
-
-| Name                 | Description             | Type      | Depended plugin         |
-| -------------------- | ----------------------- | --------- | ----------------------- |
-| `SSH_NO_SIGN`        | Skips Git Signing       | Variables | **git,npm-post** plugin |
-| `SSH_PUBLIC_KEY`     | Public SSH key content  | Secrets   | **git,npm-post** plugin |
-| `SSH_PRIVATE_KEY`    | Private SSH key content | Secrets   | **git,npm-post** plugin |
-| `SSH_KEY_PASSPHRASE` | Private SSH passphrase  | Secrets   | **git,npm-post** plugin |
+## See [plugins](./category/plugins)
 
 ## GH Actions Configurations
 
