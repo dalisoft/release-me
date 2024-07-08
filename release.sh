@@ -3,7 +3,7 @@ set -eu
 shopt -s inherit_errexit
 
 readonly CLI_PREFIX="[release-me]"
-readonly DESCRIPTION="Blazing fast minimal release workflow script written in Bash with plugins and presets support"
+readonly DESCRIPTION="Fast minimal release workflow script written in Bash with plugins and presets support"
 readonly USAGE="${CLI_PREFIX} Usage: release-me [options]
 ${DESCRIPTION}
 
