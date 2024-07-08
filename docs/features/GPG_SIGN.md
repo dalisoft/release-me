@@ -61,7 +61,7 @@ then copy content of `gpg-base64` file
 
 :::tip
 
-See [`GPG Environment variables`](../CONFIGURATION.md#gpg-git-variables)
+See [`GPG Environment variables`](../plugins/GIT.md#gpg-git-variables)
 
 :::
 
@@ -71,7 +71,7 @@ Save your [GPG key](#export-your-gpg-key) as `GPG_KEY` variable as **SECRET** no
 
 :::tip
 
-See [`GPG Environment variables`](../CONFIGURATION.md#gpg-git-variables)
+See [`GPG Environment variables`](../plugins/GIT.md#gpg-git-variables)
 
 :::
 

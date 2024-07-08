@@ -38,9 +38,9 @@ Modyify plugins as you wish and for your project needs
 
 ### Add or set `env`
 
-Add required [`Environment variables`](../CONFIGURATION.md#environment-variables) to file `.env` or set into your environment
+Add required [`Environment variables`](../plugins/GIT.md#environment-variables) to file `.env` or set into your environment
 
-Another option could be set your [`Environment variables`](../CONFIGURATION.md#environment-variables) on **CI** and run on **CI** for testing purposes. See [`example`](../CONFIGURATION.md#gh-actions-configurations)
+Another option could be set your [`Environment variables`](../plugins/GIT.md#environment-variables) on **CI** and run on **CI** for testing purposes. See [`example`](../CONFIGURATION.md#gh-actions-configurations)
 
 ### Run `release` script
 

@@ -1,6 +1,5 @@
 ---
 sidebar_position: 2
-title: SSH Sign
 ---
 
 # SSH Sign
@@ -53,7 +52,7 @@ then copy content of `ssh-base64` file
 
 :::tip
 
-See [`SSH Environment variables`](../CONFIGURATION.md#ssh-git-variables)
+See [`SSH Environment variables`](../plugins/GIT.md#ssh-git-variables)
 
 :::
 
@@ -63,7 +62,7 @@ Save your [SSH key](#export-your-ssh-key) as `SSH_PRIVATE_KEY` variable as **SEC
 
 :::tip
 
-See [`SSH Environment variables`](../CONFIGURATION.md#ssh-git-variables)
+See [`SSH Environment variables`](../plugins/GIT.md#ssh-git-variables)
 
 :::
 
