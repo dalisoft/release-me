@@ -177,6 +177,6 @@ This option helps you keep your project as alpha release easier than ever or all
 - Default: `git`
 - Type: `string`
 - Requires: `Yes`
-- Values: String of Array of [Plugins](/docs/plugins/docker.md)
+- Values: String of Array of [Plugins](./category/plugins)
 - Example: `release-me --plugins=npm-post,npm,git,github-release`
 - Used by: **Core** features
