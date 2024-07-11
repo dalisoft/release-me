@@ -54,7 +54,7 @@
     "prism-react-renderer": "^2.3.1",
     "prismjs": "^1.29.0",
     "swc-loader": "^0.2.6",
-    "typos-rs-npm": "dalisoft/typos-rs-npm#v1.23.1"
+    "typos-rs-npm": "dalisoft/typos-rs-npm#v1.23.2"
   },
   "engines": {
     "node": ">=18.19.1"
