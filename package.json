@@ -46,15 +46,14 @@
     "@docusaurus/module-type-aliases": "^3.4.0",
     "@docusaurus/preset-classic": "3.4.0",
     "@docusaurus/types": "^3.4.0",
-    "@evilmartians/lefthook": "^1.6.18",
+    "@evilmartians/lefthook": "^1.7.2",
     "@ls-lint/ls-lint": "^2.2.3",
     "@swc/core": "^1.6.13",
     "commitlint-rs-npm": "dalisoft/commitlint-rs-npm#v0.1.11",
-    "dprint": "^0.47.1",
+    "dprint": "^0.47.2",
     "prism-react-renderer": "^2.3.1",
     "prismjs": "^1.29.0",
-    "swc-loader": "^0.2.6",
-    "typos-rs-npm": "dalisoft/typos-rs-npm#v1.23.1"
+    "swc-loader": "^0.2.6"
   },
   "engines": {
     "node": ">=18.19.1"

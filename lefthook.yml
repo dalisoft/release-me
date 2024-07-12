@@ -18,11 +18,6 @@ pre-commit:
         PATH: $PATH:./node_modules/.bin
       glob: "*.md"
       run: dprint fmt {staged_files}
-    typos:
-      env:
-        PATH: $PATH:./node_modules/.bin
-      exclude: "bun.lockb|package-lock.json|yarn.lock|pnpm-lock.yaml"
-      run: typos {staged_files}
 
 pre-push:
   parallel: true
@@ -37,11 +32,6 @@ pre-push:
         PATH: $PATH:./node_modules/.bin
       glob: "*.md"
       run: dprint check {all_files}
-    typos:
-      env:
-        PATH: $PATH:./node_modules/.bin
-      exclude: "bun.lockb|package-lock.json|yarn.lock|pnpm-lock.yaml"
-      run: typos {all_files}
     ls-lint:
       env:
         PATH: $PATH:./node_modules/.bin
