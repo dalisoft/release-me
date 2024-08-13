@@ -19,7 +19,10 @@
   },
   "license": "Apache-2.0",
   "author": "Davlatjon Shavkatov <opensource@dalisoft.uz>",
-  "bin": "release-me.sh",
+  "bin": {
+    "release-me": "release-me.sh",
+    "release-me-sh": "release-me.sh"
+  },
   "files": ["presets", "plugins", "release-me.sh"],
   "browserslist": {
     "production": [">0.5%", "not dead", "not op_mini all"],
