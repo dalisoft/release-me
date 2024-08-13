@@ -42,9 +42,9 @@ docker run --rm --volume $(pwd):/repository dalisoft/release-me:latest
 ### `npm`
 
 ```bash title="Bash (Terminal)"
-npm install dalisoft/release-me --save-dev
+npm install release-me-sh --save-dev
 # or
-yarn add dalisoft/release-me --dev
+yarn add release-me-sh --dev
 # or
-bun add dalisoft/release-me --dev
+bun add release-me-sh --dev
 ```
