@@ -348,6 +348,7 @@ MAJOR_UPGRADED=false
 
 handle_git_commits() {
   log_verbose "Analyzing commits...\n"
+
   local IFS=
   while read -r line; do
     if [[ "${line}" == "${GIT_LOG_COMMIT_SEPARATOR}" ]]; then
