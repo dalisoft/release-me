@@ -155,3 +155,15 @@ test_commit_a_11_invalid_scope() {
   bash "${ROOT_DIR}/release.sh" --plugins=git
   assert_matches "v5.1.2" "$(git tag -l)"
 }
+test_commit_a_12_edge_case_1_message() {
+  git commit -m "feat: improve HttpRequest and HttpResponse" \
+    -m "- Now it is memory-safe and thread-safe" \
+    -m "- Race-condition, memory filling, thread-collision of same HttpRequest/HttpResponse cause fixed" \
+    -m "- Performance improved" \
+    -m "- Use properly batches of corks for fastest efficient way of sending response" \
+    -m "BREAKING CHANGE: getIP and getProxiedIP was removed due of above optimizations" \
+    --allow-empty --no-verify
+
+  bash "${ROOT_DIR}/release.sh" --plugins=git
+  assert_matches "v6.0.0" "$(git tag -l)"
+}
