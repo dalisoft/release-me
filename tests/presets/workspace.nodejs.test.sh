@@ -285,3 +285,15 @@ test_commit_a_13_invalid_package_name() {
   bash "${ROOT_DIR}/release.sh" --plugins=git --preset=workspace --workspace
   assert_matches "v4.5.2" "$(git tag -l)"
 }
+test_commit_a_14_edge_case_1_message() {
+  git commit -m "feat(workspace1): improve HttpRequest and HttpResponse" \
+    -m "- Now it is memory-safe and thread-safe" \
+    -m "- Race-condition, memory filling, thread-collision of same HttpRequest/HttpResponse cause fixed" \
+    -m "- Performance improved" \
+    -m "- Use properly batches of corks for fastest efficient way of sending response" \
+    -m "BREAKING CHANGE: getIP and getProxiedIP was removed due of above optimizations" \
+    --allow-empty --no-verify
+
+  bash "${ROOT_DIR}/release.sh" --plugins=git
+  assert_matches "workspace1-v5.0.0" "$(git tag -l)"
+}
