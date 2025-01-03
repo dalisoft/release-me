@@ -47,7 +47,7 @@
     "@biomejs/biome": "^1.8.3",
     "@docusaurus/core": "3.6.3",
     "@docusaurus/module-type-aliases": "^3.5.1",
-    "@docusaurus/preset-classic": "3.6.3",
+    "@docusaurus/preset-classic": "3.7.0",
     "@docusaurus/types": "^3.5.1",
     "@evilmartians/lefthook": "^1.7.12",
     "@ls-lint/ls-lint": "^2.2.3",
