@@ -3,6 +3,7 @@
 > Except bugs, errors and/or strange behavior
 
 [![Coverage Status](https://coveralls.io/repos/github/dalisoft/release-me/badge.svg?branch=master)](https://coveralls.io/github/dalisoft/release-me?branch=master)
+[<img src="https://api.gitsponsors.com/api/badge/img?id=743784077" height="20">](https://api.gitsponsors.com/api/badge/link?p=Q26SK7df9jSNo82s5G0RZDW4jghr7zW3KWUlchMOx5EzVTotTU0FHtCiA2pesrTASuv7mbIiRD5bT6sZ1yLCRNazxDf64E3xTd/Q8adPxhDi85fttM2EfidezOkOtLug8sGoOYzL0RbPOiKQYfbYQg==)
 
 Fast minimal release workflow script written in **Bash** with plugins and presets support
 
