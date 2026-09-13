@@ -361,7 +361,6 @@ process_commit_entry() {
     log_verbose "${BASH_REMATCH[3]}" "-q"
     CHECKOUT_SHA=${BASH_REMATCH[1]}
 
-    local preset_command
     preset_command=$(command -v parse_commit)
     if [[ -n "${preset_command}" ]]; then
       parse_commit BASH_REMATCH
@@ -382,9 +381,7 @@ handle_git_commits() {
       fi
       commit=""
       commit_body_extra=""
-      if ! read -r commit; then
-        commit=""
-      fi
+      read -r commit || commit=""
     else
       if [[ -n "${commit}" ]]; then
         if [[ -z "${commit_body_extra}" ]]; then
