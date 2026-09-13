@@ -297,3 +297,13 @@ test_commit_a_14_edge_case_1_message() {
   bash "${ROOT_DIR}/release.sh" --plugins=git --preset=workspace --workspace
   assert_matches "workspace1-v5.0.0" "$(git tag -l)"
 }
+test_commit_a_15_edge_case_2_message() {
+  git commit -m "fix(workspace1): some fix comment" \
+    -m "YOUR CONTENT" \
+    -m "BREAKING CHANGE: This should trigger" \
+    -m "YOUR FOOTER" \
+    --allow-empty --no-verify
+
+  bash "${ROOT_DIR}/release.sh" --plugins=git --preset=workspace --workspace
+  assert_matches "workspace1-v6.0.0" "$(git tag -l)"
+}
