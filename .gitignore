@@ -29,3 +29,9 @@ coverage
 # Docs
 .docusaurus
 build
+
+# AI
+.agents/mistakes.md
+.agents/todo.md
+.agents/track.md
+.agents/consistency.md
