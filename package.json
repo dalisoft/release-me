@@ -23,9 +23,17 @@
     "release-me": "release.sh",
     "release-me-sh": "release.sh"
   },
-  "files": ["presets", "plugins", "release.sh"],
+  "files": [
+    "presets",
+    "plugins",
+    "release.sh"
+  ],
   "browserslist": {
-    "production": [">0.5%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 3 chrome version",
       "last 3 firefox version",
@@ -44,19 +52,19 @@
     "docs:write-heading-ids": "docusaurus write-heading-ids"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.8.3",
-    "@docusaurus/core": "3.7.0",
-    "@docusaurus/module-type-aliases": "^3.5.1",
-    "@docusaurus/preset-classic": "3.7.0",
-    "@docusaurus/types": "^3.5.1",
-    "@evilmartians/lefthook": "^1.7.12",
-    "@ls-lint/ls-lint": "^2.2.3",
-    "@swc/core": "^1.7.10",
+    "@biomejs/biome": "^2.5.13",
+    "@docusaurus/core": "3.10.2",
+    "@docusaurus/module-type-aliases": "^3.10.2",
+    "@docusaurus/preset-classic": "3.10.2",
+    "@docusaurus/types": "^3.10.2",
+    "@evilmartians/lefthook": "^2.1.12",
+    "@ls-lint/ls-lint": "^2.3.1",
+    "@swc/core": "^1.16.2",
     "commitlint-rs-npm": "dalisoft/commitlint-rs-npm#v0.1.11",
-    "dprint": "^0.48.0",
-    "prism-react-renderer": "^2.3.1",
-    "prismjs": "^1.29.0",
-    "swc-loader": "^0.2.6"
+    "dprint": "^0.57.4",
+    "prism-react-renderer": "^2.4.1",
+    "prismjs": "^1.30.0",
+    "swc-loader": "^0.2.7"
   },
   "engines": {
     "node": ">=18.19.1"
