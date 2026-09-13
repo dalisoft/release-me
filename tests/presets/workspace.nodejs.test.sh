@@ -294,6 +294,6 @@ test_commit_a_14_edge_case_1_message() {
     -m "BREAKING CHANGE: getIP and getProxiedIP was removed due of above optimizations" \
     --allow-empty --no-verify
 
-  bash "${ROOT_DIR}/release.sh" --plugins=git
+  bash "${ROOT_DIR}/release.sh" --plugins=git --preset=workspace --workspace
   assert_matches "workspace1-v5.0.0" "$(git tag -l)"
 }
