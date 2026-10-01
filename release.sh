@@ -262,9 +262,9 @@ get_git_variables() {
   GIT_TAGS_LIST=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags)
 
   if ${IS_WORKSPACE}; then
-    GIT_LAST_PROJECT_TAG=$(printf "%b" "${GIT_TAGS_LIST}" | grep "${PKG_NAME}" | tail -1 | cut -d '/' -f 3)
+    GIT_LAST_PROJECT_TAG=$(printf "%b" "${GIT_TAGS_LIST}" | grep "${PKG_NAME}" | tail -1 | cut -d '/' -f 3-)
   else
-    GIT_LAST_PROJECT_TAG=$(printf "%s" "${GIT_TAGS_LIST}" | tail -1 | cut -d '/' -f 3)
+    GIT_LAST_PROJECT_TAG=$(printf "%s" "${GIT_TAGS_LIST}" | tail -1 | cut -d '/' -f 3-)
   fi
 
   if [[ ${GIT_LAST_PROJECT_TAG} != "" ]]; then
