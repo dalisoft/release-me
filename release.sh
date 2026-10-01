@@ -262,13 +262,25 @@ get_git_variables() {
   GIT_TAGS_LIST=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags)
 
   if ${IS_WORKSPACE}; then
-    GIT_LAST_PROJECT_TAG=$(printf "%b" "${GIT_TAGS_LIST}" | grep "${PKG_NAME}" | tail -1 | cut -d '/' -f 3-)
+    # Fixed-string `<name>-v` anchored lookup: sibling packages whose
+    # name contains this one, `@owner/pkg` scoped tags and legacy
+    # `name@version` tags must not leak into this package's last tag.
+    # Newest valid `x.y.z` wins; malformed versions are skipped.
+    local tag version
+    while read -r tag; do
+      tag="${tag#refs/tags/}"
+      version="${tag#"${PKG_NAME}-v"}"
+      if [[ "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        GIT_LAST_PROJECT_TAG="${tag}"
+        GIT_LAST_PROJECT_TAG_VER="${version}"
+      fi
+    done < <(printf "%b" "${GIT_TAGS_LIST}" | grep -F -- "${PKG_NAME}-v")
   else
     GIT_LAST_PROJECT_TAG=$(printf "%s" "${GIT_TAGS_LIST}" | tail -1 | cut -d '/' -f 3-)
-  fi
 
-  if [[ ${GIT_LAST_PROJECT_TAG} != "" ]]; then
-    GIT_LAST_PROJECT_TAG_VER=$(printf "%s" "${GIT_LAST_PROJECT_TAG}" | rev | cut -d 'v' -f 1 | rev)
+    if [[ ${GIT_LAST_PROJECT_TAG} != "" ]]; then
+      GIT_LAST_PROJECT_TAG_VER=$(printf "%s" "${GIT_LAST_PROJECT_TAG}" | rev | cut -d 'v' -f 1 | rev)
+    fi
   fi
 
   if [[ -n "${GIT_LAST_PROJECT_TAG_VER}" ]]; then
