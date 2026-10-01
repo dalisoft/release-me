@@ -158,9 +158,9 @@ release() {
           log_verbose "Pull request for [${NEXT_RELEASE_TAG}] updated or already exists"
         fi
 
-        if ! gh pr merge "${RELEASE_BRANCH}" --auto --rebase --delete-branch >/dev/null 2>&1; then
-          log "Pull request auto-merge is not possible, please merge it manually"
-        fi
+        git checkout "${BASE_BRANCH}"
+        git rebase "${RELEASE_BRANCH}"
+        git push --no-verify
       else
         # GitHub workflow re-trigger hack to make it work properly
         git -c fetch.pruneTags=false pull --rebase --autostash
