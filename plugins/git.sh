@@ -122,8 +122,10 @@ release() {
     fi
 
     if [ -n "${GIT_REMOTE_ORIGIN}" ]; then
-      # GitHub workflow re-trigger hack to make it work properly
-      git pull
+      # GitHub workflow re-trigger hack to make it work properly;
+      # `--no-prune-tags` keeps the fresh tag, which `fetch.pruneTags` configs
+      # would prune because it is not on the remote yet
+      git pull --no-prune-tags
       git push origin "refs/tags/${NEXT_RELEASE_TAG}" --no-verify
       log_verbose "Pushed Git tag to remote"
     else

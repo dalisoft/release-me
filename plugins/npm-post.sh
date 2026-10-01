@@ -162,8 +162,9 @@ release() {
           log "Pull request auto-merge is not possible, please merge it manually"
         fi
       else
-        # GitHub workflow re-trigger hack to make it work properly
-        git pull
+        # GitHub workflow re-trigger hack to make it work properly;
+        # `--no-prune-tags` keeps fresh refs alive for `fetch.pruneTags` configs
+        git pull --no-prune-tags
         git push --no-verify
       fi
 
