@@ -346,25 +346,55 @@ PATCH_UPGRADED=false
 MINOR_UPGRADED=false
 MAJOR_UPGRADED=false
 
+process_commit_entry() {
+  local commit="$1"
+  local commit_body_extra="$2"
+
+  if [[ "${commit}" =~ ${GIT_LOG_PARSE_REGEX} ]]; then
+    if [[ -n "${commit_body_extra}" ]]; then
+      if [[ -n "${BASH_REMATCH[5]-}" ]]; then
+        BASH_REMATCH[5]="${BASH_REMATCH[5]}"$'\n'"${commit_body_extra}"
+      else
+        BASH_REMATCH[5]="${commit_body_extra}"
+      fi
+    fi
+    log_verbose "${BASH_REMATCH[3]}" "-q"
+    CHECKOUT_SHA=${BASH_REMATCH[1]}
+
+    preset_command=$(command -v parse_commit)
+    if [[ -n "${preset_command}" ]]; then
+      parse_commit BASH_REMATCH
+    fi
+  fi
+}
+
 handle_git_commits() {
   log_verbose "Analyzing commits...\n"
 
   local IFS=
-  while read -r line; do
+  local commit=""
+  local commit_body_extra=""
+  while read -r line || [[ -n "${line}" ]]; do
     if [[ "${line}" == "${GIT_LOG_COMMIT_SEPARATOR}" ]]; then
-      read -r commit
-
-      if [[ "${commit}" =~ ${GIT_LOG_PARSE_REGEX} ]]; then
-        log_verbose "${BASH_REMATCH[3]}" "-q"
-        CHECKOUT_SHA=${BASH_REMATCH[1]}
-
-        preset_command=$(command -v parse_commit)
-        if [[ -n "${preset_command}" ]]; then
-          parse_commit BASH_REMATCH
+      if [[ -n "${commit}" ]]; then
+        process_commit_entry "${commit}" "${commit_body_extra}"
+      fi
+      commit=""
+      commit_body_extra=""
+      read -r commit || commit=""
+    else
+      if [[ -n "${commit}" ]]; then
+        if [[ -z "${commit_body_extra}" ]]; then
+          commit_body_extra="${line}"
+        else
+          commit_body_extra+=$'\n'"${line}"
         fi
       fi
     fi
   done <<<"${GIT_LOGS}"
+  if [[ -n "${commit}" ]]; then
+    process_commit_entry "${commit}" "${commit_body_extra}"
+  fi
   log_verbose "" "-q"
   log_verbose "Analyzed commits!"
 

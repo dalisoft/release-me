@@ -4,7 +4,7 @@ set -eu
 # RegExp as variable
 regexp_commit_primary="^([a-z]+)(\(([^\)]+)\))?:\ (.+)$"
 regexp_commit_major="^([a-z]+)(\(([^\)]+)\))?!?:\ (.+)$"
-string_commit_major="^BREAKING CHANGE(: )?(.+)"
+string_commit_major="BREAKING[ -]CHANGE:"
 
 # Release types
 RELEASE_SKIP_TYPES=("build" "chore" "style" "ci" "skip ci")

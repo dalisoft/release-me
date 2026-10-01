@@ -1,9 +1,8 @@
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import Heading from '@theme/Heading';
 import Layout from '@theme/Layout';
 import clsx from 'clsx';
-
-import Heading from '@theme/Heading';
 import styles from './index.module.css';
 
 function HomepageHeader() {
