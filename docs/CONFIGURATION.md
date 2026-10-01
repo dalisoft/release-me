@@ -8,7 +8,7 @@ sidebar_position: 5
 
 ## GH Actions Configurations
 
-See this project [workflow](../.github/workflows/lint_test.yml) or see below
+See this project [workflow](../.github/workflows/release.yml) or see below
 
 > On **homepage** below content may show not properly, so, please check **workflow** file linked above
 
@@ -32,6 +32,10 @@ jobs:
           fetch-depth: 0 # <-- This line is REQUIRED
           token: ${{ secrets.GITHUB_TOKEN }} # <-- This line is REQUIRED too
       - name: Release
+        permissions:
+          id-token: write
+          contents: write
+          pull-requests: write
         env:
           GIT_USERNAME: ${{ vars.GIT_USERNAME }}
           GIT_EMAIL: ${{ vars.GIT_EMAIL }}
