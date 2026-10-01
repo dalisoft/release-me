@@ -177,3 +177,13 @@ test_commit_a_13_edge_case_2_message() {
   bash "${ROOT_DIR}/release.sh" --plugins=git
   assert_matches "v7.0.0" "$(git tag -l)"
 }
+test_commit_a_14_issue_47_message() {
+  git commit -m "fix: some fix comment" \
+    -m "YOUR CONTENT" \
+    -m $'\tBREAKING CHANGE: This should trigger' \
+    -m "YOUR FOOTER" \
+    --allow-empty --no-verify
+
+  bash "${ROOT_DIR}/release.sh" --plugins=git
+  assert_matches "v8.0.0" "$(git tag -l)"
+}
