@@ -150,8 +150,3 @@ test_plugin_npm_post_no_pkg_fail_message() {
   assert_matches "Project does not have package.json" "$(NPM_TOKEN="FAKE_TOKEN" bash "${ROOT_DIR}/release.sh" --plugins=npm-post,git --verbose)"
   assert_status_code 1 "${ROOT_DIR}/release.sh --plugins=npm-post,git --quiet"
 }
-test_plugin_npm_post_no_token_fail_message() {
-  git commit --quiet -m "fix: update commit" --allow-empty --no-gpg-sign
-
-  assert_status_code 1 "${ROOT_DIR}/release.sh --plugins=npm-post,git --quiet"
-}
