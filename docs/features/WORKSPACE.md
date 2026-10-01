@@ -12,6 +12,8 @@ First check out [`workspace`](../USAGE.md#workspace) option for how it works
 
 This project allows you publish workspace packages easier but automatized **Git tagging**, **npm publish**, **GitHub release** and/or **Generate changelog** for each package without headaches
 
+Each package's last release is resolved strictly from its own `<name>-vX.Y.Z` tags: sibling packages whose name contains this one, legacy `name@version` tags and malformed versions are ignored
+
 You can check [`workspace`](../USAGE.md#workspace) example from [here](https://github.com/dalisoft/airlight/releases)
 
 ## Step-by-step guide

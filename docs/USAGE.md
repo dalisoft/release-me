@@ -44,6 +44,8 @@ bash .release-me/release.sh --plugins=git,github-release --preset=conventional-c
 | `pre-release` | Publish this project as non-production ready                               | `false`                | No       |
 | `preset`      | Presets compatibility, see [Presets](./PRESETS.md)                         | `conventional-commits` | No       |
 | `plugins`     | Plugins compatibility, see [Plugins](./category/plugins)                   | `git`                  | No       |
+| `help`        | Show help message                                                          | `-`                    | No       |
+| `version`     | Show version information                                                   | `-`                    | No       |
 
 ### `dry-run`
 
