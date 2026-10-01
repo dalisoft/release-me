@@ -52,16 +52,16 @@
     "docs:write-heading-ids": "docusaurus write-heading-ids"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.13",
+    "@biomejs/biome": "^2.5.15",
     "@docusaurus/core": "3.10.2",
     "@docusaurus/module-type-aliases": "^3.10.2",
     "@docusaurus/preset-classic": "3.10.2",
     "@docusaurus/types": "^3.10.2",
-    "@evilmartians/lefthook": "^2.1.12",
+    "@evilmartians/lefthook": "^2.1.15",
     "@ls-lint/ls-lint": "^2.3.1",
-    "@swc/core": "^1.16.2",
+    "@swc/core": "^1.16.13",
     "commitlint-rs-npm": "dalisoft/commitlint-rs-npm#v0.1.11",
-    "dprint": "^0.57.4",
+    "dprint": "^0.58.0",
     "prism-react-renderer": "^2.4.1",
     "prismjs": "^1.30.0",
     "swc-loader": "^0.2.7"
