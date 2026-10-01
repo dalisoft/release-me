@@ -65,3 +65,22 @@ test_plugin_git_0_2_initial_message() {
   assert_matches "v0.0.1" "$(bash "${ROOT_DIR}/release.sh" --plugins=git --verbose)"
   assert_matches "v0.0.1" "$(git tag -l)"
 }
+test_plugin_git_pull_rebase_divergent_remote() {
+  unset -f git
+
+  REMOTE_FOLDER=$(mktemp -d)
+  env -u GIT_DIR -u GIT_WORK_TREE -u GIT_INDEX_FILE git init --quiet --bare "${REMOTE_FOLDER}/origin.git"
+  git remote add origin "${REMOTE_FOLDER}/origin.git"
+  git push --quiet -u origin master
+
+  git commit --quiet -m "chore(ci): remote-side update" --allow-empty --no-gpg-sign
+  git push --quiet origin master
+  git reset --quiet --hard HEAD~1
+  git commit --quiet -m "fix: divergent pull" --allow-empty --no-gpg-sign
+
+  assert_status_code 0 "bash ${ROOT_DIR}/release.sh --plugins=git --verbose"
+  assert_matches "chore\\(ci\\): remote-side update" "$(git log master --oneline)"
+  assert_matches "v0\\.0\\.2" "$(git ls-remote --tags origin)"
+
+  rm -rf "${REMOTE_FOLDER}"
+}
