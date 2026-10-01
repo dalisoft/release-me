@@ -28,7 +28,7 @@ jobs:
         run: bun run docs:build
 
       - name: Upload Build Artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: build
 
