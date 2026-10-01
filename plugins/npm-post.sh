@@ -143,9 +143,30 @@ release() {
     fi
 
     if [ -n "${GIT_REMOTE_ORIGIN}" ]; then
-      # GitHub workflow re-trigger hack to make it work properly
-      git pull
-      git push --no-verify
+      if command -v gh >/dev/null 2>&1; then
+        # land the version bump via a PR, so protected base branches keep working
+        RELEASE_BRANCH="release/${NEXT_RELEASE_TAG-}"
+        BASE_BRANCH="${GITHUB_REF_NAME:-$(git rev-parse --abbrev-ref HEAD)}"
+
+        git checkout -q -B "${RELEASE_BRANCH}"
+        git push --no-verify --force-with-lease -u origin "${RELEASE_BRANCH}"
+
+        # pushing the same branch again updates the existing PR
+        if gh pr create --base "${BASE_BRANCH}" --head "${RELEASE_BRANCH}" --title "chore(ci): update \`package.json\` version to ${NEXT_RELEASE_VERSION} [skip ci]" --body "Automated version bump by [release-me](https://github.com/dalisoft/release-me)" >/dev/null 2>&1; then
+          log_verbose "Pull request for [${NEXT_RELEASE_TAG}] created"
+        else
+          log_verbose "Pull request for [${NEXT_RELEASE_TAG}] updated or already exists"
+        fi
+
+        if ! gh pr merge "${RELEASE_BRANCH}" --auto --rebase --delete-branch >/dev/null 2>&1; then
+          log "Pull request auto-merge is not possible, please merge it manually"
+        fi
+      else
+        # GitHub workflow re-trigger hack to make it work properly
+        git pull
+        git push --no-verify
+      fi
+
       CHECKOUT_SHA=$(git rev-parse HEAD)
       log "Committed npm [${NEXT_RELEASE_TAG-}] tag"
     else
