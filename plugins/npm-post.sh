@@ -106,62 +106,54 @@ release() {
   # Committing a `npm` tag
   log "Committing npm tag..."
   log_verbose "Git hash: ${CHECKOUT_SHA}!"
-  if [ -n "${NPM_TOKEN-}" ] || [ -n "${ACTIONS_ID_TOKEN_REQUEST_TOKEN-}" ]; then
 
-    # Don't load this plugin if
-    # - `--dry-run` used
-    # - `package.json` is missing
-    # - `package.json` is not changed on `Git` tracking
-    if ! ${IS_DRY_RUN-}; then
-      if [ ! -f package.json ] || [ -z "$(git diff --name-only package.json 2>/dev/null)" ]; then
-        log "Project does not have package.json or package.json not changed"
+  # Don't load this plugin if
+  # - `--dry-run` used
+  # - `package.json` is missing
+  # - `package.json` is not changed on `Git` tracking
+  if ! ${IS_DRY_RUN-}; then
+    if [ ! -f package.json ] || [ -z "$(git diff --name-only package.json 2>/dev/null)" ]; then
+      log "Project does not have package.json or package.json not changed"
+      return 1
+    fi
+    prepare
+    git add package.json
+
+    if ${IS_WORKSPACE-}; then
+      if [ -z "${PKG_NAME}" ]; then
+        log_verbose "[npm-post] Workspace defined but no package name defined"
         return 1
       fi
-      prepare
-      git add package.json
 
-      if ${IS_WORKSPACE-}; then
-        if [ -z "${PKG_NAME}" ]; then
-          log_verbose "[npm-post] Workspace defined but no package name defined"
-          return 1
-        fi
-
-        if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
-          git commit --sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION-} [skip ci]" --no-verify
-        elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUBLIC_KEY-}" ]; then
-          git commit --sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION} [skip ci]" --no-verify
-        else
-          git commit --no-gpg-sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION} [skip ci]" --no-verify
-        fi
+      if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
+        git commit --sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION-} [skip ci]" --no-verify
+      elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUBLIC_KEY-}" ]; then
+        git commit --sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION} [skip ci]" --no-verify
       else
-        if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
-          git commit --sign -m "chore(ci): update \`package.json\` version to ${NEXT_RELEASE_VERSION} [skip ci]" --no-verify
-        elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUBLIC_KEY-}" ]; then
-          git commit --sign -m "chore(ci): update \`package.json\` version to ${NEXT_RELEASE_VERSION} [skip ci]" --no-verify
-        else
-          git commit --no-gpg-sign -m "chore(ci): update \`package.json\` version to ${NEXT_RELEASE_VERSION} [skip ci]" --no-verify
-        fi
+        git commit --no-gpg-sign -m "chore(${PKG_NAME}): update \`package.json\` version to ${NEXT_RELEASE_VERSION} [skip ci]" --no-verify
       fi
-
-      if [ -n "${GIT_REMOTE_ORIGIN}" ]; then
-        # GitHub workflow re-trigger hack to make it work properly
-        git pull
-        git push --no-verify
-        CHECKOUT_SHA=$(git rev-parse HEAD)
-        log "Committed npm [${NEXT_RELEASE_TAG-}] tag"
-      else
-        log "Committing npm [${NEXT_RELEASE_TAG}] tag failed"
-      fi
-
-      cleanup
     else
-      log "Skipped committing npm [${NEXT_RELEASE_TAG}] tag in DRY-RUN mode."
+      if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
+        git commit --sign -m "chore(ci): update \`package.json\` version to ${NEXT_RELEASE_VERSION-} [skip ci]" --no-verify
+      elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUBLIC_KEY-}" ]; then
+        git commit --sign -m "chore(ci): update \`package.json\` version to ${NEXT_RELEASE_VERSION} [skip ci]" --no-verify
+      else
+        git commit --no-gpg-sign -m "chore(ci): update \`package.json\` version to ${NEXT_RELEASE_VERSION} [skip ci]" --no-verify
+      fi
     fi
+
+    if [ -n "${GIT_REMOTE_ORIGIN}" ]; then
+      # GitHub workflow re-trigger hack to make it work properly
+      git pull
+      git push --no-verify
+      CHECKOUT_SHA=$(git rev-parse HEAD)
+      log "Committed npm [${NEXT_RELEASE_TAG-}] tag"
+    else
+      log "Committing npm [${NEXT_RELEASE_TAG}] tag failed"
+    fi
+
+    cleanup
   else
-    echo "
-npm Token is not found
-Please export npm Token or run at GitHub Actions with enabled \`id-token: write\` (Trusted publishing) so this plugin can be used
-"
-    exit 1
+    log "Skipped committing npm [${NEXT_RELEASE_TAG}] tag in DRY-RUN mode."
   fi
 }
