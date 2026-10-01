@@ -162,9 +162,7 @@ release() {
           log "Pull request auto-merge is not possible, please merge it manually"
         fi
       else
-        # GitHub workflow re-trigger hack to make it work properly;
-        # `fetch.pruneTags=false` keeps fresh refs alive for prune configs
-        # and `--ff-only` never creates a local merge commit
+        # GitHub workflow re-trigger hack to make it work properly
         git -c fetch.pruneTags=false pull --ff-only
         git push --no-verify
       fi

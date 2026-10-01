@@ -110,8 +110,7 @@ release() {
   if ! ${IS_DRY_RUN-}; then
     prepare
 
-    # a previous aborted release may have left the tag behind; reuse it only
-    # when it points at the same commit, otherwise fail loudly
+    # a previous aborted release may have left the tag behind
     if git rev-parse -q --verify "refs/tags/${NEXT_RELEASE_TAG}" >/dev/null 2>&1; then
       if [ "$(git rev-parse "refs/tags/${NEXT_RELEASE_TAG}^{commit}")" != "$(git rev-parse "${CHECKOUT_SHA}^{commit}")" ]; then
         log "Git tag [${NEXT_RELEASE_TAG}] already exists on a different commit, please delete it: git tag -d ${NEXT_RELEASE_TAG}"
@@ -130,10 +129,7 @@ release() {
     fi
 
     if [ -n "${GIT_REMOTE_ORIGIN}" ]; then
-      # GitHub workflow re-trigger hack to make it work properly;
-      # `fetch.pruneTags=false` keeps the fresh tag, which prune configs would
-      # delete because it is not on the remote yet, and `--ff-only` never
-      # creates a local merge commit
+      # GitHub workflow re-trigger hack to make it work properly
       git -c fetch.pruneTags=false pull --ff-only
       git push origin "refs/tags/${NEXT_RELEASE_TAG}" --no-verify
       log_verbose "Pushed Git tag to remote"
