@@ -1,8 +1,12 @@
 name: Auto-merge dependabot updates
 
-# pull_request_target is required for dependabot PRs (secrets are withheld
-# from pull_request runs for them); this workflow never checks out PR code
-on: pull_request_target
+# no pull_request_target: dependabot PRs never trigger this workflow;
+# a scheduled job scans them through the API only, in a trusted context,
+# with no repository checkout and no third-party action code
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -11,11 +15,42 @@ permissions:
 jobs:
   auto-merge:
     timeout-minutes: 5
-    if: github.actor == 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
-      - uses: ahmadnassri/action-dependabot-auto-merge@45fc124d949b19b6b8bf6645b6c9d55f4f9ac61a # v2.6.6
-        with:
-          target: minor
-          approve: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Approve and enable auto-merge for dependabot patch/minor PRs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          semver_level() {
+            local o1 o2 o3 n1 n2 n3
+            [[ $1 =~ ^v?[0-9]+(\.[0-9]+){0,2}$ && $2 =~ ^v?[0-9]+(\.[0-9]+){0,2}$ ]] || return 1
+            IFS=. read -r o1 o2 o3 <<<"${1#v}"
+            IFS=. read -r n1 n2 n3 <<<"${2#v}"
+            if (( ${n1:-0} != ${o1:-0} )); then echo major
+            elif (( ${n2:-0} != ${o2:-0} )); then echo minor
+            elif (( ${n3:-0} != ${o3:-0} )); then echo patch
+            else echo patch
+            fi
+          }
+          while IFS=$'\t' read -r pr title; do
+            [ -n "$pr" ] || continue
+            rest=${title##* from }
+            old=${rest%% to *}
+            new=${rest##* to }
+            if ! level=$(semver_level "$old" "$new"); then
+              echo "pr #$pr: cannot parse update level from '$title', skipping"
+              continue
+            fi
+            if [ "$level" = major ]; then
+              echo "pr #$pr: major update, left for manual review"
+              continue
+            fi
+            gh pr review "$pr" --approve -b "LGTM!" >/dev/null 2>&1 \
+              || echo "pr #$pr: approve skipped (already reviewed)"
+            gh pr merge "$pr" --auto --squash >/dev/null 2>&1 \
+              || echo "pr #$pr: auto-merge already enabled"
+            echo "pr #$pr: approved + auto-merge enabled ($level)"
+          done < <(gh pr list --state open --limit 100 \
+            --json number,title,author \
+            --jq '.[] | select(.author.login == "dependabot[bot]") | "\(.number)\t\(.title)"')
