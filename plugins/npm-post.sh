@@ -163,7 +163,7 @@ release() {
         fi
       else
         # GitHub workflow re-trigger hack to make it work properly
-        git -c fetch.pruneTags=false pull --ff-only
+        git -c fetch.pruneTags=false pull --rebase --autostash
         git push --no-verify
       fi
 
