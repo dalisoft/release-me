@@ -40,8 +40,18 @@ setup_suite() {
     git config user.name "${GIT_USERNAME}"
   fi
 
+  # shellcheck disable=SC2329
   _npm() {
     # shellcheck disable=SC2317,SC2154
+    if [[ -n "${NPM_CALLS-}" ]]; then
+      printf '%s\n' "${FAKE_PARAMS[*]}" >>"${NPM_CALLS}"
+    fi
+    if [[ "${FAKE_PARAMS[0]}" == "view" ]]; then
+      # a failed lookup only means "not published"; it must not kill
+      # the release shell, so return instead of exit
+      [[ "${NPM_VIEW-}" == "published" ]]
+      return
+    fi
     if [[ "${FAKE_PARAMS[0]}" == "publish" && ("${NPM_TOKEN-}" == "FAKE_TOKEN" || "${ACTIONS_ID_TOKEN_REQUEST_TOKEN-}" == "FAKE_TOKEN") ]]; then
       return 0
     else
@@ -81,6 +91,21 @@ test_plugin_npm_0_3_trusted_publishing_message() {
 
   assert_matches "npm tag: v0.0.2 and version: v0.0.2" "$(ACTIONS_ID_TOKEN_REQUEST_TOKEN="FAKE_TOKEN" bash "${ROOT_DIR}/release.sh" --plugins=npm,git --verbose)"
   assert_matches "0.0.2" "$(cat package.json)"
+}
+test_plugin_npm_0_4_already_published_skips_publish() {
+  git commit --quiet -m "fix: already published bump" --allow-empty --no-gpg-sign
+
+  NPM_CALLS="${REPO_FOLDER}/npm-calls.log"
+  export NPM_CALLS NPM_VIEW="published"
+  assert_matches "already published to npm, skipping publish" \
+    "$(NPM_TOKEN="FAKE_TOKEN" bash "${ROOT_DIR}/release.sh" --plugins=npm --verbose)"
+  assert_matches "0.0.3" "$(cat package.json)"
+  assert_matches "view" "$(cat "${NPM_CALLS}")"
+  if grep -q "publish" "${NPM_CALLS}"; then
+    fail "npm publish must not run when the version is already published"
+  fi
+  rm -rf "${NPM_CALLS}"
+  unset NPM_CALLS NPM_VIEW
 }
 test_plugin_npm_no_pkg_fail_message() {
   git commit --quiet -m "fix: update commit" --allow-empty --no-gpg-sign
