@@ -25,6 +25,22 @@ release() {
     sed -i.bak "s/\"version\": \"[^\"]*\",/\"version\": \"${NEXT_BUILD_VERSION-}\",/" "package.json"
     rm -rf package.json.bak
 
+    # a previous aborted release may have published this version
+    # already without finishing the tag, release and docker push
+    NPM_PACKAGE_NAME=$(node -p "require('./package.json').name")
+    if [ -n "${TEMP_FILE-}" ]; then
+      npm view "${NPM_PACKAGE_NAME}@${NEXT_BUILD_VERSION-}" version --userconfig "${TEMP_FILE}" >/dev/null 2>&1 && NPM_SKIP=1 || NPM_SKIP=0
+    else
+      npm view "${NPM_PACKAGE_NAME}@${NEXT_BUILD_VERSION-}" version >/dev/null 2>&1 && NPM_SKIP=1 || NPM_SKIP=0
+    fi
+    if [ "${NPM_SKIP-}" = 1 ]; then
+      log "Version [${NEXT_BUILD_VERSION-}] already published to npm, skipping publish"
+      if [ -n "${TEMP_FILE-}" ]; then
+        rm -rf "${TEMP_FILE}"
+      fi
+      return 0
+    fi
+
     # without a token npm >= 11.5.1 exchanges the CI's OIDC token
     # (Trusted publishing) for a short-lived publish token
     if [ -n "${TEMP_FILE-}" ]; then
