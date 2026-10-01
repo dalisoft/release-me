@@ -163,9 +163,9 @@ release() {
         fi
       else
         # GitHub workflow re-trigger hack to make it work properly;
-        # `--no-prune-tags` keeps fresh refs alive for `fetch.pruneTags` configs
+        # `fetch.pruneTags=false` keeps fresh refs alive for prune configs
         # and `--ff-only` never creates a local merge commit
-        git pull --ff-only --no-prune-tags
+        git -c fetch.pruneTags=false pull --ff-only
         git push --no-verify
       fi
 

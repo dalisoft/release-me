@@ -110,7 +110,15 @@ release() {
   if ! ${IS_DRY_RUN-}; then
     prepare
 
-    if [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
+    # a previous aborted release may have left the tag behind; reuse it only
+    # when it points at the same commit, otherwise fail loudly
+    if git rev-parse -q --verify "refs/tags/${NEXT_RELEASE_TAG}" >/dev/null 2>&1; then
+      if [ "$(git rev-parse "refs/tags/${NEXT_RELEASE_TAG}^{commit}")" != "$(git rev-parse "${CHECKOUT_SHA}^{commit}")" ]; then
+        log "Git tag [${NEXT_RELEASE_TAG}] already exists on a different commit, please delete it: git tag -d ${NEXT_RELEASE_TAG}"
+        return 1
+      fi
+      log_verbose "Git tag [${NEXT_RELEASE_TAG}] already exists on the same commit, reusing it"
+    elif [ -z "${GPG_NO_SIGN-}" ] && [ -n "${GPG_KEY-}" ] && [ -n "${GPG_KEY_ID-}" ]; then
       git tag --sign "${NEXT_RELEASE_TAG-}" "${CHECKOUT_SHA}" --message "Release, tag and sign ${NEXT_RELEASE_TAG}"
       log "Created GPG signed Git tag [${NEXT_RELEASE_TAG}]!"
     elif [ -z "${SSH_NO_SIGN-}" ] && [ -n "${SSH_PUBLIC_KEY-}" ]; then
@@ -123,10 +131,10 @@ release() {
 
     if [ -n "${GIT_REMOTE_ORIGIN}" ]; then
       # GitHub workflow re-trigger hack to make it work properly;
-      # `--no-prune-tags` keeps the fresh tag, which `fetch.pruneTags` configs
-      # would prune because it is not on the remote yet, and `--ff-only`
-      # never creates a local merge commit
-      git pull --ff-only --no-prune-tags
+      # `fetch.pruneTags=false` keeps the fresh tag, which prune configs would
+      # delete because it is not on the remote yet, and `--ff-only` never
+      # creates a local merge commit
+      git -c fetch.pruneTags=false pull --ff-only
       git push origin "refs/tags/${NEXT_RELEASE_TAG}" --no-verify
       log_verbose "Pushed Git tag to remote"
     else
