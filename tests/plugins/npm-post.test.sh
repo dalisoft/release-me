@@ -44,7 +44,7 @@ setup_suite() {
 
   _npm() {
     # shellcheck disable=SC2317,SC2154
-    if [[ "${FAKE_PARAMS[0]}" == "publish" && "${NPM_TOKEN-}" == "FAKE_TOKEN" ]]; then
+    if [[ "${FAKE_PARAMS[0]}" == "publish" && ("${NPM_TOKEN-}" == "FAKE_TOKEN" || "${ACTIONS_ID_TOKEN_REQUEST_TOKEN-}" == "FAKE_TOKEN") ]]; then
       return 0
     else
       exit 1

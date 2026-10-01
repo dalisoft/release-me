@@ -42,7 +42,7 @@ setup_suite() {
 
   _npm() {
     # shellcheck disable=SC2317,SC2154
-    if [[ "${FAKE_PARAMS[0]}" == "publish" && "${NPM_TOKEN-}" == "FAKE_TOKEN" ]]; then
+    if [[ "${FAKE_PARAMS[0]}" == "publish" && ("${NPM_TOKEN-}" == "FAKE_TOKEN" || "${ACTIONS_ID_TOKEN_REQUEST_TOKEN-}" == "FAKE_TOKEN") ]]; then
       return 0
     else
       exit 1
@@ -75,6 +75,12 @@ test_plugin_npm_0_1_initial_message_dryrun() {
 test_plugin_npm_0_2_initial_message() {
   assert_matches "npm tag: v0.0.1 and version: v0.0.1" "$(NPM_TOKEN="FAKE_TOKEN" bash "${ROOT_DIR}/release.sh" --plugins=npm,git --verbose)"
   assert_matches "0.0.1" "$(cat package.json)"
+}
+test_plugin_npm_0_3_trusted_publishing_message() {
+  git commit --quiet -m "fix: trusted publishing bump" --allow-empty --no-gpg-sign
+
+  assert_matches "npm tag: v0.0.2 and version: v0.0.2" "$(ACTIONS_ID_TOKEN_REQUEST_TOKEN="FAKE_TOKEN" bash "${ROOT_DIR}/release.sh" --plugins=npm,git --verbose)"
+  assert_matches "0.0.2" "$(cat package.json)"
 }
 test_plugin_npm_no_pkg_fail_message() {
   git commit --quiet -m "fix: update commit" --allow-empty --no-gpg-sign
