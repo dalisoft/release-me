@@ -3,7 +3,6 @@ set -eu
 
 release() {
   # Publish a `npm` tag with token or Trusted publishing (OIDC)
-  if [ -n "${NPM_TOKEN-}" ] || [ -n "${ACTIONS_ID_TOKEN_REQUEST_TOKEN-}" ]; then
     log "Publishing npm tag..."
     log_verbose "npm tag: ${NEXT_RELEASE_TAG-} and version: ${NEXT_RELEASE_VERSION-}!"
 
@@ -42,11 +41,4 @@ release() {
     else
       log "Skipped npm tag [${NEXT_RELEASE_TAG}] in DRY-RUN mode."
     fi
-  else
-    echo "
-npm Token is not found
-Please export npm Token or run at GitHub Actions with enabled \`id-token: write\` (Trusted publishing) so this plugin can be used
-"
-    exit 1
-  fi
 }
