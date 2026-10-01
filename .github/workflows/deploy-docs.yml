@@ -8,6 +8,12 @@ on:
 env:
   CI: true
 
+# Pages allows only one in-progress deployment; queue overlapping runs
+# so a second deploy never hits the 400 "in progress deployment" error
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   build:
     name: Build Docusaurus

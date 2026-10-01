@@ -12,6 +12,12 @@ on:
 env:
   CI: true
 
+# every "Lint and Test" completion fires a Release; serialize them so
+# concurrent runs never race at npm publish (409 over staged/published)
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
   release:
     permissions:
@@ -44,7 +50,6 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           use: true
-          install: true
           cache-binary: true
           cleanup: true
 
