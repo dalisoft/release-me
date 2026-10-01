@@ -25,7 +25,9 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           ref: master
-          token: ${{ secrets.GH_TOKEN }}
+          # the workflows' own token; the repo GH_TOKEN PAT is expired and
+          # breaks checkout auth on every workflow_run-triggered run
+          token: ${{ github.token }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -43,7 +45,7 @@ jobs:
         env:
           GIT_USERNAME: ${{ vars.GIT_USERNAME }}
           GIT_EMAIL: ${{ vars.GIT_EMAIL }}
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_KEY_PASSPHRASE: ${{ secrets.SSH_KEY_PASSPHRASE }}
