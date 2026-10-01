@@ -106,7 +106,7 @@ release() {
   # Committing a `npm` tag
   log "Committing npm tag..."
   log_verbose "Git hash: ${CHECKOUT_SHA}!"
-  if [ -n "${NPM_TOKEN-}" ]; then
+  if [ -n "${NPM_TOKEN-}" ] || [ -n "${ACTIONS_ID_TOKEN_REQUEST_TOKEN-}" ]; then
 
     # Don't load this plugin if
     # - `--dry-run` used
@@ -160,7 +160,7 @@ release() {
   else
     echo "
 npm Token is not found
-Please export npm Token so this plugin can be used
+Please export npm Token or run at GitHub Actions with enabled \`id-token: write\` (Trusted publishing) so this plugin can be used
 "
     exit 1
   fi
