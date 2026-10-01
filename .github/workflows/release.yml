@@ -32,7 +32,7 @@ jobs:
       # trusted publishing (OIDC) needs Node >= 22.14 with npm >= 11.5.1;
       # the runner's default node/npm may be older
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 24
 
