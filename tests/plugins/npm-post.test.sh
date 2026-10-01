@@ -143,6 +143,15 @@ test_plugin_npm_post_0_7_custom_gpg_npm_message_preinstalled() {
   assert_matches "npm tag: v0.0.6 and version: v0.0.6" "$(NPM_TOKEN="FAKE_TOKEN" bash "${ROOT_DIR}/release.sh" --plugins=npm,npm-post,git --verbose)"
   assert_matches "0.0.6" "$(cat package.json)"
 }
+test_plugin_npm_post_0_8_no_signed_off_by_trailer() {
+  unset -f git
+
+  git commit --quiet -m "fix: no signed-off-by trailer" --allow-empty --no-gpg-sign
+
+  assert_status_code 0 "NPM_TOKEN=FAKE_TOKEN bash ${ROOT_DIR}/release.sh --plugins=npm,npm-post,git --quiet"
+  assert_matches "chore\\(ci\\): update" "$(git log -1 --pretty=%B)"
+  assert_not_matches "Signed-off-by" "$(git log -1 --pretty=%B)"
+}
 test_plugin_npm_post_no_pkg_fail_message() {
   git commit --quiet -m "fix: update commit" --allow-empty --no-gpg-sign
 
