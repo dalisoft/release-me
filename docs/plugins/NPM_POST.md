@@ -45,9 +45,13 @@ This plugin is not essential but recommended to keep `version` field in sync
 
 ### npm variables
 
-| Name        | Description                         | Type    |
-| ----------- | ----------------------------------- | ------- |
-| `NPM_TOKEN` | Used to publish to **npm** registry | Secrets |
+> These variable names used for publishing to **npm** registry via the `npm` plugin
+
+| Name        | Description                                   | Type    |
+| ----------- | --------------------------------------------- | ------- |
+| `NPM_TOKEN` | Optional. Used to publish to **npm** registry | Secrets |
+
+When `NPM_TOKEN` is not set, publishing falls back to **Trusted publishing (OIDC)** — supported on GitHub Actions with `id-token: write` permission and npm >= 11.5.1, no token required. The `npm-post` plugin itself runs whenever it is listed in `--plugins`, with or without a token.
 
 ## Usage
 
