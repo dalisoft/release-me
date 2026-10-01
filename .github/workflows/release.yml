@@ -29,6 +29,13 @@ jobs:
           # breaks checkout auth on every workflow_run-triggered run
           token: ${{ github.token }}
 
+      # trusted publishing (OIDC) needs Node >= 22.14 with npm >= 11.5.1;
+      # the runner's default node/npm may be older
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
