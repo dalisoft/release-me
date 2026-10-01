@@ -44,8 +44,14 @@ setup_suite() {
     git config user.name "${GIT_USERNAME}"
   fi
 
+  # shellcheck disable=SC2329
   _npm() {
     # shellcheck disable=SC2317,SC2154
+    if [[ "${FAKE_PARAMS[0]}" == "view" ]]; then
+      # a failed lookup only means "not published"; it must not kill
+      # the release shell, so return instead of exit
+      return 1
+    fi
     if [[ "${FAKE_PARAMS[0]}" == "publish" && "${NPM_TOKEN-}" == "FAKE_TOKEN" ]]; then
       return 0
     else
