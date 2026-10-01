@@ -37,6 +37,7 @@ jobs:
           contents: write
           pull-requests: write
         env:
+          BASE_BRANCH: ${{ github.event.repository.default_branch }}
           GIT_USERNAME: ${{ vars.GIT_USERNAME }}
           GIT_EMAIL: ${{ vars.GIT_EMAIL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # <-- This line is REQUIRED too

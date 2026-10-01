@@ -146,7 +146,7 @@ release() {
       if command -v gh >/dev/null 2>&1; then
         # land the version bump via a PR, so protected base branches keep working
         RELEASE_BRANCH="release/${NEXT_RELEASE_TAG-}"
-        BASE_BRANCH="${GITHUB_REF_NAME:-$(git rev-parse --abbrev-ref HEAD)}"
+        BASE_BRANCH="${BASE_BRANCH:-master}"
 
         git checkout -q -B "${RELEASE_BRANCH}"
         git push --no-verify --force-with-lease -u origin "${RELEASE_BRANCH}"
