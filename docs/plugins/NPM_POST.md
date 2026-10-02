@@ -53,7 +53,7 @@ This plugin is not essential but recommended to keep `version` field in sync
 
 When `NPM_TOKEN` is not set, publishing falls back to **Trusted publishing (OIDC)** — supported on GitHub Actions with `id-token: write` permission and npm >= 11.5.1, no token required. The `npm-post` plugin itself runs whenever it is listed in `--plugins`, with or without a token.
 
-When the GitHub CLI (`gh`) is available, the version bump lands as a `release/<tag>` branch Pull Request against the base branch — an existing PR for the same tag is updated, and auto-merge is attempted (enable "Allow auto-merge" in the repository settings). Without `gh`, it pushes the base branch directly.
+The version bump lands on the base branch as a direct, signed push (rebased and autostashed). Run the release CI with a token whose actor is allowed to push the base branch — e.g. a dedicated GitHub App in the branch ruleset bypass list — and keep the `[skip ci]` trailer so the bump push does not re-trigger the release.
 
 ## Usage
 
