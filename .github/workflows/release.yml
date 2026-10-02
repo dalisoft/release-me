@@ -23,18 +23,25 @@ jobs:
     permissions:
       id-token: write
       contents: write
-      pull-requests: write
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'master' }}
     steps:
+      # short-lived token (1h) of the release GitHub App: the only actor
+      # allowed to push master directly (ruleset bypass list). Everyone
+      # else, admins included, must go through a pull request
+      - name: Release app token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
           fetch-tags: true
           ref: master
-          # the workflows' own token; the repo GH_TOKEN PAT is expired and
-          # breaks checkout auth on every workflow_run-triggered run
-          token: ${{ github.token }}
+          token: ${{ steps.app-token.outputs.token }}
 
       # trusted publishing (OIDC) needs Node >= 22.14 with npm >= 11.5.1;
       # the runner's default node/npm may be older
