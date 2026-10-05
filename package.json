@@ -61,7 +61,7 @@
     "@ls-lint/ls-lint": "^2.3.1",
     "@swc/core": "^1.16.13",
     "commitlint-rs-npm": "dalisoft/commitlint-rs-npm#v0.1.11",
-    "dprint": "^0.58.0",
+    "dprint": "^0.59.0",
     "prism-react-renderer": "^2.4.1",
     "prismjs": "^1.30.0",
     "swc-loader": "^0.2.7"
