@@ -147,6 +147,9 @@ test_plugin_npm_post_0_8_no_signed_off_by_trailer() {
   unset -f git
 
   git commit --quiet -m "fix: no signed-off-by trailer" --allow-empty --no-gpg-sign
+  # 0_7 aborts at its pull (fake remote, no tracking), so the version the
+  # sed writes may match package.json already; force a tracked change
+  echo " " >>package.json
 
   assert_status_code 0 "NPM_TOKEN=FAKE_TOKEN bash ${ROOT_DIR}/release.sh --plugins=npm,npm-post,git --quiet"
   assert_matches "chore\\(ci\\): update" "$(git log -1 --pretty=%B)"
